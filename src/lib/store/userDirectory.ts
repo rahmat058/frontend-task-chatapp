@@ -1,80 +1,71 @@
-'use client';
+'use client'
 
-import { create } from 'zustand';
-import { getEntityId } from '@/lib/utils/ids';
-import type { User } from '@/types/models';
+import { create } from 'zustand'
+import { getEntityId } from '@/lib/utils/ids'
+import type { User } from '@/types/models'
 
-export type DirectoryUser = Pick<User, '_id' | 'name'> & { phone?: string };
+export type DirectoryUser = Pick<User, '_id' | 'name'> & { phone?: string }
 
 interface UserDirectoryState {
-  byId: Record<string, DirectoryUser>;
-  byConversationId: Record<string, DirectoryUser>;
-  remember: (users: unknown[]) => void;
-  rememberPeer: (conversationId: string, user: unknown) => void;
+  byId: Record<string, DirectoryUser>
+  byConversationId: Record<string, DirectoryUser>
+  remember: (users: unknown[]) => void
+  rememberPeer: (conversationId: string, user: unknown) => void
 }
 
-const STORAGE_KEY = 'chat_user_directory';
+const STORAGE_KEY = 'chat_user_directory'
 
 function empty() {
-  return { byId: {} as Record<string, DirectoryUser>, byConversationId: {} as Record<string, DirectoryUser> };
+  return { byId: {} as Record<string, DirectoryUser>, byConversationId: {} as Record<string, DirectoryUser> }
 }
 
 function load() {
-  if (typeof window === 'undefined') return empty();
+  if (typeof window === 'undefined') return empty()
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return empty();
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const src =
-      parsed.state && typeof parsed.state === 'object'
-        ? (parsed.state as Record<string, unknown>)
-        : parsed;
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return empty()
+    const parsed = JSON.parse(raw) as Record<string, unknown>
+    const src = parsed.state && typeof parsed.state === 'object' ? (parsed.state as Record<string, unknown>) : parsed
     return {
-      byId:
-        src.byId && typeof src.byId === 'object'
-          ? (src.byId as Record<string, DirectoryUser>)
-          : {},
+      byId: src.byId && typeof src.byId === 'object' ? (src.byId as Record<string, DirectoryUser>) : {},
       byConversationId:
         src.byConversationId && typeof src.byConversationId === 'object'
           ? (src.byConversationId as Record<string, DirectoryUser>)
           : {},
-    };
+    }
   } catch {
-    return empty();
+    return empty()
   }
 }
 
-function save(state: {
-  byId: Record<string, DirectoryUser>;
-  byConversationId: Record<string, DirectoryUser>;
-}) {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+function save(state: { byId: Record<string, DirectoryUser>; byConversationId: Record<string, DirectoryUser> }) {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
 }
 
 function toDirectoryUser(value: unknown): DirectoryUser | null {
-  const id = getEntityId(value);
-  if (!id || !value || typeof value !== 'object') return null;
+  const id = getEntityId(value)
+  if (!id || !value || typeof value !== 'object') return null
 
-  const record = value as Record<string, unknown>;
-  const nestedUser = record.user && typeof record.user === 'object' ? record.user : null;
-  const nameSource = (nestedUser ?? record) as Record<string, unknown>;
-  const name = nameSource.name;
-  if (typeof name !== 'string') return null;
-  const trimmed = name.trim();
+  const record = value as Record<string, unknown>
+  const nestedUser = record.user && typeof record.user === 'object' ? record.user : null
+  const nameSource = (nestedUser ?? record) as Record<string, unknown>
+  const name = nameSource.name
+  if (typeof name !== 'string') return null
+  const trimmed = name.trim()
   if (!trimmed || /^direct message$/i.test(trimmed) || trimmed === 'Unknown') {
-    return null;
+    return null
   }
 
-  const phone = nameSource.phone ?? record.phone;
+  const phone = nameSource.phone ?? record.phone
   return {
     _id: id,
     name: trimmed,
     ...(typeof phone === 'string' && phone ? { phone } : {}),
-  };
+  }
 }
 
-const initial = load();
+const initial = load()
 
 /**
  * Live `GET /conversations` returns participant ids only. Names are learned
@@ -86,37 +77,37 @@ export const useUserDirectory = create<UserDirectoryState>((set, get) => ({
   byConversationId: initial.byConversationId,
 
   remember: (users) => {
-    let changed = false;
-    const byId = { ...get().byId };
+    let changed = false
+    const byId = { ...get().byId }
 
     for (const user of users) {
-      const next = toDirectoryUser(user);
-      if (!next) continue;
-      const prev = byId[next._id];
-      if (prev?.name === next.name && prev?.phone === next.phone) continue;
-      byId[next._id] = { ...prev, ...next };
-      changed = true;
+      const next = toDirectoryUser(user)
+      if (!next) continue
+      const prev = byId[next._id]
+      if (prev?.name === next.name && prev?.phone === next.phone) continue
+      byId[next._id] = { ...prev, ...next }
+      changed = true
     }
 
-    if (!changed) return;
-    const nextState = { byId, byConversationId: get().byConversationId };
-    save(nextState);
-    set({ byId });
+    if (!changed) return
+    const nextState = { byId, byConversationId: get().byConversationId }
+    save(nextState)
+    set({ byId })
   },
 
   rememberPeer: (conversationId, user) => {
-    const entry = toDirectoryUser(user);
-    if (!conversationId || !entry) return;
+    const entry = toDirectoryUser(user)
+    if (!conversationId || !entry) return
 
     const byId = {
       ...get().byId,
       [entry._id]: { ...get().byId[entry._id], ...entry },
-    };
+    }
     const byConversationId = {
       ...get().byConversationId,
       [conversationId]: entry,
-    };
-    save({ byId, byConversationId });
-    set({ byId, byConversationId });
+    }
+    save({ byId, byConversationId })
+    set({ byId, byConversationId })
   },
-}));
+}))

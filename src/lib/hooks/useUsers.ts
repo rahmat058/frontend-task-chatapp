@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useQuery } from '@tanstack/react-query';
-import { usersApi } from '@/lib/api/users';
-import { useDeferredValue } from 'react';
+import { useQuery } from '@tanstack/react-query'
+import { usersApi } from '@/lib/api/users'
+import { useDeferredValue } from 'react'
 
 export function useUserSearch(query: string) {
-  const deferredQuery = useDeferredValue(query);
+  const deferredQuery = useDeferredValue(query)
 
   return useQuery({
     queryKey: ['users', 'search', deferredQuery],
@@ -13,5 +13,5 @@ export function useUserSearch(query: string) {
     enabled: deferredQuery.trim().length > 0,
     staleTime: 5_000,
     placeholderData: (prev) => prev, // keep previous results while typing
-  });
+  })
 }

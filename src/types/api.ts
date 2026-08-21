@@ -1,74 +1,74 @@
-import type { User, Conversation, Message } from './models';
+import type { User, Conversation, Message } from './models'
 
 // ─── Auth ──────────────────────────────────────────────────────────────────
 
 export interface LoginRequest {
-  phone: string;
-  name: string;
+  phone: string
+  name: string
 }
 
 export interface LoginResponse {
-  token: string;
-  user: User;
+  token: string
+  user: User
 }
 
 export interface MeResponse {
-  user: User;
+  user: User
 }
 
 // ─── Users ─────────────────────────────────────────────────────────────────
 
-export type SearchUsersResponse = User[];
+export type SearchUsersResponse = User[]
 
 // ─── Conversations ──────────────────────────────────────────────────────────
 
-export type ListConversationsResponse = Conversation[];
+export type ListConversationsResponse = Conversation[]
 
 export interface StartConversationRequest {
-  userId: string;
+  userId: string
 }
 
-export type StartConversationResponse = Conversation;
+export type StartConversationResponse = Conversation
 
 // ─── Messages ──────────────────────────────────────────────────────────────
 
 export interface MessageHistoryResponse {
-  messages: Message[];
-  hasMore: boolean;
-  nextCursor: string | null;
+  messages: Message[]
+  hasMore: boolean
+  nextCursor: string | null
 }
 
 export interface SendMessageRequest {
-  conversationId: string;
-  text: string;
+  conversationId: string
+  text: string
 }
 
-export type SendMessageResponse = Message;
+export type SendMessageResponse = Message
 
 // ─── Groups ────────────────────────────────────────────────────────────────
 
 export interface CreateGroupRequest {
-  name: string;
-  participantIds: string[];
+  name: string
+  participantIds: string[]
 }
 
-export type CreateGroupResponse = Conversation;
+export type CreateGroupResponse = Conversation
 
 export interface AddParticipantsRequest {
-  userIds: string[];
+  userIds: string[]
 }
 
 export interface PromoteAdminRequest {
-  userId: string;
+  userId: string
 }
 
 export interface RenameGroupRequest {
-  name: string;
+  name: string
 }
 
 // ─── Generic API wrapper ───────────────────────────────────────────────────
 
 export interface ApiError {
-  message: string;
-  statusCode?: number;
+  message: string
+  statusCode?: number
 }

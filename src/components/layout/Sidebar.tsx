@@ -1,27 +1,25 @@
-'use client';
+'use client'
 
-import { LogOut, MessageSquare, Plus, UsersRound } from 'lucide-react';
-import { Avatar } from '@/components/common/Avatar';
-import { Button } from '@/components/common/Button';
-import { ConversationList } from '@/components/conversations/ConversationList';
-import { useAuth } from '@/lib/hooks/useAuth';
-import { useUIStore } from '@/lib/store/uiStore';
+import { LogOut, MessageSquare, Plus, UsersRound } from 'lucide-react'
+import { Avatar } from '@/components/common/Avatar'
+import { Button } from '@/components/common/Button'
+import { ConversationList } from '@/components/conversations/ConversationList'
+import { useAuth } from '@/lib/hooks/useAuth'
+import { useUIStore } from '@/lib/store/uiStore'
 
 export function Sidebar() {
-  const { user, logout } = useAuth();
-  const setNewChatOpen = useUIStore((s) => s.setNewChatOpen);
-  const setNewGroupOpen = useUIStore((s) => s.setNewGroupOpen);
+  const { user, logout } = useAuth()
+  const setNewChatOpen = useUIStore((s) => s.setNewChatOpen)
+  const setNewGroupOpen = useUIStore((s) => s.setNewGroupOpen)
 
   return (
-    <aside className="flex flex-col h-full bg-[var(--color-surface-1)] border-r border-[var(--color-border)]">
-      <div className="flex items-center justify-between px-4 py-4 border-b border-[var(--color-border)]">
+    <aside className="flex h-full flex-col border-r border-[var(--color-border)] bg-[var(--color-surface-1)]">
+      <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-4">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center">
-            <MessageSquare className="w-4 h-4 text-white" aria-hidden="true" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600">
+            <MessageSquare className="h-4 w-4 text-white" aria-hidden="true" />
           </div>
-          <span className="font-bold text-sm text-[var(--color-text-primary)]">
-            ChatApp
-          </span>
+          <span className="text-sm font-bold text-[var(--color-text-primary)]">ChatApp</span>
         </div>
 
         <div className="flex items-center gap-1">
@@ -31,9 +29,8 @@ export function Sidebar() {
             size="icon"
             onClick={() => setNewGroupOpen(true)}
             title="New group"
-            aria-label="Create a new group"
-          >
-            <UsersRound className="w-4 h-4" aria-hidden="true" />
+            aria-label="Create a new group">
+            <UsersRound className="h-4 w-4" aria-hidden="true" />
           </Button>
           <Button
             id="new-chat-btn"
@@ -41,9 +38,8 @@ export function Sidebar() {
             size="icon"
             onClick={() => setNewChatOpen(true)}
             title="New chat"
-            aria-label="Start a new chat"
-          >
-            <Plus className="w-4 h-4" aria-hidden="true" />
+            aria-label="Start a new chat">
+            <Plus className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
       </div>
@@ -53,16 +49,12 @@ export function Sidebar() {
       </div>
 
       {user && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--color-border)]">
-          <div className="flex items-center gap-2.5 min-w-0">
+        <div className="flex items-center justify-between border-t border-[var(--color-border)] px-4 py-3">
+          <div className="flex min-w-0 items-center gap-2.5">
             <Avatar name={user.name} size="sm" />
             <div className="min-w-0">
-              <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">
-                {user.name}
-              </p>
-              <p className="text-xs text-[var(--color-text-muted)] truncate">
-                {user.phone}
-              </p>
+              <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{user.name}</p>
+              <p className="truncate text-xs text-[var(--color-text-muted)]">{user.phone}</p>
             </div>
           </div>
           <Button
@@ -72,12 +64,11 @@ export function Sidebar() {
             onClick={logout}
             title="Sign out"
             aria-label="Sign out"
-            className="text-[var(--color-text-muted)]"
-          >
-            <LogOut className="w-4 h-4" aria-hidden="true" />
+            className="text-[var(--color-text-muted)]">
+            <LogOut className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
       )}
     </aside>
-  );
+  )
 }

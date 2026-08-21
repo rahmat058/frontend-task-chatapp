@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { useEffect, useRef } from 'react';
-import { useAuthStore } from '@/lib/store/authStore';
-import { authApi } from '@/lib/api/auth';
-import { storage } from '@/lib/utils/storage';
+import { useEffect, useRef } from 'react'
+import { useAuthStore } from '@/lib/store/authStore'
+import { authApi } from '@/lib/api/auth'
+import { storage } from '@/lib/utils/storage'
 
 /**
  * Restores an existing session on mount by validating the stored JWT against
@@ -11,25 +11,25 @@ import { storage } from '@/lib/utils/storage';
  * guards can act.
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const setAuth = useAuthStore((s) => s.setAuth);
-  const clearAuth = useAuthStore((s) => s.clearAuth);
-  const restored = useRef(false);
+  const setAuth = useAuthStore((s) => s.setAuth)
+  const clearAuth = useAuthStore((s) => s.clearAuth)
+  const restored = useRef(false)
 
   useEffect(() => {
-    if (restored.current) return;
-    restored.current = true;
+    if (restored.current) return
+    restored.current = true
 
-    const token = storage.getToken();
+    const token = storage.getToken()
     if (!token) {
-      clearAuth();
-      return;
+      clearAuth()
+      return
     }
 
     authApi
       .me()
       .then((user) => setAuth(user, token))
-      .catch(() => clearAuth());
-  }, [setAuth, clearAuth]);
+      .catch(() => clearAuth())
+  }, [setAuth, clearAuth])
 
-  return <>{children}</>;
+  return <>{children}</>
 }

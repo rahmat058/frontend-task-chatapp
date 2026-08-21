@@ -10,10 +10,7 @@ export async function GET() {
     const data = (await res.json().catch(() => null)) as { status?: string } | null
     const status = typeof data?.status === 'string' ? data.status : res.ok ? 'ok' : 'down'
 
-    return Response.json(
-      { status },
-      { status: status === 'ok' ? 200 : 503 },
-    )
+    return Response.json({ status }, { status: status === 'ok' ? 200 : 503 })
   } catch {
     return Response.json({ status: 'down' }, { status: 503 })
   }

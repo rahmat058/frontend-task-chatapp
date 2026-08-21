@@ -52,7 +52,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full" noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-5" noValidate>
       <Controller
         name="phoneDigits"
         control={control}
@@ -69,7 +69,7 @@ export function LoginForm() {
             inputMode="numeric"
             placeholder="1712345678"
             autoComplete="tel-national"
-            leftIcon={<Phone className="w-4 h-4" />}
+            leftIcon={<Phone className="h-4 w-4" />}
             prefix={COUNTRY_CODE}
             aria-label={`Phone number, country code ${COUNTRY_CODE}`}
             error={errors.phoneDigits?.message}
@@ -88,7 +88,7 @@ export function LoginForm() {
         type="text"
         placeholder="Ada Lovelace"
         autoComplete="name"
-        leftIcon={<User className="w-4 h-4" />}
+        leftIcon={<User className="h-4 w-4" />}
         error={errors.name?.message}
         {...register('name', {
           required: 'Name is required',
@@ -98,18 +98,16 @@ export function LoginForm() {
 
       {apiDown && (
         <div
-          className="text-sm text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3"
-          role="status"
-        >
+          className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-400"
+          role="status">
           The chat API is not reachable right now. Check your connection and try again.
         </div>
       )}
 
       {error && (
         <div
-          className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 animate-fade-in"
-          role="alert"
-        >
+          className="animate-fade-in rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400"
+          role="alert">
           {error}
         </div>
       )}
@@ -119,13 +117,12 @@ export function LoginForm() {
         size="lg"
         isLoading={isLoading}
         disabled={isLoading}
-        rightIcon={!isLoading ? <ArrowRight className="w-4 h-4" /> : undefined}
-        className="w-full mt-1"
-      >
+        rightIcon={!isLoading ? <ArrowRight className="h-4 w-4" /> : undefined}
+        className="mt-1 w-full">
         {isLoading ? 'Signing in…' : 'Continue'}
       </Button>
 
-      <p className="text-center text-xs text-[var(--color-text-muted)] leading-relaxed">
+      <p className="text-center text-xs leading-relaxed text-[var(--color-text-muted)]">
         New here? Just enter your phone — we&apos;ll create your account automatically.
       </p>
     </form>

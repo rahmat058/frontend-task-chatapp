@@ -1,4 +1,5 @@
 # Product Requirements Document (PRD)
+
 ### Frontend Developer Take-Home Assignment — Chat Application
 
 > **Source:** `Senior_Frontend_Engineer_Task_Instructions.pdf`
@@ -32,11 +33,11 @@
 
 Three-part take-home assignment. Each part builds on the previous one.
 
-| Part | Title | Deliverable |
-|------|-------|-------------|
-| **Part 1** | API Docs + Chat App | Working chat screens + standalone API doc |
-| **Part 2** | Creative Landing Page | Landing page showcasing Part 1 |
-| **Part 3** | Thought Process Write-up | README section or separate doc |
+| Part       | Title                    | Deliverable                               |
+| ---------- | ------------------------ | ----------------------------------------- |
+| **Part 1** | API Docs + Chat App      | Working chat screens + standalone API doc |
+| **Part 2** | Creative Landing Page    | Landing page showcasing Part 1            |
+| **Part 3** | Thought Process Write-up | README section or separate doc            |
 
 > **Evaluation Focus:** Code quality, decision-making, creativity, and real-world judgment. No single "correct" solution — how you think and structure your code matters most.
 
@@ -66,10 +67,10 @@ Write your own API documentation **before** you start building. This is a **stan
 
 **Login Screen Requirements:**
 
-| Field | Type | Validation |
-|-------|------|------------|
+| Field        | Type       | Validation                   |
+| ------------ | ---------- | ---------------------------- |
 | Phone number | text input | Required, valid phone format |
-| Name | text input | Required, non-empty |
+| Name         | text input | Required, non-empty          |
 
 - No password field
 - On success → redirect to the chat main screen
@@ -84,21 +85,22 @@ Write your own API documentation **before** you start building. This is a **stan
 ```js
 // Connect to ROOT origin — NOT /api
 const socket = io('https://frontend-task-chatapp.onrender.com', {
-  auth: { token }  // JWT from login
-});
+  auth: { token }, // JWT from login
+})
 ```
 
 > ⚠️ **Critical:** Socket.io lives at the host root, not under `/api`. An invalid or missing token is rejected at handshake time.
 
 #### Event Reference
 
-| Direction | Event | Payload | Description |
-|-----------|-------|---------|-------------|
-| Client → Server | `message:send` | `{ conversationId, text }` | Send a message (optional ack callback) |
-| Server → Client | `message:new` | Message object | New message arrived for the current user |
-| Server → Client | `conversation:updated` | Conversation object | Group created, renamed, or members/admins changed |
+| Direction       | Event                  | Payload                    | Description                                       |
+| --------------- | ---------------------- | -------------------------- | ------------------------------------------------- |
+| Client → Server | `message:send`         | `{ conversationId, text }` | Send a message (optional ack callback)            |
+| Server → Client | `message:new`          | Message object             | New message arrived for the current user          |
+| Server → Client | `conversation:updated` | Conversation object        | Group created, renamed, or members/admins changed |
 
 **Behavior rules:**
+
 - `message:new` → append to active conversation list; show unread badge if not active
 - `conversation:updated` → refresh conversation name/participants in sidebar
 - On socket disconnect → show reconnecting banner; on reconnect → re-fetch latest messages to close any gap
@@ -109,126 +111,126 @@ const socket = io('https://frontend-task-chatapp.onrender.com', {
 
 #### F1 — Login Screen
 
-| ID | Requirement | Done |
-|----|-------------|------|
-| F1.1 | User enters **phone number** and **name** to log in/register | ✅ |
-| F1.2 | New phone number triggers auto-registration; existing phone logs in | ✅ |
-| F1.3 | JWT stored and reused across sessions (localStorage) | ✅ |
-| F1.4 | On page reload → call `GET /api/auth/me` with stored token to restore session | ✅ |
-| F1.5 | Clear error state shown on failed login | ✅ |
+| ID   | Requirement                                                                   | Done |
+| ---- | ----------------------------------------------------------------------------- | ---- |
+| F1.1 | User enters **phone number** and **name** to log in/register                  | ✅   |
+| F1.2 | New phone number triggers auto-registration; existing phone logs in           | ✅   |
+| F1.3 | JWT stored and reused across sessions (localStorage)                          | ✅   |
+| F1.4 | On page reload → call `GET /api/auth/me` with stored token to restore session | ✅   |
+| F1.5 | Clear error state shown on failed login                                       | ✅   |
 
 ---
 
 #### F2 — Conversation List Screen
 
-| ID | Requirement | Done |
-|----|-------------|------|
-| F2.1 | Fetch all conversations the user is part of via `GET /api/conversations` | ✅ |
-| F2.2 | Show: name (or participant name for DMs), last message preview, timestamp | ✅ |
-| F2.3 | Visually distinguish **direct** (1-to-1) vs **group** conversations | ✅ |
-| F2.4 | Real-time: `message:new` bumps conversation to top and updates preview | ✅ |
-| F2.5 | Empty state: "No conversations yet — start one!" | ✅ |
-| F2.6 | Loading skeleton while fetching | ✅ |
+| ID   | Requirement                                                               | Done |
+| ---- | ------------------------------------------------------------------------- | ---- |
+| F2.1 | Fetch all conversations the user is part of via `GET /api/conversations`  | ✅   |
+| F2.2 | Show: name (or participant name for DMs), last message preview, timestamp | ✅   |
+| F2.3 | Visually distinguish **direct** (1-to-1) vs **group** conversations       | ✅   |
+| F2.4 | Real-time: `message:new` bumps conversation to top and updates preview    | ✅   |
+| F2.5 | Empty state: "No conversations yet — start one!"                          | ✅   |
+| F2.6 | Loading skeleton while fetching                                           | ✅   |
 
 ---
 
 #### F3 — Starting a Direct Conversation
 
-| ID | Requirement | Done |
-|----|-------------|------|
-| F3.1 | User searches by **name or phone number** via `GET /api/users/search?q=` | ✅ |
-| F3.2 | Trigger search on minimum 1 character | ✅ |
-| F3.3 | Selecting a result → `POST /api/conversations` with `{ userId }` | ✅ |
-| F3.4 | If conversation already exists, open the existing one (no duplicate) | ✅ |
-| F3.5 | Navigate to the chat panel on creation | ✅ |
+| ID   | Requirement                                                              | Done |
+| ---- | ------------------------------------------------------------------------ | ---- |
+| F3.1 | User searches by **name or phone number** via `GET /api/users/search?q=` | ✅   |
+| F3.2 | Trigger search on minimum 1 character                                    | ✅   |
+| F3.3 | Selecting a result → `POST /api/conversations` with `{ userId }`         | ✅   |
+| F3.4 | If conversation already exists, open the existing one (no duplicate)     | ✅   |
+| F3.5 | Navigate to the chat panel on creation                                   | ✅   |
 
 ---
 
 #### F4 — Group Conversations
 
-| ID | Requirement | Done |
-|----|-------------|------|
-| F4.1 | Create a group with a **name** and **multiple participants** | ✅ |
-| F4.2 | `POST /api/conversations/group` with `{ name, participantIds }` | ✅ |
-| F4.3 | Creator automatically becomes an **admin** | ✅ |
-| F4.4 | Admins can: add members, remove members, promote to admin, rename group | ✅ |
-| F4.5 | Any member can **leave** (DELETE their own userId from participants) | ✅ |
-| F4.6 | `conversation:updated` socket event refreshes group state in real-time | ✅ |
+| ID   | Requirement                                                             | Done |
+| ---- | ----------------------------------------------------------------------- | ---- |
+| F4.1 | Create a group with a **name** and **multiple participants**            | ✅   |
+| F4.2 | `POST /api/conversations/group` with `{ name, participantIds }`         | ✅   |
+| F4.3 | Creator automatically becomes an **admin**                              | ✅   |
+| F4.4 | Admins can: add members, remove members, promote to admin, rename group | ✅   |
+| F4.5 | Any member can **leave** (DELETE their own userId from participants)    | ✅   |
+| F4.6 | `conversation:updated` socket event refreshes group state in real-time  | ✅   |
 
 **Group API operations at a glance:**
 
-| Action | Method + Path |
-|--------|---------------|
-| Create group | `POST /api/conversations/group` |
-| Add members | `POST /api/conversations/:id/participants` |
+| Action                | Method + Path                                        |
+| --------------------- | ---------------------------------------------------- |
+| Create group          | `POST /api/conversations/group`                      |
+| Add members           | `POST /api/conversations/:id/participants`           |
 | Remove member / leave | `DELETE /api/conversations/:id/participants/:userId` |
-| Promote to admin | `POST /api/conversations/:id/admins` |
-| Rename group | `PATCH /api/conversations/:id` |
+| Promote to admin      | `POST /api/conversations/:id/admins`                 |
+| Rename group          | `PATCH /api/conversations/:id`                       |
 
 ---
 
 #### F5 — Message List (Chat Panel)
 
-| ID | Requirement | Done |
-|----|-------------|------|
-| F5.1 | Fetch history via `GET /api/conversations/:id/messages` | ✅ |
-| F5.2 | Pagination: `limit` (default 20) + `before` cursor for loading older messages | ✅ |
-| F5.3 | **Sent** messages right-aligned; **received** messages left-aligned | ✅ |
-| F5.4 | Each message shows: sender name (groups), message text, timestamp | ✅ |
-| F5.5 | Loading state while fetching | ✅ |
-| F5.6 | Empty state: "No messages yet — say hello!" | ✅ |
+| ID   | Requirement                                                                   | Done |
+| ---- | ----------------------------------------------------------------------------- | ---- |
+| F5.1 | Fetch history via `GET /api/conversations/:id/messages`                       | ✅   |
+| F5.2 | Pagination: `limit` (default 20) + `before` cursor for loading older messages | ✅   |
+| F5.3 | **Sent** messages right-aligned; **received** messages left-aligned           | ✅   |
+| F5.4 | Each message shows: sender name (groups), message text, timestamp             | ✅   |
+| F5.5 | Loading state while fetching                                                  | ✅   |
+| F5.6 | Empty state: "No messages yet — say hello!"                                   | ✅   |
 
 ---
 
 #### F6 — Sending Messages
 
-| ID | Requirement | Done |
-|----|-------------|------|
-| F6.1 | Text input fixed at the bottom of the chat panel | ✅ |
-| F6.2 | Submit via **Enter key** or **Send button** | ✅ |
-| F6.3 | **Empty messages must not be sendable** — button disabled, Enter no-ops | ✅ |
-| F6.4 | Send via `POST /api/messages` with `{ conversationId, text }` | ✅ |
-| F6.5 | Or send via socket `message:send` event — both approaches are valid | ✅ REST send |
-| F6.6 | Optimistic UI: show message immediately; confirm/revert on response | ✅ |
-| F6.7 | Input clears after successful send | ✅ |
+| ID   | Requirement                                                             | Done         |
+| ---- | ----------------------------------------------------------------------- | ------------ |
+| F6.1 | Text input fixed at the bottom of the chat panel                        | ✅           |
+| F6.2 | Submit via **Enter key** or **Send button**                             | ✅           |
+| F6.3 | **Empty messages must not be sendable** — button disabled, Enter no-ops | ✅           |
+| F6.4 | Send via `POST /api/messages` with `{ conversationId, text }`           | ✅           |
+| F6.5 | Or send via socket `message:send` event — both approaches are valid     | ✅ REST send |
+| F6.6 | Optimistic UI: show message immediately; confirm/revert on response     | ✅           |
+| F6.7 | Input clears after successful send                                      | ✅           |
 
 ---
 
 #### F7 — Real-time Updates
 
-| ID | Requirement | Done |
-|----|-------------|------|
-| F7.1 | `message:new` socket event appends new message to the active conversation | ✅ |
-| F7.2 | New message in a non-active conversation → show unread badge/count | ✅ |
-| F7.3 | No manual refresh ever required | ✅ |
-| F7.4 | Socket disconnect → show "Reconnecting..." indicator | ✅ |
-| F7.5 | On reconnect → re-fetch recent messages to close any message gap | ✅ |
+| ID   | Requirement                                                               | Done |
+| ---- | ------------------------------------------------------------------------- | ---- |
+| F7.1 | `message:new` socket event appends new message to the active conversation | ✅   |
+| F7.2 | New message in a non-active conversation → show unread badge/count        | ✅   |
+| F7.3 | No manual refresh ever required                                           | ✅   |
+| F7.4 | Socket disconnect → show "Reconnecting..." indicator                      | ✅   |
+| F7.5 | On reconnect → re-fetch recent messages to close any message gap          | ✅   |
 
 ---
 
 #### F8 — Auto-scroll Behavior
 
-| ID | Requirement | Done |
-|----|-------------|------|
-| F8.1 | Auto-scroll to latest message when the chat panel first opens | ✅ |
-| F8.2 | Auto-scroll on new message **only if** the user is already at the bottom | ✅ |
-| F8.3 | **Do NOT force-scroll** if the user has scrolled up to read earlier messages | ✅ |
-| F8.4 | Show "↓ New message" / scroll-to-bottom FAB when scrolled up and new message arrives | ✅ |
+| ID   | Requirement                                                                          | Done |
+| ---- | ------------------------------------------------------------------------------------ | ---- |
+| F8.1 | Auto-scroll to latest message when the chat panel first opens                        | ✅   |
+| F8.2 | Auto-scroll on new message **only if** the user is already at the bottom             | ✅   |
+| F8.3 | **Do NOT force-scroll** if the user has scrolled up to read earlier messages         | ✅   |
+| F8.4 | Show "↓ New message" / scroll-to-bottom FAB when scrolled up and new message arrives | ✅   |
 
 ---
 
 ### 2.5 UX & Edge Cases
 
-| Scenario | Expected Behavior |
-|----------|-------------------|
-| Empty message send attempt | Send button disabled; Enter key is a no-op |
-| Network error on send | Error toast shown; allow retry |
-| Token expired or invalid | Redirect to login; clear stored JWT |
-| User search returns no results | "No users found" empty state |
-| Socket disconnects | "Connection lost. Reconnecting..." banner |
-| Loading conversations | Skeleton loader (not a spinner) |
-| Very long message text | Wraps cleanly inside the bubble |
-| Sending to yourself | Handled gracefully (API decides behavior) |
+| Scenario                       | Expected Behavior                          |
+| ------------------------------ | ------------------------------------------ |
+| Empty message send attempt     | Send button disabled; Enter key is a no-op |
+| Network error on send          | Error toast shown; allow retry             |
+| Token expired or invalid       | Redirect to login; clear stored JWT        |
+| User search returns no results | "No users found" empty state               |
+| Socket disconnects             | "Connection lost. Reconnecting..." banner  |
+| Loading conversations          | Skeleton loader (not a spinner)            |
+| Very long message text         | Wraps cleanly inside the bubble            |
+| Sending to yourself            | Handled gracefully (API decides behavior)  |
 
 ---
 
@@ -238,24 +240,24 @@ const socket = io('https://frontend-task-chatapp.onrender.com', {
 
 ### Requirements
 
-| ID | Requirement |
-|----|-------------|
-| LP1 | Full visual creative freedom — no design file provided |
-| LP2 | Design your own: layout, color palette, typography, animations |
-| LP3 | Fully **responsive** — mobile, tablet, and desktop |
-| LP4 | Clearly communicates what the product does and its key features |
-| LP5 | **Live hosted URL required** (Vercel, Netlify, etc.) for submission |
+| ID  | Requirement                                                                    |
+| --- | ------------------------------------------------------------------------------ |
+| LP1 | Full visual creative freedom — no design file provided                         |
+| LP2 | Design your own: layout, color palette, typography, animations                 |
+| LP3 | Fully **responsive** — mobile, tablet, and desktop                             |
+| LP4 | Clearly communicates what the product does and its key features                |
+| LP5 | **Live hosted URL required** (Vercel, Netlify, etc.) for submission            |
 | LP6 | Bold and creative — we'd rather see original instincts than a generic template |
 
 ### Suggested Sections
 
-| Section | Content |
-|---------|---------|
-| **Hero** | Headline, subheadline, primary CTA ("Try it now →") |
-| **Features** | Real-time messaging, groups, simple login |
-| **Demo Preview** | Screenshot or animated UI preview of the chat |
-| **How It Works** | 3-step: Log in → Find contacts → Chat |
-| **Footer** | Links, tech stack credit |
+| Section          | Content                                             |
+| ---------------- | --------------------------------------------------- |
+| **Hero**         | Headline, subheadline, primary CTA ("Try it now →") |
+| **Features**     | Real-time messaging, groups, simple login           |
+| **Demo Preview** | Screenshot or animated UI preview of the chat       |
+| **How It Works** | 3-step: Log in → Find contacts → Chat               |
+| **Footer**       | Links, tech stack credit                            |
 
 > **Design inspiration:** Modern SaaS products like Linear, Vercel, Loom — dark themes, glassmorphism, smooth scroll animations.
 
@@ -267,13 +269,13 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 
 ### Required Sections
 
-| Section | What to cover |
-|---------|---------------|
-| **Architecture & Libraries (Part 1)** | Why you chose your folder structure, state management, and libraries. Trade-offs considered. |
-| **Design Decisions (Part 2)** | Reasoning behind color palette, layout, typography, and animation choices. |
-| **AI Tool Usage** | Which tools used, what for (boilerplate, debugging, docs, research), and what you changed, rejected, or wrote yourself. |
-| **What You'd Improve** | What you'd do differently or add with more time. |
-| **API Issues Observed** | Odd behavior, inconsistent responses, missing error handling, pagination quirks — and how you worked around them. Say "none" if nothing was observed. |
+| Section                               | What to cover                                                                                                                                         |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Architecture & Libraries (Part 1)** | Why you chose your folder structure, state management, and libraries. Trade-offs considered.                                                          |
+| **Design Decisions (Part 2)**         | Reasoning behind color palette, layout, typography, and animation choices.                                                                            |
+| **AI Tool Usage**                     | Which tools used, what for (boilerplate, debugging, docs, research), and what you changed, rejected, or wrote yourself.                               |
+| **What You'd Improve**                | What you'd do differently or add with more time.                                                                                                      |
+| **API Issues Observed**               | Odd behavior, inconsistent responses, missing error handling, pagination quirks — and how you worked around them. Say "none" if nothing was observed. |
 
 > Tip: Keep this **concise and honest**. Clear reasoning over exhaustive coverage.
 
@@ -291,9 +293,11 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ### Auth
 
 #### `POST /auth/login` — Login or Register
+
 🔓 No auth required
 
 **Request Body:**
+
 ```json
 {
   "phone": "+15551234567",
@@ -302,6 +306,7 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ```
 
 **Observed Response:**
+
 ```json
 {
   "token": "<JWT>",
@@ -312,9 +317,11 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ---
 
 #### `GET /auth/me` — Get Current User
+
 🔐 Auth required
 
 **Observed Response:**
+
 ```json
 { "_id": "string", "phone": "+15551234567", "name": "Ada Lovelace" }
 ```
@@ -324,13 +331,15 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ### Users
 
 #### `GET /users/search?q={term}` — Search Users
+
 🔐 Auth required
 
-| Param | In | Type | Required | Description |
-|-------|----|------|----------|-------------|
-| `q` | query | string | Yes | Name or phone to search |
+| Param | In    | Type   | Required | Description             |
+| ----- | ----- | ------ | -------- | ----------------------- |
+| `q`   | query | string | Yes      | Name or phone to search |
 
 **Observed Response:**
+
 ```json
 [{ "_id": "string", "name": "string", "phone": "string" }]
 ```
@@ -340,9 +349,11 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ### Conversations
 
 #### `GET /conversations` — List My Conversations
+
 🔐 Auth required
 
 **Observed Response:**
+
 ```json
 {
   "data": [
@@ -362,9 +373,11 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ---
 
 #### `POST /conversations` — Start a Direct Conversation
+
 🔐 Auth required
 
 **Request Body:**
+
 ```json
 { "userId": "665f0c2a9b1e4a0012ab34cd" }
 ```
@@ -372,15 +385,17 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ---
 
 #### `GET /conversations/:id/messages` — Get Message History
+
 🔐 Auth required
 
-| Param | In | Type | Required | Default | Description |
-|-------|----|------|----------|---------|-------------|
-| `id` | path | string | Yes | — | Conversation ID |
-| `limit` | query | integer | No | 20 | Messages per page |
-| `before` | query | string | No | — | Cursor: fetch messages before this message ID |
+| Param    | In    | Type    | Required | Default | Description                                   |
+| -------- | ----- | ------- | -------- | ------- | --------------------------------------------- |
+| `id`     | path  | string  | Yes      | —       | Conversation ID                               |
+| `limit`  | query | integer | No       | 20      | Messages per page                             |
+| `before` | query | string  | No       | —       | Cursor: fetch messages before this message ID |
 
 **Observed Response:**
+
 ```json
 {
   "messages": [
@@ -402,9 +417,11 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ### Messages
 
 #### `POST /messages` — Send a Message
+
 🔐 Auth required
 
 **Request Body:**
+
 ```json
 { "conversationId": "string", "text": "Hello!" }
 ```
@@ -414,6 +431,7 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ### Groups
 
 #### `POST /conversations/group` — Create a Group
+
 🔐 Auth required
 
 ```json
@@ -423,6 +441,7 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ---
 
 #### `POST /conversations/:id/participants` — Add Members
+
 🔐 Auth required | Admins only
 
 ```json
@@ -432,11 +451,13 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ---
 
 #### `DELETE /conversations/:id/participants/:userId` — Remove Member / Leave
+
 🔐 Auth required | Admins only (or own `userId` to leave)
 
 ---
 
 #### `POST /conversations/:id/admins` — Promote to Admin
+
 🔐 Auth required | Admins only
 
 ```json
@@ -446,6 +467,7 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ---
 
 #### `PATCH /conversations/:id` — Rename Group
+
 🔐 Auth required | Admins only
 
 ```json
@@ -457,6 +479,7 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ### System
 
 #### `GET /health` — Health Check
+
 🔓 No auth required
 
 **Path:** host root (`https://frontend-task-chatapp.onrender.com/health`), **not** `/api/health`.
@@ -470,54 +493,54 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 ```typescript
 // Authenticated user
 interface User {
-  _id: string;
-  name: string;
-  phone: string;
+  _id: string
+  name: string
+  phone: string
 }
 
 // Conversation (direct or group)
 interface Conversation {
-  _id: string;
-  type: 'direct' | 'group';
-  name?: string;           // group only
-  participants: string[];  // array of user IDs
-  admins?: string[];       // group only
+  _id: string
+  type: 'direct' | 'group'
+  name?: string // group only
+  participants: string[] // array of user IDs
+  admins?: string[] // group only
   lastMessage?: {
-    text: string;
-    createdAt: string;     // ISO 8601
-  };
-  updatedAt: string;       // ISO 8601
+    text: string
+    createdAt: string // ISO 8601
+  }
+  updatedAt: string // ISO 8601
 }
 
 // Individual message
 interface Message {
-  _id: string;
-  conversationId: string;
+  _id: string
+  conversationId: string
   sender: {
-    _id: string;
-    name: string;
-  };
-  text: string;
-  createdAt: string;       // ISO 8601
+    _id: string
+    name: string
+  }
+  text: string
+  createdAt: string // ISO 8601
 }
 
 // Login / registration response
 interface AuthResponse {
-  token: string;
-  user: User;
+  token: string
+  user: User
 }
 
 // Message history response
 interface MessageHistoryResponse {
-  messages: Message[];
-  hasMore: boolean;
-  nextCursor: string | null;
+  messages: Message[]
+  hasMore: boolean
+  nextCursor: string | null
 }
 
 // Socket.io events
 interface SocketSendPayload {
-  conversationId: string;
-  text: string;
+  conversationId: string
+  text: string
 }
 ```
 
@@ -596,15 +619,15 @@ Socket event: message:new
 
 ## 8. Non-Functional Requirements
 
-| Category | Requirement |
-|----------|-------------|
-| **Code Quality** | Production-level: clean, maintainable, reasonably organized — not a prototype |
-| **Responsiveness** | Mobile-first; works correctly on mobile and desktop |
-| **Performance** | Paginated message history; avoid unnecessary re-renders |
-| **Accessibility** | Keyboard navigable; sufficient color contrast; ARIA labels on interactive elements |
-| **Error Handling** | Loading, empty, and error states handled throughout the entire app |
-| **Deployment** | Both Part 1 and Part 2 must have live, working hosted URLs |
-| **README** | Clear setup/run instructions, tech stack used, and the Part 3 write-up |
+| Category           | Requirement                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| **Code Quality**   | Production-level: clean, maintainable, reasonably organized — not a prototype      |
+| **Responsiveness** | Mobile-first; works correctly on mobile and desktop                                |
+| **Performance**    | Paginated message history; avoid unnecessary re-renders                            |
+| **Accessibility**  | Keyboard navigable; sufficient color contrast; ARIA labels on interactive elements |
+| **Error Handling** | Loading, empty, and error states handled throughout the entire app                 |
+| **Deployment**     | Both Part 1 and Part 2 must have live, working hosted URLs                         |
+| **README**         | Clear setup/run instructions, tech stack used, and the Part 3 write-up             |
 
 ---
 
@@ -630,25 +653,25 @@ Socket event: message:new
 
 ## 10. Submission Checklist
 
-| Item | Required | Done |
-|------|----------|------|
-| GitHub repo (public, or private with access granted) | ✅ | ☐ |
-| `README.md` with setup/run instructions | ✅ | ☐ |
-| Tech stack listed in README | ✅ | ☐ |
-| Part 3 write-up in README or separate doc | ✅ | ☐ |
-| **Standalone API documentation** (Part 1 deliverable) | ✅ | ✅ [`docs/API.md`](./API.md) |
-| Part 1 — Live hosted demo URL (chat app) | ✅ | ☐ |
-| Part 2 — Live hosted demo URL (landing page) | ✅ | ☐ |
-| F1: Login screen (phone + name, JWT, session restore) | ✅ | ✅ |
-| F2: Conversation list (direct + group, loading/empty states) | ✅ | ✅ |
-| F3: Start a direct conversation (user search → new chat) | ✅ | ✅ |
-| F4: Group conversations (create, add/remove members, admin) | ✅ | ✅ |
-| F5: Message list (paginated, sender/receiver distinction) | ✅ | ✅ |
-| F6: Send messages (empty prevention, optimistic UI) | ✅ | ✅ |
-| F7: Real-time updates via Socket.io | ✅ | ✅ |
-| F8: Auto-scroll (smart — does not force-scroll when reading) | ✅ | ✅ |
-| Loading, empty, and error states throughout | ✅ | ✅ |
+| Item                                                         | Required | Done                         |
+| ------------------------------------------------------------ | -------- | ---------------------------- |
+| GitHub repo (public, or private with access granted)         | ✅       | ☐                            |
+| `README.md` with setup/run instructions                      | ✅       | ☐                            |
+| Tech stack listed in README                                  | ✅       | ☐                            |
+| Part 3 write-up in README or separate doc                    | ✅       | ☐                            |
+| **Standalone API documentation** (Part 1 deliverable)        | ✅       | ✅ [`docs/API.md`](./API.md) |
+| Part 1 — Live hosted demo URL (chat app)                     | ✅       | ☐                            |
+| Part 2 — Live hosted demo URL (landing page)                 | ✅       | ☐                            |
+| F1: Login screen (phone + name, JWT, session restore)        | ✅       | ✅                           |
+| F2: Conversation list (direct + group, loading/empty states) | ✅       | ✅                           |
+| F3: Start a direct conversation (user search → new chat)     | ✅       | ✅                           |
+| F4: Group conversations (create, add/remove members, admin)  | ✅       | ✅                           |
+| F5: Message list (paginated, sender/receiver distinction)    | ✅       | ✅                           |
+| F6: Send messages (empty prevention, optimistic UI)          | ✅       | ✅                           |
+| F7: Real-time updates via Socket.io                          | ✅       | ✅                           |
+| F8: Auto-scroll (smart — does not force-scroll when reading) | ✅       | ✅                           |
+| Loading, empty, and error states throughout                  | ✅       | ✅                           |
 
 ---
 
-*PRD derived from `Senior_Frontend_Engineer_Task_Instructions.pdf` and the live OpenAPI spec at `https://frontend-task-chatapp.onrender.com/docs/`*
+_PRD derived from `Senior_Frontend_Engineer_Task_Instructions.pdf` and the live OpenAPI spec at `https://frontend-task-chatapp.onrender.com/docs/`_

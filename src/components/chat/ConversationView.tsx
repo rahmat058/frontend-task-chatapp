@@ -1,36 +1,31 @@
-'use client';
+'use client'
 
-import { useEffect } from 'react';
-import { useConversations } from '@/lib/hooks/useConversations';
-import { ChatPanel } from '@/components/chat/ChatPanel';
-import { ErrorState } from '@/components/common/ErrorState';
-import { SkeletonLoader } from '@/components/common/SkeletonLoader';
-import { useUIStore } from '@/lib/store/uiStore';
+import { useEffect } from 'react'
+import { useConversations } from '@/lib/hooks/useConversations'
+import { ChatPanel } from '@/components/chat/ChatPanel'
+import { ErrorState } from '@/components/common/ErrorState'
+import { SkeletonLoader } from '@/components/common/SkeletonLoader'
+import { useUIStore } from '@/lib/store/uiStore'
 
 export function ConversationView({ conversationId }: { conversationId: string }) {
-  const { data: conversations, isLoading, error, refetch } = useConversations();
-  const clearUnread = useUIStore((s) => s.clearUnread);
-  const setActiveConversation = useUIStore((s) => s.setActiveConversation);
+  const { data: conversations, isLoading, error, refetch } = useConversations()
+  const clearUnread = useUIStore((s) => s.clearUnread)
+  const setActiveConversation = useUIStore((s) => s.setActiveConversation)
 
   useEffect(() => {
-    setActiveConversation(conversationId);
-    clearUnread(conversationId);
-  }, [conversationId, clearUnread, setActiveConversation]);
+    setActiveConversation(conversationId)
+    clearUnread(conversationId)
+  }, [conversationId, clearUnread, setActiveConversation])
 
   if (isLoading) {
-    return <SkeletonLoader variant="message" count={6} />;
+    return <SkeletonLoader variant="message" count={6} />
   }
 
   if (error) {
-    return (
-      <ErrorState
-        description="Failed to load this conversation."
-        onRetry={() => refetch()}
-      />
-    );
+    return <ErrorState description="Failed to load this conversation." onRetry={() => refetch()} />
   }
 
-  const conversation = conversations?.find((c) => c._id === conversationId);
+  const conversation = conversations?.find((c) => c._id === conversationId)
 
   if (!conversation) {
     return (
@@ -39,8 +34,8 @@ export function ConversationView({ conversationId }: { conversationId: string })
         description="This conversation may have been deleted, or you may not have access to it."
         onRetry={() => refetch()}
       />
-    );
+    )
   }
 
-  return <ChatPanel conversation={conversation} />;
+  return <ChatPanel conversation={conversation} />
 }

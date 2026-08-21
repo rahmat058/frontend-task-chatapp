@@ -1,18 +1,18 @@
-const TOKEN_KEY = 'chat_jwt';
+const TOKEN_KEY = 'chat_jwt'
 
 export const storage = {
   getToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem(TOKEN_KEY);
+    if (typeof window === 'undefined') return null
+    return localStorage.getItem(TOKEN_KEY)
   },
 
   setToken(token: string): void {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem(TOKEN_KEY, token);
+    if (typeof window === 'undefined') return
+    localStorage.setItem(TOKEN_KEY, token)
   },
 
   removeToken(): void {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem(TOKEN_KEY);
+    if (typeof window === 'undefined') return
+    localStorage.removeItem(TOKEN_KEY)
   },
-};
+}

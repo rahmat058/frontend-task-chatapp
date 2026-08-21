@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { ChatHeader } from './ChatHeader';
-import { MessageList } from './MessageList';
-import { MessageInput } from './MessageInput';
-import { ConnectionBanner } from '@/components/layout/ConnectionBanner';
-import type { Conversation } from '@/types/models';
+import { ChatHeader } from './ChatHeader'
+import { MessageList } from './MessageList'
+import { MessageInput } from './MessageInput'
+import { ConnectionBanner } from '@/components/layout/ConnectionBanner'
+import type { Conversation } from '@/types/models'
 
 interface ChatPanelProps {
-  conversation: Conversation;
+  conversation: Conversation
 }
 
 export function ChatPanel({ conversation }: ChatPanelProps) {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       <ConnectionBanner />
       <ChatHeader conversation={conversation} />
       <div className="flex-1 overflow-hidden">
@@ -20,5 +20,5 @@ export function ChatPanel({ conversation }: ChatPanelProps) {
       </div>
       <MessageInput conversationId={conversation._id} />
     </div>
-  );
+  )
 }

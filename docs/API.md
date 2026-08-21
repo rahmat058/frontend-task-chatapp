@@ -104,11 +104,11 @@ Host **root**, not under `/api`. No auth.
 
 ## WebSocket events
 
-| Direction | Event | Payload |
-|-----------|-------|---------|
-| Client → server | `message:send` | `{ conversationId, text }` |
-| Server → client | `message:new` | Message |
-| Server → client | `conversation:updated` | Conversation |
+| Direction       | Event                  | Payload                    |
+| --------------- | ---------------------- | -------------------------- |
+| Client → server | `message:send`         | `{ conversationId, text }` |
+| Server → client | `message:new`          | Message                    |
+| Server → client | `conversation:updated` | Conversation               |
 
 This app **sends** messages with `POST /api/messages` and **receives** with `message:new`.
 
@@ -116,18 +116,18 @@ This app **sends** messages with `POST /api/messages` and **receives** with `mes
 
 ## Client mapping
 
-| Spec path | App usage |
-|-----------|-----------|
-| `POST /auth/login` | Login form |
-| `GET /auth/me` | Session restore |
-| `GET /users/search` | New chat + add group members |
-| `GET /conversations` | Sidebar list |
-| `POST /conversations` | Start DM |
-| `GET /conversations/:id/messages` | Chat history |
-| `POST /messages` | Send |
-| `POST /conversations/group` | New group |
-| `POST /conversations/:id/participants` | Open a **group** chat → **Manage group** → search and **Add** |
+| Spec path                                        | App usage                                                                   |
+| ------------------------------------------------ | --------------------------------------------------------------------------- |
+| `POST /auth/login`                               | Login form                                                                  |
+| `GET /auth/me`                                   | Session restore                                                             |
+| `GET /users/search`                              | New chat + add group members                                                |
+| `GET /conversations`                             | Sidebar list                                                                |
+| `POST /conversations`                            | Start DM                                                                    |
+| `GET /conversations/:id/messages`                | Chat history                                                                |
+| `POST /messages`                                 | Send                                                                        |
+| `POST /conversations/group`                      | New group                                                                   |
+| `POST /conversations/:id/participants`           | Open a **group** chat → **Manage group** → search and **Add**               |
 | `DELETE /conversations/:id/participants/:userId` | **Manage group** → **Remove** on a member, or **Leave group** (your own id) |
-| `POST /conversations/:id/admins` | **Manage group** → **Promote** on a member who is not already an admin |
-| `PATCH /conversations/:id` | **Manage group** → change the name → **Save name** |
-| `GET /health` | Login screen reachability check |
+| `POST /conversations/:id/admins`                 | **Manage group** → **Promote** on a member who is not already an admin      |
+| `PATCH /conversations/:id`                       | **Manage group** → change the name → **Save name**                          |
+| `GET /health`                                    | Login screen reachability check                                             |

@@ -48,9 +48,7 @@ export function NewGroupDialog() {
   const close = () => setNewGroupOpen(false)
 
   const toggleUser = (u: User) => {
-    setSelectedUsers((prev) =>
-      prev.some((x) => x._id === u._id) ? prev.filter((x) => x._id !== u._id) : [...prev, u],
-    )
+    setSelectedUsers((prev) => (prev.some((x) => x._id === u._id) ? prev.filter((x) => x._id !== u._id) : [...prev, u]))
     clearErrors('root')
   }
 
@@ -89,14 +87,12 @@ export function NewGroupDialog() {
             type="submit"
             form="new-group-form"
             isLoading={isPending}
-            disabled={!canCreate || isPending}
-          >
+            disabled={!canCreate || isPending}>
             Create group
           </Button>
         </>
-      }
-    >
-      <form id="new-group-form" onSubmit={handleSubmit(onCreate)} className="p-4 flex flex-col gap-4" noValidate>
+      }>
+      <form id="new-group-form" onSubmit={handleSubmit(onCreate)} className="flex flex-col gap-4 p-4" noValidate>
         <Input
           id="group-name-input"
           label="Group name"
@@ -115,7 +111,7 @@ export function NewGroupDialog() {
           placeholder="Search by name or phone…"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          leftIcon={isFetching ? <Spinner size="sm" /> : <Search className="w-4 h-4" />}
+          leftIcon={isFetching ? <Spinner size="sm" /> : <Search className="h-4 w-4" />}
         />
 
         {selectedUsers.length > 0 && (
@@ -123,16 +119,14 @@ export function NewGroupDialog() {
             {selectedUsers.map((u) => (
               <span
                 key={u._id}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--color-primary-soft)] text-[var(--color-primary)] text-xs font-medium rounded-full border border-[var(--color-primary)]/20"
-              >
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-primary)]/20 bg-[var(--color-primary-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-primary)]">
                 {u.name}
                 <button
                   type="button"
                   onClick={() => toggleUser(u)}
-                  className="hover:text-red-400 transition-colors"
-                  aria-label={`Remove ${u.name}`}
-                >
-                  <X className="w-3 h-3" aria-hidden="true" />
+                  className="transition-colors hover:text-red-400"
+                  aria-label={`Remove ${u.name}`}>
+                  <X className="h-3 w-3" aria-hidden="true" />
                 </button>
               </span>
             ))}
@@ -150,17 +144,16 @@ export function NewGroupDialog() {
                   onClick={() => toggleUser(u)}
                   aria-pressed={isSelected}
                   className={cn(
-                    'w-full flex items-center gap-3 px-4 py-2.5 text-left rounded-none transition-colors',
+                    'flex w-full items-center gap-3 rounded-none px-4 py-2.5 text-left transition-colors',
                     'hover:bg-[var(--color-surface-3)]',
                     isSelected && 'opacity-60',
-                  )}
-                >
+                  )}>
                   <Avatar name={u.name} size="sm" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">{u.name}</p>
-                    <p className="text-xs text-[var(--color-text-muted)] truncate">{u.phone}</p>
+                    <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{u.name}</p>
+                    <p className="truncate text-xs text-[var(--color-text-muted)]">{u.phone}</p>
                   </div>
-                  {isSelected && <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0" aria-hidden="true" />}
+                  {isSelected && <Check className="h-4 w-4 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />}
                 </button>
               )
             })}

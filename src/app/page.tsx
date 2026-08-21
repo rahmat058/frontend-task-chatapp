@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/lib/store/authStore';
-import { AuthSplash } from '@/components/common/AuthSplash';
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/lib/store/authStore'
+import { AuthSplash } from '@/components/common/AuthSplash'
 
 /**
  * The session lives in localStorage, so the destination can only be decided
@@ -11,16 +11,16 @@ import { AuthSplash } from '@/components/common/AuthSplash';
  * prerender that `cacheComponents` uses to validate instant navigation.
  */
 export default function RootPage() {
-  const status = useAuthStore((s) => s.status);
-  const router = useRouter();
+  const status = useAuthStore((s) => s.status)
+  const router = useRouter()
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.replace('/chat');
+      router.replace('/chat')
     } else if (status === 'unauthenticated') {
-      router.replace('/login');
+      router.replace('/login')
     }
-  }, [status, router]);
+  }, [status, router])
 
-  return <AuthSplash />;
+  return <AuthSplash />
 }

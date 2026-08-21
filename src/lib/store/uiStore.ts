@@ -1,18 +1,18 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
 interface UIState {
-  activeConversationId: string | null;
-  isNewChatOpen: boolean;
-  isNewGroupOpen: boolean;
-  isMobileSidebarOpen: boolean;
-  unreadById: Record<string, number>;
+  activeConversationId: string | null
+  isNewChatOpen: boolean
+  isNewGroupOpen: boolean
+  isMobileSidebarOpen: boolean
+  unreadById: Record<string, number>
 
-  setActiveConversation: (id: string | null) => void;
-  setNewChatOpen: (open: boolean) => void;
-  setNewGroupOpen: (open: boolean) => void;
-  setMobileSidebarOpen: (open: boolean) => void;
-  incrementUnread: (conversationId: string) => void;
-  clearUnread: (conversationId: string) => void;
+  setActiveConversation: (id: string | null) => void
+  setNewChatOpen: (open: boolean) => void
+  setNewGroupOpen: (open: boolean) => void
+  setMobileSidebarOpen: (open: boolean) => void
+  incrementUnread: (conversationId: string) => void
+  clearUnread: (conversationId: string) => void
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -25,10 +25,7 @@ export const useUIStore = create<UIState>((set) => ({
   setActiveConversation: (id) =>
     set((state) => ({
       activeConversationId: id,
-      unreadById:
-        id && state.unreadById[id]
-          ? { ...state.unreadById, [id]: 0 }
-          : state.unreadById,
+      unreadById: id && state.unreadById[id] ? { ...state.unreadById, [id]: 0 } : state.unreadById,
     })),
   setNewChatOpen: (open) => set({ isNewChatOpen: open }),
   setNewGroupOpen: (open) => set({ isNewGroupOpen: open }),
@@ -44,4 +41,4 @@ export const useUIStore = create<UIState>((set) => ({
     set((state) => ({
       unreadById: { ...state.unreadById, [conversationId]: 0 },
     })),
-}));
+}))
