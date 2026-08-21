@@ -7,6 +7,8 @@ import { BrandMark } from '@/components/common/BrandMark'
 import { buttonClassName } from '@/components/common/buttonStyles'
 import { useAuthStore } from '@/lib/store/authStore'
 import { cn } from '@/lib/utils/cn'
+import { scrollToHash } from '@/lib/utils/scrollToHash'
+import { LandingContainer } from './LandingContainer'
 
 const links = [
   { href: '#features', label: 'Features' },
@@ -21,7 +23,7 @@ export function MarketingNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--bg-canvas)]">
-      <div className="relative mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-6 md:px-10">
+      <LandingContainer className="relative flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
           <BrandMark size="sm" />
           <span className="text-[16px] leading-[1.35] font-semibold text-[var(--text-primary)]">ChatApp</span>
@@ -32,7 +34,8 @@ export function MarketingNav() {
             <a
               key={link.href}
               href={link.href}
-              className="rounded-[var(--radius-sm)] text-sm text-[var(--text-secondary)] transition-colors duration-[var(--duration-fast)] hover:text-[var(--text-primary)] focus-visible:shadow-[var(--focus-ring)]">
+              className="rounded-[var(--radius-sm)] text-sm text-[var(--text-secondary)] transition-colors duration-[var(--duration-fast)] hover:text-[var(--text-primary)] focus-visible:shadow-[var(--focus-ring)]"
+              onClick={(event) => scrollToHash(event, link.href)}>
               {link.label}
             </a>
           ))}
@@ -55,7 +58,7 @@ export function MarketingNav() {
             <Menu className="h-[18px] w-[18px]" strokeWidth={1.75} />
           )}
         </button>
-      </div>
+      </LandingContainer>
 
       {open && (
         <div id="landing-menu" className="border-t border-[var(--border-subtle)] px-6 py-4 lg:hidden">
@@ -65,7 +68,7 @@ export function MarketingNav() {
                 key={link.href}
                 href={link.href}
                 className="flex min-h-11 items-center text-sm text-[var(--text-secondary)]"
-                onClick={() => setOpen(false)}>
+                onClick={(event) => scrollToHash(event, link.href, () => setOpen(false))}>
                 {link.label}
               </a>
             ))}
