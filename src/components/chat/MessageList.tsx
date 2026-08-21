@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronUp, MessagesSquare } from 'lucide-react'
+import { ChevronUp, MessagesSquare, Users } from 'lucide-react'
 import { MessageBubble } from './MessageBubble'
 import { ScrollToBottom } from './ScrollToBottom'
 import { SkeletonLoader } from '@/components/common/SkeletonLoader'
@@ -47,29 +47,31 @@ export function MessageList({ conversation }: MessageListProps) {
         </div>
       )}
 
-      <div
-        ref={scrollRef}
-        className="mx-auto flex w-full max-w-[760px] flex-1 flex-col gap-2 overflow-y-auto px-6 py-4">
+      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto">
         {messages.length === 0 ? (
-          <EmptyState
-            icon={<MessagesSquare className="h-6 w-6" />}
-            title="No messages yet"
-            description="Say hello to start the conversation."
-          />
+          <div className="flex min-h-full items-center justify-center px-6">
+            <EmptyState
+              icon={isGroup ? <Users className="h-6 w-6" /> : <MessagesSquare className="h-6 w-6" />}
+              title="No messages yet"
+              description="Say hello to start the conversation."
+            />
+          </div>
         ) : (
-          messages.map((message, index) => {
-            const previous = messages[index - 1]
-            return (
-              <MessageBubble
-                key={message._id}
-                message={message}
-                conversation={conversation}
-                isMine={isOwnMessage(message, user?._id)}
-                isGroup={isGroup}
-                showSender={getSenderId(previous) !== getSenderId(message)}
-              />
-            )
-          })
+          <div className="flex w-full flex-col gap-2 px-6 py-4">
+            {messages.map((message, index) => {
+              const previous = messages[index - 1]
+              return (
+                <MessageBubble
+                  key={message._id}
+                  message={message}
+                  conversation={conversation}
+                  isMine={isOwnMessage(message, user?._id)}
+                  isGroup={isGroup}
+                  showSender={getSenderId(previous) !== getSenderId(message)}
+                />
+              )
+            })}
+          </div>
         )}
       </div>
 

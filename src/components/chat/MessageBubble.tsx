@@ -30,8 +30,8 @@ export function MessageBubble({ message, conversation, isMine, isGroup, showSend
   })
 
   return (
-    <div className={cn('flex', isMine ? 'justify-end' : 'justify-start')}>
-      <div className={cn('flex max-w-[68%] flex-col', isMine ? 'items-end' : 'items-start')}>
+    <div className={cn('flex w-full', isMine ? 'justify-end' : 'justify-start')}>
+      <div className={cn('flex w-fit max-w-[68%] flex-col', isMine ? 'items-end' : 'items-start')}>
         {isGroup && !isMine && showSender && (
           <span className="mb-1 px-1 text-xs font-medium text-[var(--text-secondary)]">{senderName}</span>
         )}
