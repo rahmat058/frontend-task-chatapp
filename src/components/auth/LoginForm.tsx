@@ -1,79 +1,81 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { ArrowRight, Phone, User } from 'lucide-react';
-import { Input } from '@/components/common/Input';
-import { Button } from '@/components/common/Button';
-import { useAuth } from '@/lib/hooks/useAuth';
-import { systemApi } from '@/lib/api/system';
+import { useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { ArrowRight, Phone, User } from 'lucide-react'
+import { Input } from '@/components/common/Input'
+import { Button } from '@/components/common/Button'
+import { useAuth } from '@/lib/hooks/useAuth'
+import { systemApi } from '@/lib/api/system'
+import { COUNTRY_CODE, LOCAL_DIGITS, toE164, toLocalDigits } from '@/lib/utils/phone'
 
-const COUNTRY_CODE = '+880';
-const LOCAL_DIGITS = 10;
-
-function toLocalDigits(value: string): string {
-  let digits = value.replace(/\D/g, '');
-  if (digits.startsWith('880')) digits = digits.slice(3);
-  if (digits.startsWith('0')) digits = digits.slice(1);
-  return digits.slice(0, LOCAL_DIGITS);
+interface LoginValues {
+  phoneDigits: string
+  name: string
 }
 
 export function LoginForm() {
-  const { login, isLoading, error } = useAuth();
-  const [phoneDigits, setPhoneDigits] = useState('');
-  const [name, setName] = useState('');
-  const [touched, setTouched] = useState({ phone: false, name: false });
-  const [apiDown, setApiDown] = useState(false);
+  const { login, isLoading, error } = useAuth()
+  const [apiDown, setApiDown] = useState(false)
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginValues>({
+    defaultValues: { phoneDigits: '', name: '' },
+    mode: 'onBlur',
+  })
 
   useEffect(() => {
-    let cancelled = false;
+    let cancelled = false
     systemApi
       .health()
       .then((res) => {
-        if (!cancelled) setApiDown(res.status !== 'ok');
+        if (!cancelled) setApiDown(res.status !== 'ok')
       })
       .catch(() => {
-        if (!cancelled) setApiDown(true);
-      });
+        if (!cancelled) setApiDown(true)
+      })
     return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const validatePhone = (digits: string) => {
-    if (!digits) return 'Phone number is required';
-    if (digits.length !== LOCAL_DIGITS) {
-      return `Enter a ${LOCAL_DIGITS}-digit number after ${COUNTRY_CODE}`;
+      cancelled = true
     }
-    return undefined;
-  };
+  }, [])
 
-  const phoneError = touched.phone ? validatePhone(phoneDigits) : undefined;
-  const nameError =
-    touched.name && !name.trim() ? 'Name is required' : undefined;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setTouched({ phone: true, name: true });
-    if (validatePhone(phoneDigits) || !name.trim()) return;
-    await login(`${COUNTRY_CODE}${phoneDigits}`, name.trim());
-  };
+  const onSubmit = async ({ phoneDigits, name }: LoginValues) => {
+    await login(toE164(phoneDigits), name.trim())
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full" noValidate>
-      <Input
-        id="login-phone"
-        label="Phone number"
-        type="tel"
-        inputMode="numeric"
-        placeholder="1712345678"
-        value={phoneDigits}
-        onChange={(e) => setPhoneDigits(toLocalDigits(e.target.value))}
-        onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
-        error={phoneError}
-        autoComplete="tel-national"
-        leftIcon={<Phone className="w-4 h-4" />}
-        prefix={COUNTRY_CODE}
-        aria-label={`Phone number, country code ${COUNTRY_CODE}`}
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full" noValidate>
+      <Controller
+        name="phoneDigits"
+        control={control}
+        rules={{
+          required: 'Phone number is required',
+          validate: (value) =>
+            value.length === LOCAL_DIGITS || `Enter a ${LOCAL_DIGITS}-digit number after ${COUNTRY_CODE}`,
+        }}
+        render={({ field }) => (
+          <Input
+            id="login-phone"
+            label="Phone number"
+            type="tel"
+            inputMode="numeric"
+            placeholder="1712345678"
+            autoComplete="tel-national"
+            leftIcon={<Phone className="w-4 h-4" />}
+            prefix={COUNTRY_CODE}
+            aria-label={`Phone number, country code ${COUNTRY_CODE}`}
+            error={errors.phoneDigits?.message}
+            value={field.value}
+            onBlur={field.onBlur}
+            onChange={(e) => field.onChange(toLocalDigits(e.target.value))}
+            name={field.name}
+            ref={field.ref}
+          />
+        )}
       />
 
       <Input
@@ -81,12 +83,13 @@ export function LoginForm() {
         label="Your name"
         type="text"
         placeholder="Ada Lovelace"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        onBlur={() => setTouched((t) => ({ ...t, name: true }))}
-        error={nameError}
         autoComplete="name"
         leftIcon={<User className="w-4 h-4" />}
+        error={errors.name?.message}
+        {...register('name', {
+          required: 'Name is required',
+          validate: (value) => value.trim().length > 0 || 'Name is required',
+        })}
       />
 
       {apiDown && (
@@ -94,8 +97,7 @@ export function LoginForm() {
           className="text-sm text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3"
           role="status"
         >
-          The chat API is not reachable right now. Check your connection and try
-          again.
+          The chat API is not reachable right now. Check your connection and try again.
         </div>
       )}
 
@@ -120,9 +122,8 @@ export function LoginForm() {
       </Button>
 
       <p className="text-center text-xs text-[var(--color-text-muted)] leading-relaxed">
-        New here? Just enter your phone — we&apos;ll create your account
-        automatically.
+        New here? Just enter your phone — we&apos;ll create your account automatically.
       </p>
     </form>
-  );
+  )
 }

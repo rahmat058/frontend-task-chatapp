@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
 import { Crown, Search } from 'lucide-react';
 import { Dialog } from '@/components/common/Dialog';
 import { Input } from '@/components/common/Input';
@@ -35,11 +36,19 @@ export function GroupSettingsDialog({
   const user = useAuthStore((s) => s.user);
   const knownUsers = useUserDirectory((s) => s.byId);
 
-  const members = resolveMembers(conversation, knownUsers, user);
-  const admin = isAdmin(conversation, user?._id);
+  const members = resolveMembers(conversation, knownUsers, user)
+  const admin = isAdmin(conversation, user?._id)
 
-  const [name, setName] = useState(conversation.name ?? '');
-  const [query, setQuery] = useState('');
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors: renameErrors },
+  } = useForm<{ name: string }>({
+    defaultValues: { name: conversation.name ?? '' },
+  })
+  const name = watch('name')
+  const [query, setQuery] = useState('')
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<{
     kind: 'add' | 'promote' | 'remove' | 'leave';
@@ -77,18 +86,16 @@ export function GroupSettingsDialog({
     }
   };
 
-  const handleRename = () => {
-    const next = name.trim();
-    if (!next || next === conversation.name) return;
-    void (async () => {
-      setError(null);
-      try {
-        await rename.mutateAsync(next);
-      } catch (err) {
-        setError(getApiErrorMessage(err, 'Could not rename the group.'));
-      }
-    })();
-  };
+  const onRename = handleSubmit(async ({ name: nextName }) => {
+    const next = nextName.trim()
+    if (!next || next === conversation.name) return
+    setError(null)
+    try {
+      await rename.mutateAsync(next)
+    } catch (err) {
+      setError(getApiErrorMessage(err, 'Could not rename the group.'))
+    }
+  })
 
   const handleLeave = async () => {
     if (!user?._id) return;
@@ -108,25 +115,26 @@ export function GroupSettingsDialog({
     <Dialog title="Group settings" onClose={onClose} className="max-h-[85vh] flex flex-col">
       <div className="p-4 flex flex-col gap-4 min-h-0 overflow-y-auto">
         {admin && (
-          <div className="flex gap-2">
+          <form onSubmit={onRename} className="flex flex-col gap-2" noValidate>
             <Input
               id="rename-group-input"
               label="Group name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              error={renameErrors.name?.message}
+              {...register('name', {
+                required: 'Group name is required',
+                validate: (value) => value.trim().length > 0 || 'Group name is required',
+              })}
             />
-          </div>
-        )}
-        {admin && (
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={handleRename}
-            isLoading={rename.isPending}
-            disabled={!name.trim() || name.trim() === conversation.name}
-          >
-            Save name
-          </Button>
+            <Button
+              type="submit"
+              size="sm"
+              variant="secondary"
+              isLoading={rename.isPending}
+              disabled={!name.trim() || name.trim() === conversation.name}
+            >
+              Save name
+            </Button>
+          </form>
         )}
 
         {admin && (
