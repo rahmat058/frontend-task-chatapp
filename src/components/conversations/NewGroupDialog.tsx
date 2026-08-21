@@ -11,6 +11,7 @@ import { Dialog } from '@/components/common/Dialog'
 import { Spinner } from '@/components/common/Spinner'
 import { useUserSearch } from '@/lib/hooks/useUsers'
 import { useCreateGroup } from '@/lib/hooks/useConversations'
+import { useUserDirectory } from '@/lib/store/userDirectory'
 import { useUIStore } from '@/lib/store/uiStore'
 import { getApiErrorMessage } from '@/lib/api/normalize'
 import { cn } from '@/lib/utils/cn'
@@ -61,6 +62,7 @@ export function NewGroupDialog() {
     }
     setSubmitError(null)
     try {
+      useUserDirectory.getState().remember(selectedUsers)
       const group = await createGroup({
         name: name.trim(),
         participantIds: selectedUsers.map((u) => u._id),

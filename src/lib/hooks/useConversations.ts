@@ -46,7 +46,8 @@ export function useCreateGroup() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: CreateGroupRequest) => groupsApi.create(data),
-    onSuccess: () => {
+    onSuccess: (conversation) => {
+      useUserDirectory.getState().remember(conversation.participants)
       queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY })
     },
   })
@@ -61,7 +62,10 @@ export function useAddParticipants(conversationId: string) {
   const invalidate = useInvalidateConversations()
   return useMutation({
     mutationFn: (userIds: string[]) => groupsApi.addParticipants(conversationId, { userIds }),
-    onSuccess: invalidate,
+    onSuccess: (conversation) => {
+      useUserDirectory.getState().remember(conversation.participants)
+      invalidate()
+    },
   })
 }
 

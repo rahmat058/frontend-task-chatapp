@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { getEntityId } from '@/lib/utils/ids'
+import { getEntityId, idsMatch } from '@/lib/utils/ids'
 import type { User } from '@/types/models'
 
 export type DirectoryUser = Pick<User, '_id' | 'name'> & { phone?: string }
@@ -63,6 +63,15 @@ function toDirectoryUser(value: unknown): DirectoryUser | null {
     name: trimmed,
     ...(typeof phone === 'string' && phone ? { phone } : {}),
   }
+}
+
+export function findKnownUser(
+  byId: Record<string, DirectoryUser>,
+  id?: string | null,
+): DirectoryUser | undefined {
+  if (!id) return undefined
+  if (byId[id]) return byId[id]
+  return Object.values(byId).find((user) => idsMatch(user._id, id))
 }
 
 const initial = load()

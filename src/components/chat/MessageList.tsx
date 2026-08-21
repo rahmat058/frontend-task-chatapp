@@ -7,6 +7,7 @@ import { SkeletonLoader } from '@/components/common/SkeletonLoader'
 import { EmptyState } from '@/components/common/EmptyState'
 import { Button } from '@/components/common/Button'
 import { useMessages } from '@/lib/hooks/useMessages'
+import { useResolveUnknownUsers } from '@/lib/hooks/useResolveUnknownUsers'
 import { useAuthStore } from '@/lib/store/authStore'
 import { useScrollBehavior } from '@/lib/hooks/useScrollBehavior'
 import { getSenderId, isOwnMessage } from '@/lib/utils/message'
@@ -22,6 +23,7 @@ export function MessageList({ conversation }: MessageListProps) {
 
   const messages = data?.allMessages ?? []
   const { scrollRef, showScrollButton, hasNewMessages, scrollToBottom } = useScrollBehavior(messages.length)
+  useResolveUnknownUsers(conversation, messages, user?._id)
 
   const isGroup = conversation.type === 'group'
 
@@ -59,6 +61,7 @@ export function MessageList({ conversation }: MessageListProps) {
               <MessageBubble
                 key={message._id}
                 message={message}
+                conversation={conversation}
                 isMine={isOwnMessage(message, user?._id)}
                 isGroup={isGroup}
                 showSender={getSenderId(previous) !== getSenderId(message)}

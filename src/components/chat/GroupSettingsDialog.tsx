@@ -155,7 +155,10 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
                     run(
                       'add',
                       candidate._id,
-                      () => addMembers.mutateAsync([candidate._id]),
+                      () => {
+                        useUserDirectory.getState().remember([candidate])
+                        return addMembers.mutateAsync([candidate._id])
+                      },
                       'Could not add that member.',
                     )
                   }
