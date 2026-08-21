@@ -59,7 +59,7 @@ export function LandingPage() {
       <main>
         <section
           id="offer"
-          className="mx-auto max-w-[1200px] px-6 pt-16 pb-20 md:px-10 md:pt-24 md:pb-28 lg:px-16">
+          className="mx-auto max-w-[1200px] px-6 pt-16 pb-20 md:px-10 md:pt-24 md:pb-28">
           <div className="grid items-center gap-14 lg:grid-cols-[42%_1fr] lg:gap-16">
             <Reveal>
               <h1 className="text-[40px] leading-[1.08] font-[650] tracking-[-0.03em] sm:text-[56px] sm:leading-[1.06]">
@@ -98,7 +98,7 @@ export function LandingPage() {
         </section>
 
         <section id="features" className="border-t border-[var(--border-subtle)]">
-          <div className="mx-auto max-w-[1200px] px-6 py-20 md:px-10 lg:px-16">
+          <div className="mx-auto max-w-[1200px] px-6 py-20 md:px-10">
             <h2 className="sr-only">What ChatApp does</h2>
             <div className="grid gap-8 md:grid-cols-3">
               {capabilities.map((item, index) => (
@@ -117,7 +117,7 @@ export function LandingPage() {
         </section>
 
         <section id="how-it-works" className="border-t border-[var(--border-subtle)] bg-[var(--surface-1)]">
-          <div className="mx-auto max-w-[1200px] px-6 py-20 md:px-10 lg:px-16">
+          <div className="mx-auto max-w-[1200px] px-6 py-20 md:px-10">
             <Reveal>
               <h2 className="max-w-[18ch] text-[30px] leading-[1.2] font-[620] tracking-[-0.02em]">
                 Log in, find people, chat
@@ -170,7 +170,7 @@ export function LandingPage() {
       </main>
 
       <footer className="border-t border-[var(--border-subtle)] bg-[var(--surface-1)]/80">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-10 lg:px-16">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-10">
           <div className="flex items-center gap-3">
             <BrandMark size="sm" />
             <div>
