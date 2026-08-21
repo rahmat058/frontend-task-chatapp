@@ -25,7 +25,7 @@ export function LandingHowItWorks() {
     <section id="how-it-works" className="scroll-mt-28">
       <LandingContainer className="max-w-3xl py-16 md:py-24">
         <Reveal className="mb-10 text-center">
-          <h2 className="text-[30px] leading-[1.2] font-[620] tracking-[-0.02em] sm:text-[40px]">
+          <h2 className="text-[30px] leading-[1.2] font-[620] tracking-[-0.02em] sm:text-[40px] md:text-[48px]">
             How it <span className="landing-text-gradient">works</span>
           </h2>
           <p className="mt-3 text-base text-[var(--text-secondary)]">From phone number to a live thread in three steps.</p>

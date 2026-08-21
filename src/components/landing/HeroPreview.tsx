@@ -51,7 +51,7 @@ export function HeroPreview() {
   const animate = visible && !reduced
 
   return (
-    <figure ref={rootRef} className="relative z-10 mx-auto max-w-[1040px]">
+    <figure ref={rootRef} className="relative z-10 w-full">
       <div className="overflow-hidden rounded-[20px] border border-[var(--border-default)] bg-[var(--surface-1)] shadow-[var(--shadow-dialog)]">
         <div className="flex items-center justify-between gap-3 border-b border-[var(--border-subtle)] px-3 py-2">
           <div className="flex min-w-0 items-center gap-2">
@@ -70,7 +70,7 @@ export function HeroPreview() {
             width={786}
             height={513}
             priority
-            sizes="(max-width: 1200px) 100vw, 1040px"
+            sizes="(max-width: 896px) calc(100vw - 2rem), 896px"
             className="h-auto w-full"
             style={{
               clipPath: reduced ? undefined : `inset(0 0 ${Math.max(0, 100 - progress)}% 0)`,

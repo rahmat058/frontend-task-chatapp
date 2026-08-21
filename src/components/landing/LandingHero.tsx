@@ -9,7 +9,7 @@ export function LandingHero() {
   return (
     <section
       id="offer"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden pt-24 pb-12 sm:pt-28 sm:pb-16">
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-24 pb-12 sm:pt-28 sm:pb-16">
       <div className="landing-aurora pointer-events-none absolute inset-0 opacity-90" aria-hidden="true" />
       <div
         className="landing-orb pointer-events-none absolute top-1/4 left-1/4 h-64 w-64 bg-[rgb(7_148_85_/_30%)] sm:h-96 sm:w-96"
@@ -22,13 +22,14 @@ export function LandingHero() {
 
       <LandingContainer className="relative z-10 text-center">
         <Reveal>
-          <h1 className="text-balance text-[40px] leading-[1.08] font-[650] tracking-[-0.03em] sm:text-[56px] sm:leading-[1.06] lg:text-[64px]">
-            <span className="landing-text-gradient">Conversation,</span>
+          <h1 className="text-balance text-[48px] leading-[1.05] font-[650] tracking-[-0.035em] sm:text-[64px] sm:leading-[1.04] lg:text-[72px] lg:leading-[1.02]">
+            <span className="landing-text-gradient">Conversation</span>
             <br />
-            <span className="text-[32px] sm:text-[44px] lg:text-[52px]">without the noise.</span>
+            without the noise.
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl px-4 text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-            Private messages and groups that stay in sync — instantly.
+          <p className="mx-auto mt-6 max-w-[42rem] px-4 text-base leading-[1.65] text-[var(--text-secondary)] sm:text-lg sm:leading-[1.6]">
+            ChatApp is a realtime messenger for private 1:1 threads and groups — not a public feed.
+            Sign in with your name and a Bangladesh phone number. 
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link href="/login" className={cn(buttonClassName({ size: 'lg' }), 'landing-btn-primary px-8')}>
@@ -44,11 +45,13 @@ export function LandingHero() {
             </a>
           </div>
         </Reveal>
-
-        <Reveal delay={80} className="landing-hero-stage relative mt-12 md:mt-16">
-          <HeroPreview />
-        </Reveal>
       </LandingContainer>
+
+      <Reveal delay={80} className="landing-hero-stage relative z-10 mt-12 w-full md:mt-16">
+        <div className="mx-auto w-[calc(100%-2rem)] max-w-4xl">
+          <HeroPreview />
+        </div>
+      </Reveal>
     </section>
   )
 }

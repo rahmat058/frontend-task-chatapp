@@ -22,7 +22,7 @@ export function MarketingNav() {
   const appHref = signedIn ? '/chat' : '/login'
 
   return (
-    <nav className="fixed top-4 right-4 left-4 z-50 mx-auto max-w-6xl">
+    <nav className="fixed inset-x-4 top-4 z-50 mx-auto max-w-6xl">
       <div className={cn('landing-nav-glass', open ? 'rounded-[1.25rem]' : 'rounded-2xl')}>
         <div className="flex h-14 items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>

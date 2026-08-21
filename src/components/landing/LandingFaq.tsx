@@ -33,7 +33,7 @@ export function LandingFaq() {
     <section id="faq" className="scroll-mt-28">
       <LandingContainer className="py-16 md:py-24">
         <Reveal>
-          <h2 className="text-center text-[30px] leading-[1.2] font-[620] tracking-[-0.02em]">
+          <h2 className="text-center text-[30px] leading-[1.2] font-[620] tracking-[-0.02em] sm:text-[40px] md:text-[48px]">
             Frequently asked <span className="landing-text-gradient">questions</span>
           </h2>
           <p className="mt-3 text-center text-sm text-[var(--text-secondary)]">

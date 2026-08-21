@@ -19,7 +19,7 @@ export function LandingCta() {
       />
       <LandingContainer className="relative py-20 md:py-28">
         <Reveal className="mx-auto max-w-3xl text-center">
-          <h2 className="text-[30px] leading-[1.2] font-[620] tracking-[-0.02em] sm:text-[40px] sm:leading-[1.12]">
+          <h2 className="text-[30px] leading-[1.2] font-[620] tracking-[-0.02em] sm:text-[40px] sm:leading-[1.12] md:text-[48px]">
             Ready to start a <span className="landing-text-gradient">thread?</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[var(--text-secondary)]">

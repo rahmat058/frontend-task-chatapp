@@ -46,7 +46,7 @@ export function LandingFeatures() {
     <section id="features" className="scroll-mt-28">
       <LandingContainer className="py-16 md:py-24">
         <Reveal className="mx-auto mb-12 max-w-2xl text-center md:mb-16">
-          <h2 className="text-[30px] leading-[1.2] font-[620] tracking-[-0.02em] sm:text-[40px] sm:leading-[1.12]">
+          <h2 className="text-[30px] leading-[1.2] font-[620] tracking-[-0.02em] sm:text-[40px] sm:leading-[1.12] md:text-[48px]">
             Everything you need for a <span className="landing-text-gradient">quiet inbox</span>
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[var(--text-secondary)]">

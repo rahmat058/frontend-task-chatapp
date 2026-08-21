@@ -40,7 +40,7 @@ export function LandingCapabilities() {
     <section id="capabilities" className="scroll-mt-28">
       <LandingContainer className="py-12 md:py-16">
         <Reveal>
-          <h2 className="text-center text-[30px] leading-[1.2] font-[620] tracking-[-0.02em]">
+          <h2 className="text-center text-[30px] leading-[1.2] font-[620] tracking-[-0.02em] sm:text-[40px] md:text-[48px]">
             Built into the product, not the pitch
           </h2>
           <p className="mx-auto mt-3 max-w-[42ch] text-center text-sm leading-relaxed text-[var(--text-secondary)]">
