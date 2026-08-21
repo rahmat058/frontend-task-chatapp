@@ -8,10 +8,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  prefix?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, leftIcon, rightIcon, className, id, ...props }, ref) => {
+  ({ label, error, leftIcon, rightIcon, prefix, className, id, ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
     const errorId = error ? `${inputId}-error` : undefined;
 
@@ -31,6 +32,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               {leftIcon}
             </span>
           )}
+          {prefix && (
+            <span
+              className={cn(
+                'absolute text-sm font-medium text-[var(--color-text-secondary)] pointer-events-none select-none',
+                leftIcon ? 'left-10' : 'left-4'
+              )}
+              aria-hidden="true"
+            >
+              {prefix}
+            </span>
+          )}
           <input
             ref={ref}
             id={inputId}
@@ -43,7 +55,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               'transition-all duration-150',
               'focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-soft)]',
               'disabled:opacity-50 disabled:cursor-not-allowed',
-              leftIcon && 'pl-10',
+              leftIcon && !prefix && 'pl-10',
+              leftIcon && prefix && 'pl-[5.75rem]',
+              !leftIcon && prefix && 'pl-16',
               rightIcon && 'pr-10',
               error &&
                 'border-red-500/60 focus:border-red-500 focus:ring-red-500/20',

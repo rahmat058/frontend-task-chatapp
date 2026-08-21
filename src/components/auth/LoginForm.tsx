@@ -7,12 +7,19 @@ import { Button } from '@/components/common/Button';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { systemApi } from '@/lib/api/system';
 
-/** Permissive on formatting, strict on being a usable phone number. */
-const PHONE_PATTERN = /^\+?[\d\s()-]{7,20}$/;
+const COUNTRY_CODE = '+880';
+const LOCAL_DIGITS = 10;
+
+function toLocalDigits(value: string): string {
+  let digits = value.replace(/\D/g, '');
+  if (digits.startsWith('880')) digits = digits.slice(3);
+  if (digits.startsWith('0')) digits = digits.slice(1);
+  return digits.slice(0, LOCAL_DIGITS);
+}
 
 export function LoginForm() {
   const { login, isLoading, error } = useAuth();
-  const [phone, setPhone] = useState('');
+  const [phoneDigits, setPhoneDigits] = useState('');
   const [name, setName] = useState('');
   const [touched, setTouched] = useState({ phone: false, name: false });
   const [apiDown, setApiDown] = useState(false);
@@ -32,21 +39,23 @@ export function LoginForm() {
     };
   }, []);
 
-  const validatePhone = (value: string) => {
-    if (!value.trim()) return 'Phone number is required';
-    if (!PHONE_PATTERN.test(value.trim())) return 'Enter a valid phone number';
+  const validatePhone = (digits: string) => {
+    if (!digits) return 'Phone number is required';
+    if (digits.length !== LOCAL_DIGITS) {
+      return `Enter a ${LOCAL_DIGITS}-digit number after ${COUNTRY_CODE}`;
+    }
     return undefined;
   };
 
-  const phoneError = touched.phone ? validatePhone(phone) : undefined;
+  const phoneError = touched.phone ? validatePhone(phoneDigits) : undefined;
   const nameError =
     touched.name && !name.trim() ? 'Name is required' : undefined;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched({ phone: true, name: true });
-    if (validatePhone(phone) || !name.trim()) return;
-    await login(phone.trim(), name.trim());
+    if (validatePhone(phoneDigits) || !name.trim()) return;
+    await login(`${COUNTRY_CODE}${phoneDigits}`, name.trim());
   };
 
   return (
@@ -55,14 +64,16 @@ export function LoginForm() {
         id="login-phone"
         label="Phone number"
         type="tel"
-        inputMode="tel"
-        placeholder="+1 555 123 4567"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
+        inputMode="numeric"
+        placeholder="1712345678"
+        value={phoneDigits}
+        onChange={(e) => setPhoneDigits(toLocalDigits(e.target.value))}
         onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
         error={phoneError}
-        autoComplete="tel"
+        autoComplete="tel-national"
         leftIcon={<Phone className="w-4 h-4" />}
+        prefix={COUNTRY_CODE}
+        aria-label={`Phone number, country code ${COUNTRY_CODE}`}
       />
 
       <Input
