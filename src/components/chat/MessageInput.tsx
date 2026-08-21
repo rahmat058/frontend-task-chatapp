@@ -2,22 +2,27 @@
 
 import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { SendHorizontal, X } from 'lucide-react'
+import { Paperclip, Send, X } from 'lucide-react'
+import { EmojiPicker } from './EmojiPicker'
 import { useSendMessage } from '@/lib/hooks/useMessages'
+import { useConversationName } from '@/lib/hooks/useConversationName'
 import { getApiErrorMessage } from '@/lib/api/normalize'
 import { cn } from '@/lib/utils/cn'
+import type { Conversation } from '@/types/models'
 
 interface MessageInputProps {
-  conversationId: string
+  conversation: Conversation
 }
 
 interface MessageValues {
   text: string
 }
 
-export function MessageInput({ conversationId }: MessageInputProps) {
+export function MessageInput({ conversation }: MessageInputProps) {
+  const conversationId = conversation._id
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const { mutate: sendMessage, isPending } = useSendMessage(conversationId)
+  const peerName = useConversationName(conversation)
   const {
     register,
     handleSubmit,
@@ -38,6 +43,23 @@ export function MessageInput({ conversationId }: MessageInputProps) {
   const resize = (el: HTMLTextAreaElement) => {
     el.style.height = 'auto'
     el.style.height = `${Math.min(el.scrollHeight, 140)}px`
+  }
+
+  const insertEmoji = (emoji: string) => {
+    const el = textareaRef.current
+    const current = text ?? ''
+    const start = el?.selectionStart ?? current.length
+    const end = el?.selectionEnd ?? current.length
+    const next = `${current.slice(0, start)}${emoji}${current.slice(end)}`
+
+    setValue('text', next, { shouldDirty: true })
+    requestAnimationFrame(() => {
+      if (!el) return
+      el.focus()
+      const caret = start + emoji.length
+      el.setSelectionRange(caret, caret)
+      resize(el)
+    })
   }
 
   const onSend = ({ text: raw }: MessageValues) => {
@@ -78,8 +100,20 @@ export function MessageInput({ conversationId }: MessageInputProps) {
         </div>
       )}
 
-      <div className="flex min-h-[72px] items-end gap-2 px-4 py-3">
-        <div className="flex flex-1 items-end rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-2)] transition-[border-color,box-shadow] duration-[var(--duration-fast)] focus-within:border-[var(--green-400)] focus-within:shadow-[var(--focus-ring)]">
+      <div className="flex min-h-[72px] items-end px-4 py-3">
+        <div className="flex flex-1 items-end gap-1 rounded-[var(--radius-lg)] border border-[var(--border-default)] bg-[var(--surface-2)] p-0.5 transition-[border-color,box-shadow] duration-[var(--duration-fast)] focus-within:border-[var(--green-400)] focus-within:shadow-[var(--focus-ring)]">
+          <button
+            type="button"
+            aria-disabled="true"
+            title="Attachments coming soon"
+            aria-label="Attach a file — coming soon"
+            onClick={(event) => event.preventDefault()}
+            className="flex h-11 w-11 shrink-0 cursor-not-allowed items-center justify-center rounded-[var(--radius-md)] text-[var(--text-disabled)] focus-visible:shadow-[var(--focus-ring)]">
+            <Paperclip className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
+          </button>
+
+          <span className="my-2 w-px self-stretch bg-[var(--border-subtle)]" aria-hidden="true" />
+
           <textarea
             id="message-input"
             {...textField}
@@ -97,33 +131,41 @@ export function MessageInput({ conversationId }: MessageInputProps) {
                 void handleSubmit(onSend)()
               }
             }}
-            placeholder="Type a message…"
+            placeholder={`Message ${peerName}…`}
             rows={1}
             aria-label="Message"
             className={cn(
-              'flex-1 resize-none bg-transparent px-4 py-3 text-sm',
+              'flex-1 resize-none bg-transparent px-3 py-3 text-sm',
               'text-[var(--text-primary)] placeholder:text-[var(--text-muted)]',
               'leading-relaxed focus:outline-none',
-              'max-h-[140px] min-h-12 overflow-y-auto',
+              'max-h-[140px] min-h-11 overflow-y-auto',
             )}
           />
-        </div>
 
-        <button
-          id="send-message-btn"
-          type="submit"
-          disabled={!canSend}
-          aria-label="Send message"
-          className={cn(
-            'flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius-md)]',
-            'bg-[var(--green-600)] text-[var(--text-primary)]',
-            'transition-colors duration-[var(--duration-fast)]',
-            'hover:bg-[var(--green-500)]',
-            'focus-visible:shadow-[var(--focus-ring)]',
-            'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--green-600)]',
-          )}>
-          <SendHorizontal className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
-        </button>
+          <EmojiPicker onSelect={insertEmoji} disabled={isPending} />
+
+          <button
+            id="send-message-btn"
+            type="submit"
+            disabled={!canSend}
+            title="Send message"
+            aria-label="Send message"
+            className={cn(
+              'flex h-11 w-11 shrink-0 items-center justify-center rounded-full',
+              'bg-[var(--green-600)] text-[var(--text-primary)]',
+              'transition-colors duration-[var(--duration-fast)]',
+              'hover:bg-[var(--green-500)]',
+              'focus-visible:shadow-[var(--focus-ring)]',
+              'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--green-600)]',
+            )}>
+            <Send
+              className="h-[17px] w-[17px] translate-x-px"
+              fill="currentColor"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
+          </button>
+        </div>
       </div>
     </form>
   )

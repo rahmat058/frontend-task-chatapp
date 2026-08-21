@@ -18,7 +18,7 @@ export function ChatPanel({ conversation }: ChatPanelProps) {
       <div className="flex-1 overflow-hidden">
         <MessageList conversation={conversation} />
       </div>
-      <MessageInput conversationId={conversation._id} />
+      <MessageInput conversation={conversation} />
     </div>
   )
 }
