@@ -6,8 +6,8 @@ import type { SearchUsersResponse } from '@/types/api'
 import type { User } from '@/types/models'
 
 export const usersApi = {
-  async search(q: string): Promise<SearchUsersResponse> {
-    const res = await apiClient.get<unknown>('/users/search', { params: { q } })
+  async search(q: string, signal?: AbortSignal): Promise<SearchUsersResponse> {
+    const res = await apiClient.get<unknown>('/users/search', { params: { q }, signal })
     const users = unwrapArray<User>(res.data)
       .map((user) => {
         const _id = getEntityId(user)

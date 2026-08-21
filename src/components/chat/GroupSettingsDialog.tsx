@@ -14,6 +14,7 @@ import { useAuthStore } from '@/lib/store/authStore'
 import { useUserDirectory } from '@/lib/store/userDirectory'
 import { useToastStore } from '@/lib/store/toastStore'
 import { useUserSearch } from '@/lib/hooks/useUsers'
+import { SEARCH_DEBOUNCE_MS } from '@/lib/hooks/useDebounce'
 import { useAddParticipants, usePromoteAdmin, useRemoveParticipant, useRenameGroup } from '@/lib/hooks/useConversations'
 import { getApiErrorMessage } from '@/lib/api/normalize'
 import { getAdminIds, isAdmin, resolveMembers } from '@/lib/utils/conversation'
@@ -58,7 +59,7 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
     id: string
   } | null>(null)
 
-  const { data: searchResults, isFetching } = useUserSearch(query)
+  const { data: searchResults, isSearching } = useUserSearch(query)
   const rename = useRenameGroup(conversation._id)
   const addMembers = useAddParticipants(conversation._id)
   const removeMember = useRemoveParticipant(conversation._id)
@@ -152,8 +153,9 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
             label="Add members"
             placeholder="Search by name or phone…"
             value={query}
+            debounceMs={SEARCH_DEBOUNCE_MS}
             onChange={(e) => setQuery(e.target.value)}
-            leftIcon={isFetching ? <Spinner size="sm" /> : <Search className="h-4 w-4" strokeWidth={1.75} />}
+            leftIcon={isSearching ? <Spinner size="sm" /> : <Search className="h-4 w-4" strokeWidth={1.75} />}
           />
         )}
 

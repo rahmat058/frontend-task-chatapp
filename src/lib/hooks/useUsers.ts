@@ -2,16 +2,22 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { usersApi } from '@/lib/api/users'
-import { useDeferredValue } from 'react'
 
 export function useUserSearch(query: string) {
-  const deferredQuery = useDeferredValue(query)
+  const searchTerm = query.trim()
 
-  return useQuery({
-    queryKey: ['users', 'search', deferredQuery],
-    queryFn: () => usersApi.search(deferredQuery),
-    enabled: deferredQuery.trim().length > 0,
-    staleTime: 5_000,
-    placeholderData: (prev) => prev, // keep previous results while typing
+  const result = useQuery({
+    queryKey: ['users', 'search', searchTerm],
+    queryFn: ({ signal }) => usersApi.search(searchTerm, signal),
+    enabled: searchTerm.length > 0,
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+    placeholderData: (previous) => previous,
   })
+
+  return {
+    ...result,
+    data: searchTerm.length > 0 ? result.data : undefined,
+    isSearching: searchTerm.length > 0 && result.isFetching,
+  }
 }

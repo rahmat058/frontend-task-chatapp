@@ -9,6 +9,7 @@ import { Dialog } from '@/components/common/Dialog'
 import { Spinner } from '@/components/common/Spinner'
 import { ErrorState } from '@/components/common/ErrorState'
 import { useUserSearch } from '@/lib/hooks/useUsers'
+import { SEARCH_DEBOUNCE_MS } from '@/lib/hooks/useDebounce'
 import { useStartConversation } from '@/lib/hooks/useConversations'
 import { useUIStore } from '@/lib/store/uiStore'
 import { getApiErrorMessage } from '@/lib/api/normalize'
@@ -22,7 +23,7 @@ export function ConversationSearch() {
   const setActiveConversation = useUIStore((s) => s.setActiveConversation)
   const router = useRouter()
 
-  const { data: users, isFetching } = useUserSearch(query)
+  const { data: users, isSearching } = useUserSearch(query)
   const { mutateAsync: startConversation, isPending } = useStartConversation()
 
   const close = () => setNewChatOpen(false)
@@ -43,7 +44,7 @@ export function ConversationSearch() {
   }
 
   const hasSearched = query.trim().length > 0
-  const noResults = hasSearched && !isFetching && users?.length === 0
+  const noResults = hasSearched && !isSearching && users?.length === 0
 
   return (
     <Dialog title="New conversation" onClose={close}>
@@ -52,9 +53,10 @@ export function ConversationSearch() {
           id="user-search-input"
           placeholder="Search by name or phone…"
           value={query}
+          debounceMs={SEARCH_DEBOUNCE_MS}
           onChange={(e) => setQuery(e.target.value)}
           autoFocus
-          leftIcon={isFetching ? <Spinner size="sm" /> : <Search className="h-4 w-4" />}
+          leftIcon={isSearching ? <Spinner size="sm" /> : <Search className="h-4 w-4" />}
         />
       </div>
 

@@ -10,6 +10,7 @@ import { Avatar } from '@/components/common/Avatar'
 import { Dialog } from '@/components/common/Dialog'
 import { Spinner } from '@/components/common/Spinner'
 import { useUserSearch } from '@/lib/hooks/useUsers'
+import { SEARCH_DEBOUNCE_MS } from '@/lib/hooks/useDebounce'
 import { useCreateGroup } from '@/lib/hooks/useConversations'
 import { useUserDirectory } from '@/lib/store/userDirectory'
 import { useUIStore } from '@/lib/store/uiStore'
@@ -43,7 +44,7 @@ export function NewGroupDialog() {
   })
 
   const groupName = watch('name')
-  const { data: searchResults, isFetching } = useUserSearch(searchQuery)
+  const { data: searchResults, isSearching } = useUserSearch(searchQuery)
   const { mutateAsync: createGroup, isPending } = useCreateGroup()
 
   const close = () => setNewGroupOpen(false)
@@ -112,8 +113,9 @@ export function NewGroupDialog() {
           label="Add participants"
           placeholder="Search by name or phone…"
           value={searchQuery}
+          debounceMs={SEARCH_DEBOUNCE_MS}
           onChange={(e) => setSearchQuery(e.target.value)}
-          leftIcon={isFetching ? <Spinner size="sm" /> : <Search className="h-4 w-4" />}
+          leftIcon={isSearching ? <Spinner size="sm" /> : <Search className="h-4 w-4" />}
         />
 
         {selectedUsers.length > 0 && (

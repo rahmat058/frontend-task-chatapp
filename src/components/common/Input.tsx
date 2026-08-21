@@ -1,9 +1,9 @@
 'use client'
 
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils/cn'
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   label?: string
   error?: string
   valid?: boolean
@@ -11,12 +11,73 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   rightIcon?: React.ReactNode
   leading?: React.ReactNode
   prefix?: string
+  /** Wait this long after the last keystroke before calling `onChange`. Empty values flush immediately. */
+  debounceMs?: number
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
+}
+
+function emitValue(onChange: React.ChangeEventHandler<HTMLInputElement> | undefined, value: string) {
+  onChange?.({ target: { value } } as React.ChangeEvent<HTMLInputElement>)
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, valid, leftIcon, rightIcon, leading, prefix, className, id, ...props }, ref) => {
+  (
+    {
+      label,
+      error,
+      valid,
+      leftIcon,
+      rightIcon,
+      leading,
+      prefix,
+      className,
+      id,
+      debounceMs = 0,
+      value,
+      defaultValue,
+      onChange,
+      ...props
+    },
+    ref,
+  ) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
     const errorId = error ? `${inputId}-error` : undefined
+    const debounce = debounceMs > 0
+    const timerRef = useRef<number>(0)
+    const onChangeRef = useRef(onChange)
+    onChangeRef.current = onChange
+
+    const [localValue, setLocalValue] = useState(() => String(value ?? defaultValue ?? ''))
+
+    useEffect(() => {
+      if (!debounce) return
+      setLocalValue(String(value ?? ''))
+    }, [debounce, value])
+
+    useEffect(() => {
+      return () => window.clearTimeout(timerRef.current)
+    }, [])
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const next = event.target.value
+
+      if (!debounce) {
+        onChange?.(event)
+        return
+      }
+
+      setLocalValue(next)
+      window.clearTimeout(timerRef.current)
+
+      if (next.trim().length === 0) {
+        emitValue(onChangeRef.current, next)
+        return
+      }
+
+      timerRef.current = window.setTimeout(() => {
+        emitValue(onChangeRef.current, next)
+      }, debounceMs)
+    }
 
     return (
       <div className="flex w-full flex-col gap-2">
@@ -64,6 +125,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               className,
             )}
             {...props}
+            value={debounce ? localValue : value}
+            defaultValue={debounce ? undefined : defaultValue}
+            onChange={handleChange}
           />
           {rightIcon && <div className="absolute right-2 flex items-center text-[var(--text-muted)]">{rightIcon}</div>}
         </div>

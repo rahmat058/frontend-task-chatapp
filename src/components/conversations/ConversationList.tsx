@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { MessagesSquare, Search } from 'lucide-react'
 import { ConversationItem } from './ConversationItem'
@@ -11,6 +11,7 @@ import { SkeletonLoader } from '@/components/common/SkeletonLoader'
 import { ErrorState } from '@/components/common/ErrorState'
 import { EmptyState } from '@/components/common/EmptyState'
 import { useConversations } from '@/lib/hooks/useConversations'
+import { SEARCH_DEBOUNCE_MS, useDebounce } from '@/lib/hooks/useDebounce'
 import { useAuthStore } from '@/lib/store/authStore'
 import { useUserDirectory } from '@/lib/store/userDirectory'
 import { useUIStore } from '@/lib/store/uiStore'
@@ -36,19 +37,22 @@ export function ConversationList() {
   const peers = useUserDirectory((s) => s.byConversationId)
   const [filter, setFilter] = useState<Filter>('all')
   const [query, setQuery] = useState('')
+  const debouncedQuery = useDebounce(query, SEARCH_DEBOUNCE_MS)
+  const searchTerm = query.trim().length === 0 ? '' : debouncedQuery.trim().toLowerCase()
 
   const params = useParams()
   const activeId = params?.id as string | undefined
 
-  const visible = (conversations ?? []).filter((conversation) => {
-    if (filter === 'groups' && conversation.type !== 'group') return false
-    if (filter === 'unread' && !(unreadById[conversation._id] > 0)) return false
-    const q = query.trim().toLowerCase()
-    if (!q) return true
-    const name = getConversationName(conversation, userId, knownUsers, peers[conversation._id]).toLowerCase()
-    const snippet = (conversation.lastMessage?.text ?? '').toLowerCase()
-    return name.includes(q) || snippet.includes(q)
-  })
+  const visible = useMemo(() => {
+    return (conversations ?? []).filter((conversation) => {
+      if (filter === 'groups' && conversation.type !== 'group') return false
+      if (filter === 'unread' && !(unreadById[conversation._id] > 0)) return false
+      if (!searchTerm) return true
+      const name = getConversationName(conversation, userId, knownUsers, peers[conversation._id]).toLowerCase()
+      const snippet = (conversation.lastMessage?.text ?? '').toLowerCase()
+      return name.includes(searchTerm) || snippet.includes(searchTerm)
+    })
+  }, [conversations, filter, knownUsers, peers, searchTerm, unreadById, userId])
 
   return (
     <>
