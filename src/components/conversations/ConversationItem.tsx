@@ -5,6 +5,7 @@ import { Avatar } from '@/components/common/Avatar';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { formatConversationTime } from '@/lib/utils/formatDate';
+import { getConversationName, getLastActivity } from '@/lib/utils/conversation';
 import type { Conversation } from '@/types/models';
 
 interface ConversationItemProps {
@@ -18,14 +19,10 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
   const { setActiveConversation } = useUIStore();
 
   const isGroup = conversation.type === 'group';
-
-  // For DMs, show the other participant's name
-  const displayName = isGroup
-    ? conversation.name ?? 'Group Chat'
-    : conversation.participants.find((p) => p._id !== user?._id)?.name ??
-      'Unknown';
+  const displayName = getConversationName(conversation, user?._id);
 
   const lastMsg = conversation.lastMessage;
+  const timestamp = formatConversationTime(getLastActivity(conversation));
 
   const handleClick = () => {
     setActiveConversation(conversation._id);
@@ -56,14 +53,14 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           >
             {displayName}
           </span>
-          {lastMsg && (
+          {timestamp && (
             <span className="text-xs text-[var(--color-text-muted)] shrink-0">
-              {formatConversationTime(lastMsg.createdAt)}
+              {timestamp}
             </span>
           )}
         </div>
         <p className="text-xs text-[var(--color-text-secondary)] truncate mt-0.5">
-          {lastMsg ? lastMsg.text : 'No messages yet'}
+          {lastMsg?.text || 'No messages yet'}
         </p>
       </div>
 

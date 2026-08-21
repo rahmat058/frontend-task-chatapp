@@ -1,12 +1,26 @@
-import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
+import { AuthSplash } from '@/components/common/AuthSplash';
 
 /**
- * Root page — redirect to /chat if authenticated, else /login.
- * Token check is a lightweight hint; the AuthProvider handles full restore.
+ * The session lives in localStorage, so the destination can only be decided
+ * on the client. Redirecting from the server here would also abort the
+ * prerender that `cacheComponents` uses to validate instant navigation.
  */
-export default async function RootPage() {
-  // We can't check localStorage from the server, so we just redirect to /chat.
-  // AuthProvider + middleware (if added) will handle the final auth gate.
-  redirect('/chat');
+export default function RootPage() {
+  const status = useAuthStore((s) => s.status);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.replace('/chat');
+    } else if (status === 'unauthenticated') {
+      router.replace('/login');
+    }
+  }, [status, router]);
+
+  return <AuthSplash />;
 }

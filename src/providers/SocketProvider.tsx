@@ -1,111 +1,76 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  useRef,
-} from 'react';
-import type { Socket } from 'socket.io-client';
+import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { connectSocket, disconnectSocket } from '@/lib/socket/socket';
 import { useAuthStore } from '@/lib/store/authStore';
 import { SOCKET_EVENTS } from '@/types/socket';
-import type {
-  SocketNewMessagePayload,
-  SocketConversationUpdatedPayload,
-} from '@/types/socket';
-import type { Message } from '@/types/models';
+import type { SocketNewMessagePayload } from '@/types/socket';
+import { messagesQueryKey } from '@/lib/hooks/useMessages';
+import type { MessageHistoryResponse } from '@/types/api';
 
-interface SocketContextValue {
-  socket: Socket | null;
-  isConnected: boolean;
-}
-
-const SocketContext = createContext<SocketContextValue>({
-  socket: null,
-  isConnected: false,
-});
-
-export function useSocketContext() {
-  return useContext(SocketContext);
-}
-
+/**
+ * Owns the socket lifecycle and keeps the React Query cache in sync with
+ * server events. Connection state itself is read via `useSocket`.
+ */
 export function SocketProvider({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuthStore();
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const queryClient = useQueryClient();
-  const socketRef = useRef<Socket | null>(null);
-
-  const handleNewMessage = useCallback(
-    (message: SocketNewMessagePayload) => {
-      // Update the infinite message cache for the relevant conversation
-      queryClient.setQueryData(
-        ['messages', message.conversationId],
-        (old: { pages: { messages: Message[] }[] } | undefined) => {
-          if (!old) return old;
-          const newPages = [...old.pages];
-          if (newPages.length > 0) {
-            // Add to last page (most recent)
-            const lastPage = newPages[newPages.length - 1];
-            newPages[newPages.length - 1] = {
-              ...lastPage,
-              messages: [...lastPage.messages, message],
-            };
-          }
-          return { ...old, pages: newPages };
-        }
-      );
-      // Invalidate conversations list to update last message + ordering
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
-    },
-    [queryClient]
-  );
-
-  const handleConversationUpdated = useCallback(
-    (_conversation: SocketConversationUpdatedPayload) => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
-    },
-    [queryClient]
-  );
 
   useEffect(() => {
     if (!isAuthenticated) {
       disconnectSocket();
-      socketRef.current = null;
-      setSocket(null);
-      setIsConnected(false);
       return;
     }
 
-    const s = connectSocket();
-    socketRef.current = s;
-    setSocket(s);
+    const socket = connectSocket();
 
-    const onConnect = () => setIsConnected(true);
-    const onDisconnect = () => setIsConnected(false);
+    const handleNewMessage = (message: SocketNewMessagePayload) => {
+      if (!message?.conversationId) return;
 
-    s.on('connect', onConnect);
-    s.on('disconnect', onDisconnect);
-    s.on(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
-    s.on(SOCKET_EVENTS.CONVERSATION_UPDATED, handleConversationUpdated);
+      queryClient.setQueryData(
+        messagesQueryKey(message.conversationId),
+        (old: { pages: MessageHistoryResponse[] } | undefined) => {
+          if (!old?.pages?.length) return old;
 
-    if (s.connected) setIsConnected(true);
+          const alreadyPresent = old.pages.some((page) =>
+            page.messages.some((m) => m._id === message._id)
+          );
+          if (alreadyPresent) return old;
+
+          const pages = [...old.pages];
+          const last = pages[pages.length - 1];
+          pages[pages.length - 1] = {
+            ...last,
+            messages: [...last.messages, message],
+          };
+          return { ...old, pages };
+        }
+      );
+
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    };
+
+    const handleConversationUpdated = () => {
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    };
+
+    // Re-fetch on (re)connect to close any gap opened while the socket was down.
+    const handleConnect = () => {
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    };
+
+    socket.on('connect', handleConnect);
+    socket.on(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
+    socket.on(SOCKET_EVENTS.CONVERSATION_UPDATED, handleConversationUpdated);
 
     return () => {
-      s.off('connect', onConnect);
-      s.off('disconnect', onDisconnect);
-      s.off(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
-      s.off(SOCKET_EVENTS.CONVERSATION_UPDATED, handleConversationUpdated);
+      socket.off('connect', handleConnect);
+      socket.off(SOCKET_EVENTS.MESSAGE_NEW, handleNewMessage);
+      socket.off(SOCKET_EVENTS.CONVERSATION_UPDATED, handleConversationUpdated);
     };
-  }, [isAuthenticated, handleNewMessage, handleConversationUpdated]);
+  }, [isAuthenticated, queryClient]);
 
-  return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <>{children}</>;
 }

@@ -1,5 +1,8 @@
 import { EmptyState } from '@/components/common/EmptyState';
 
+/** Gated behind client-side session restore; see the chat layout. */
+export const instant = false;
+
 export default function ChatIndexPage() {
   return (
     <div className="flex h-full items-center justify-center">

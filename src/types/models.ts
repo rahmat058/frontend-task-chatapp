@@ -6,20 +6,23 @@ export interface User {
 
 export type ConversationType = 'direct' | 'group';
 
+/** Responses return either a bare id or a populated user. */
+export type Participant = User | string;
+
 export interface Conversation {
   _id: string;
   type: ConversationType;
   name?: string; // group only
-  participants: User[];
-  admins?: string[]; // group only — array of user IDs
+  participants: Participant[];
+  admins?: Participant[]; // group only
   lastMessage?: {
-    _id: string;
+    _id?: string;
     text: string;
-    sender: Pick<User, '_id' | 'name'>;
-    createdAt: string;
+    sender?: Pick<User, '_id' | 'name'>;
+    createdAt?: string;
   };
-  updatedAt: string;
-  createdAt: string;
+  updatedAt?: string;
+  createdAt?: string;
 }
 
 export interface Message {
@@ -28,5 +31,5 @@ export interface Message {
   sender: Pick<User, '_id' | 'name'>;
   text: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }

@@ -2,49 +2,69 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const BOTTOM_THRESHOLD = 100; // px from bottom to be considered "at bottom"
+/** Distance from the bottom still treated as "following the conversation". */
+const BOTTOM_THRESHOLD = 100;
 
-export function useScrollBehavior(deps: unknown[]) {
+/**
+ * Auto-scrolls to the newest message only while the user is already at the
+ * bottom. If they have scrolled up to read history, incoming messages surface
+ * a jump-to-latest affordance instead of yanking the viewport.
+ */
+export function useScrollBehavior(messageCount: number) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isAtBottom, setIsAtBottom] = useState(true);
+  const isAtBottom = useRef(true);
+  const previousCount = useRef(0);
+  const hasPerformedInitialScroll = useRef(false);
+
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [hasNewMessages, setHasNewMessages] = useState(false);
 
   const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTo({ top: el.scrollHeight, behavior });
-  }, []);
-
-  // Track scroll position
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    const atBottom = distFromBottom <= BOTTOM_THRESHOLD;
-    setIsAtBottom(atBottom);
-    setShowScrollButton(!atBottom);
+    isAtBottom.current = true;
+    setShowScrollButton(false);
+    setHasNewMessages(false);
   }, []);
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+
+    const handleScroll = () => {
+      const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+      const atBottom = distance <= BOTTOM_THRESHOLD;
+      isAtBottom.current = atBottom;
+      setShowScrollButton(!atBottom);
+      if (atBottom) setHasNewMessages(false);
+    };
+
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
-
-  // Auto-scroll when new messages come in — only if at bottom
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (isAtBottom) {
-      scrollToBottom('smooth');
-    }
-  }, deps);
-
-  // Initial scroll to bottom (instant)
-  useEffect(() => {
-    scrollToBottom('instant');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { scrollRef, isAtBottom, showScrollButton, scrollToBottom };
+  useEffect(() => {
+    const previous = previousCount.current;
+    previousCount.current = messageCount;
+
+    if (messageCount === 0) return;
+
+    if (!hasPerformedInitialScroll.current) {
+      hasPerformedInitialScroll.current = true;
+      scrollToBottom('instant');
+      return;
+    }
+
+    // Older pages prepend above the viewport; they must not move the user.
+    if (messageCount <= previous) return;
+
+    if (isAtBottom.current) {
+      scrollToBottom('smooth');
+    } else {
+      setHasNewMessages(true);
+    }
+  }, [messageCount, scrollToBottom]);
+
+  return { scrollRef, showScrollButton, hasNewMessages, scrollToBottom };
 }

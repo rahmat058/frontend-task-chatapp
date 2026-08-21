@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { storage } from '@/lib/utils/storage';
+import { useAuthStore } from '@/lib/store/authStore';
 
-const BASE_URL = 'https://frontend-task-chatapp.onrender.com/api';
+export const API_ORIGIN =
+  process.env.NEXT_PUBLIC_API_ORIGIN ??
+  'https://frontend-task-chatapp.onrender.com';
 
 export const apiClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: `${API_ORIGIN}/api`,
   headers: { 'Content-Type': 'application/json' },
-  timeout: 15000,
+  timeout: 20000,
 });
-
-// ─── Request interceptor: inject JWT ────────────────────────────────────────
 
 apiClient.interceptors.request.use((config) => {
   const token = storage.getToken();
@@ -19,17 +20,14 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// ─── Response interceptor: handle 401 globally ─────────────────────────────
-
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      storage.removeToken();
-      // Redirect to login — use window.location to avoid circular imports
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
+      // Clearing auth flips the store to `unauthenticated`, which lets the
+      // route guards navigate. A hard location change here would instead
+      // reload the app and fight React Router state.
+      useAuthStore.getState().clearAuth();
     }
     return Promise.reject(error);
   }

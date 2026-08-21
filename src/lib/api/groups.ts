@@ -1,4 +1,5 @@
 import { apiClient } from './client';
+import { unwrapObject } from './normalize';
 import type {
   CreateGroupRequest,
   CreateGroupResponse,
@@ -10,11 +11,13 @@ import type { Conversation } from '@/types/models';
 
 export const groupsApi = {
   async create(data: CreateGroupRequest): Promise<CreateGroupResponse> {
-    const res = await apiClient.post<CreateGroupResponse>(
-      '/conversations/group',
-      data
-    );
-    return res.data;
+    const res = await apiClient.post<unknown>('/conversations/group', data);
+    const group = unwrapObject<Conversation>(res.data, 'conversation');
+
+    if (!group?._id) {
+      throw new Error('Group was created but no id was returned.');
+    }
+    return group;
   },
 
   async addParticipants(

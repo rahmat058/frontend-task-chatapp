@@ -3,6 +3,10 @@
 import { Avatar } from '@/components/common/Avatar';
 import type { Conversation } from '@/types/models';
 import { useAuthStore } from '@/lib/store/authStore';
+import {
+  getConversationName,
+  getParticipantCount,
+} from '@/lib/utils/conversation';
 
 interface ChatHeaderProps {
   conversation: Conversation;
@@ -12,13 +16,11 @@ export function ChatHeader({ conversation }: ChatHeaderProps) {
   const { user } = useAuthStore();
   const isGroup = conversation.type === 'group';
 
-  const displayName = isGroup
-    ? conversation.name ?? 'Group Chat'
-    : conversation.participants.find((p) => p._id !== user?._id)?.name ??
-      'Unknown';
+  const displayName = getConversationName(conversation, user?._id);
 
+  const memberCount = getParticipantCount(conversation);
   const subtitle = isGroup
-    ? `${conversation.participants.length} members`
+    ? `${memberCount} ${memberCount === 1 ? 'member' : 'members'}`
     : 'Direct message';
 
   return (

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authApi } from '@/lib/api/auth';
+import { getApiErrorMessage } from '@/lib/api/normalize';
 import { useAuthStore } from '@/lib/store/authStore';
 
 export function useAuth() {
@@ -17,12 +18,9 @@ export function useAuth() {
     try {
       const { user, token } = await authApi.login({ phone, name });
       setAuth(user, token);
-      router.push('/chat');
-    } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? 'Login failed. Please try again.';
-      setError(msg);
+      router.replace('/chat');
+    } catch (err) {
+      setError(getApiErrorMessage(err, 'Login failed. Please try again.'));
     } finally {
       setIsLoading(false);
     }
@@ -30,7 +28,7 @@ export function useAuth() {
 
   const logout = () => {
     clearAuth();
-    router.push('/login');
+    router.replace('/login');
   };
 
   return { login, logout, user, isAuthenticated, isLoading, error };

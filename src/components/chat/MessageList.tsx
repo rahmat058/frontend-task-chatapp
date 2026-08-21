@@ -1,11 +1,9 @@
 'use client';
 
-import { useRef, forwardRef } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { SkeletonLoader } from '@/components/common/SkeletonLoader';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Button } from '@/components/common/Button';
-import { Spinner } from '@/components/common/Spinner';
 import { useMessages } from '@/lib/hooks/useMessages';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useScrollBehavior } from '@/lib/hooks/useScrollBehavior';
@@ -27,9 +25,9 @@ export function MessageList({ conversation }: MessageListProps) {
   } = useMessages(conversation._id);
 
   const messages = data?.allMessages ?? [];
-  const messageCount = messages.length;
 
-  const { scrollRef, showScrollButton, scrollToBottom } = useScrollBehavior([messageCount]);
+  const { scrollRef, showScrollButton, hasNewMessages, scrollToBottom } =
+    useScrollBehavior(messages.length);
 
   const isGroup = conversation.type === 'group';
 
@@ -93,7 +91,10 @@ export function MessageList({ conversation }: MessageListProps) {
 
       {/* Scroll to bottom FAB */}
       {showScrollButton && (
-        <ScrollToBottom onClick={() => scrollToBottom('smooth')} />
+        <ScrollToBottom
+          onClick={() => scrollToBottom('smooth')}
+          hasNewMessages={hasNewMessages}
+        />
       )}
     </div>
   );

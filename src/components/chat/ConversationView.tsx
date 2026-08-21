@@ -1,0 +1,37 @@
+'use client';
+
+import { useConversations } from '@/lib/hooks/useConversations';
+import { ChatPanel } from '@/components/chat/ChatPanel';
+import { ErrorState } from '@/components/common/ErrorState';
+import { SkeletonLoader } from '@/components/common/SkeletonLoader';
+
+export function ConversationView({ conversationId }: { conversationId: string }) {
+  const { data: conversations, isLoading, error, refetch } = useConversations();
+
+  if (isLoading) {
+    return <SkeletonLoader variant="message" count={6} />;
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        description="Failed to load this conversation."
+        onRetry={() => refetch()}
+      />
+    );
+  }
+
+  const conversation = conversations?.find((c) => c._id === conversationId);
+
+  if (!conversation) {
+    return (
+      <ErrorState
+        title="Conversation not found"
+        description="This conversation may have been deleted, or you may not have access to it."
+        onRetry={() => refetch()}
+      />
+    );
+  }
+
+  return <ChatPanel conversation={conversation} />;
+}
