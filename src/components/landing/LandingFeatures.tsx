@@ -22,7 +22,7 @@ const capabilities = [
 
 export function LandingFeatures() {
   return (
-    <section id="features" className="scroll-mt-20 border-t border-[var(--border-subtle)]">
+    <section id="features" className="scroll-mt-24 border-t border-[var(--border-subtle)]">
       <LandingContainer className="py-20">
         <h2 className="sr-only">What ChatApp does</h2>
         <div className="grid gap-8 md:grid-cols-3">

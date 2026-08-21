@@ -18,7 +18,7 @@ const steps = [
 
 export function LandingHowItWorks() {
   return (
-    <section id="how-it-works" className="scroll-mt-20 border-t border-[var(--border-subtle)] bg-[var(--surface-1)]">
+    <section id="how-it-works" className="scroll-mt-24 border-t border-[var(--border-subtle)] bg-[var(--surface-1)]">
       <LandingContainer className="py-20">
         <Reveal>
           <h2 className="max-w-[18ch] text-[30px] leading-[1.2] font-[620] tracking-[-0.02em]">

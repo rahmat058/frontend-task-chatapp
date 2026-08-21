@@ -14,7 +14,7 @@ const trust = [
 
 export function LandingHero() {
   return (
-    <section id="offer" className="scroll-mt-20 pt-16 pb-20 md:pt-24 md:pb-28">
+    <section id="offer" className="scroll-mt-24 pt-16 pb-20 md:pt-24 md:pb-28">
       <LandingContainer>
         <div className="grid items-center gap-14 lg:grid-cols-[42%_1fr] lg:gap-16">
           <Reveal>
