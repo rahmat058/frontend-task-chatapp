@@ -45,14 +45,14 @@ export function ChatHeader({ conversation }: ChatHeaderProps) {
 
       {isGroup && (
         <Button
-          variant="ghost"
-          size="icon"
-          className="ml-auto"
-          aria-label="Group settings"
-          title="Group settings"
+          variant="secondary"
+          size="sm"
+          className="shrink-0"
+          aria-label="Manage group"
           onClick={() => setSettingsOpen(true)}
         >
-          <Settings2 className="w-4 h-4" aria-hidden="true" />
+          <Settings2 className="w-3.5 h-3.5" aria-hidden="true" />
+          Manage group
         </Button>
       )}
 

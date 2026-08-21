@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Crown, Search, UserMinus } from 'lucide-react';
+import { Crown, Search } from 'lucide-react';
 import { Dialog } from '@/components/common/Dialog';
 import { Input } from '@/components/common/Input';
 import { Button } from '@/components/common/Button';
@@ -173,36 +173,49 @@ export function GroupSettingsDialog({
                       </p>
                     )}
                   </div>
-                  {admin && !memberIsAdmin && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() =>
-                        run(
-                          () => promote.mutateAsync(member._id),
-                          'Could not promote that member.'
-                        )
-                      }
-                      isLoading={promote.isPending}
-                    >
-                      Promote
-                    </Button>
-                  )}
-                  {admin && !isSelf && (
-                    <Button
-                      size="sm"
-                      variant="danger"
-                      onClick={() =>
-                        run(
-                          () => removeMember.mutateAsync(member._id),
-                          'Could not remove that member.'
-                        )
-                      }
-                      isLoading={removeMember.isPending}
-                      aria-label={`Remove ${member.name}`}
-                    >
-                      <UserMinus className="w-3.5 h-3.5" />
-                    </Button>
+                  {isSelf ? null : (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        disabled={!admin || memberIsAdmin}
+                        title={
+                          !admin
+                            ? 'Only group admins can promote members'
+                            : memberIsAdmin
+                              ? 'Already an admin'
+                              : 'Promote to admin (POST /conversations/:id/admins)'
+                        }
+                        onClick={() =>
+                          run(
+                            () => promote.mutateAsync(member._id),
+                            'Could not promote that member.'
+                          )
+                        }
+                        isLoading={promote.isPending}
+                      >
+                        Promote
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        disabled={!admin}
+                        title={
+                          admin
+                            ? 'Remove from group'
+                            : 'Only group admins can remove members'
+                        }
+                        onClick={() =>
+                          run(
+                            () => removeMember.mutateAsync(member._id),
+                            'Could not remove that member.'
+                          )
+                        }
+                        isLoading={removeMember.isPending}
+                      >
+                        Remove
+                      </Button>
+                    </>
                   )}
                 </div>
               );

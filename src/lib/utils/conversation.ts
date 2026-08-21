@@ -64,6 +64,16 @@ function collectRawParticipants(raw: Record<string, unknown>): unknown[] {
   return collected;
 }
 
+function collectAdmins(raw: Record<string, unknown>): unknown[] {
+  const buckets = [raw.admins, raw.adminIds, raw.admin];
+  const collected: unknown[] = [];
+  for (const bucket of buckets) {
+    if (Array.isArray(bucket)) collected.push(...bucket);
+    else if (bucket) collected.push(bucket);
+  }
+  return collected;
+}
+
 export function normalizeConversation(raw: unknown): Conversation | null {
   const obj = asRecord(raw);
   if (!obj) return null;
@@ -105,11 +115,9 @@ export function normalizeConversation(raw: unknown): Conversation | null {
     type,
     name,
     participants,
-    admins: Array.isArray(nested.admins)
-      ? nested.admins
-          .map(participantFromUnknown)
-          .filter((p): p is Participant => p !== null)
-      : undefined,
+    admins: collectAdmins(nested)
+      .map(participantFromUnknown)
+      .filter((p): p is Participant => p !== null),
     lastMessage: lastMessage?.text || lastMessage?.createdAt ? lastMessage : undefined,
     updatedAt: typeof nested.updatedAt === 'string' ? nested.updatedAt : undefined,
     createdAt: typeof nested.createdAt === 'string' ? nested.createdAt : undefined,
@@ -258,11 +266,20 @@ export function sortByRecency(conversations: Conversation[]): Conversation[] {
   );
 }
 
+export function getAdminIds(conversation: Conversation): string[] {
+  const raw = conversation.admins;
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((admin) => (typeof admin === 'string' ? admin.trim() : getEntityId(admin)))
+    .filter((id): id is string => Boolean(id));
+}
+
 export function isAdmin(conversation: Conversation, userId?: string): boolean {
-  if (!userId || !Array.isArray(conversation.admins)) return false;
-  return conversation.admins.some((admin) =>
-    typeof admin === 'string'
-      ? admin === userId
-      : getEntityId(admin) === userId
-  );
+  if (!userId) return false;
+  const ids = getAdminIds(conversation);
+  if (ids.length === 0) {
+    // List payloads often omit `admins`. The API still enforces permission.
+    return true;
+  }
+  return ids.includes(userId);
 }

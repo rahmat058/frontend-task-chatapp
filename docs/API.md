@@ -126,8 +126,8 @@ This app **sends** messages with `POST /api/messages` and **receives** with `mes
 | `GET /conversations/:id/messages` | Chat history |
 | `POST /messages` | Send |
 | `POST /conversations/group` | New group |
-| `POST /conversations/:id/participants` | Group settings → Add |
-| `DELETE /conversations/:id/participants/:userId` | Remove member / Leave |
-| `POST /conversations/:id/admins` | Promote |
-| `PATCH /conversations/:id` | Rename |
+| `POST /conversations/:id/participants` | Open a **group** chat → **Manage group** → search and **Add** |
+| `DELETE /conversations/:id/participants/:userId` | **Manage group** → **Remove** on a member, or **Leave group** (your own id) |
+| `POST /conversations/:id/admins` | **Manage group** → **Promote** on a member who is not already an admin |
+| `PATCH /conversations/:id` | **Manage group** → change the name → **Save name** |
 | `GET /health` | Login screen reachability check |
