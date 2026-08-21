@@ -25,10 +25,14 @@ export interface Conversation {
   createdAt?: string;
 }
 
+/** Sender is populated on some payloads and a bare user id on others. */
+export type MessageSender = Pick<User, '_id' | 'name'> | string;
+
 export interface Message {
   _id: string;
   conversationId: string;
-  sender: Pick<User, '_id' | 'name'>;
+  sender: MessageSender;
+  senderId?: string;
   text: string;
   createdAt: string;
   updatedAt?: string;

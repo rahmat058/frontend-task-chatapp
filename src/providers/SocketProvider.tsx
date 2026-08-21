@@ -6,7 +6,9 @@ import { connectSocket, disconnectSocket } from '@/lib/socket/socket';
 import { useAuthStore } from '@/lib/store/authStore';
 import { SOCKET_EVENTS } from '@/types/socket';
 import type { SocketNewMessagePayload } from '@/types/socket';
-import { messagesQueryKey } from '@/lib/hooks/useMessages';
+import { isOptimistic, messagesQueryKey } from '@/lib/hooks/useMessages';
+import { getSenderId, normalizeMessage } from '@/lib/utils/message';
+import type { Message } from '@/types/models';
 import type { MessageHistoryResponse } from '@/types/api';
 
 /**
@@ -25,25 +27,35 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
     const socket = connectSocket();
 
-    const handleNewMessage = (message: SocketNewMessagePayload) => {
-      if (!message?.conversationId) return;
+    const handleNewMessage = (payload: SocketNewMessagePayload) => {
+      const incoming = normalizeMessage(
+        payload,
+        useAuthStore.getState().user
+      );
+      if (!incoming?.conversationId) return;
 
       queryClient.setQueryData(
-        messagesQueryKey(message.conversationId),
+        messagesQueryKey(incoming.conversationId),
         (old: { pages: MessageHistoryResponse[] } | undefined) => {
           if (!old?.pages?.length) return old;
 
           const alreadyPresent = old.pages.some((page) =>
-            page.messages.some((m) => m._id === message._id)
+            page.messages.some((m) => m._id === incoming._id)
           );
           if (alreadyPresent) return old;
 
-          const pages = [...old.pages];
-          const last = pages[pages.length - 1];
-          pages[pages.length - 1] = {
-            ...last,
-            messages: [...last.messages, message],
-          };
+          const isEcho = (m: Message) =>
+            isOptimistic(m) &&
+            m.text === incoming.text &&
+            getSenderId(m) === getSenderId(incoming);
+
+          const pages = old.pages.map((page, index, all) => {
+            const withoutEcho = page.messages.filter((m) => !isEcho(m));
+            if (index !== all.length - 1) {
+              return { ...page, messages: withoutEcho };
+            }
+            return { ...page, messages: [...withoutEcho, incoming] };
+          });
           return { ...old, pages };
         }
       );

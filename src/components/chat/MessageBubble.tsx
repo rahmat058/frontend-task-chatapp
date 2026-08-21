@@ -3,6 +3,7 @@
 import { Check, Clock } from 'lucide-react';
 import { formatMessageTime } from '@/lib/utils/formatDate';
 import { isOptimistic } from '@/lib/hooks/useMessages';
+import { getSenderName } from '@/lib/utils/message';
 import { cn } from '@/lib/utils/cn';
 import type { Message } from '@/types/models';
 
@@ -39,7 +40,7 @@ export function MessageBubble({
       >
         {isGroup && !isMine && showSender && (
           <span className="text-[11px] font-medium text-[var(--color-primary)] mb-0.5 px-1">
-            {message.sender?.name ?? 'Unknown'}
+            {getSenderName(message)}
           </span>
         )}
 

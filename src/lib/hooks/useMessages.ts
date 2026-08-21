@@ -9,6 +9,7 @@ import { conversationsApi } from '@/lib/api/conversations';
 import { messagesApi } from '@/lib/api/messages';
 import { useAuthStore } from '@/lib/store/authStore';
 import { toTimestamp } from '@/lib/utils/formatDate';
+import { getSenderId, normalizeMessage } from '@/lib/utils/message';
 import type { Message } from '@/types/models';
 import type { MessageHistoryResponse } from '@/types/api';
 
@@ -33,12 +34,15 @@ export function mergeMessages(messages: Message[]): Message[] {
 
   for (const message of messages) {
     if (!isOptimistic(message)) {
-      confirmed.add(`${message.sender?._id}|${message.text}`);
+      confirmed.add(`${getSenderId(message)}|${message.text}`);
     }
   }
 
   for (const message of messages) {
-    if (isOptimistic(message) && confirmed.has(`${message.sender?._id}|${message.text}`)) {
+    if (
+      isOptimistic(message) &&
+      confirmed.has(`${getSenderId(message)}|${message.text}`)
+    ) {
       continue;
     }
     byId.set(message._id, message);
@@ -131,6 +135,10 @@ export function useSendMessage(conversationId: string) {
     },
 
     onSuccess: (serverMessage, _text, context) => {
+      const confirmed =
+        normalizeMessage(serverMessage, useAuthStore.getState().user) ??
+        serverMessage;
+
       queryClient.setQueryData(
         messagesQueryKey(conversationId),
         (old: { pages: MessageHistoryResponse[] } | undefined) => {
@@ -140,7 +148,7 @@ export function useSendMessage(conversationId: string) {
             pages: old.pages.map((page) => ({
               ...page,
               messages: page.messages.map((m) =>
-                m._id === context.optimisticMessage._id ? serverMessage : m
+                m._id === context.optimisticMessage._id ? confirmed : m
               ),
             })),
           };

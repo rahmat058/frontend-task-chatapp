@@ -9,6 +9,7 @@ import { Button } from '@/components/common/Button';
 import { useMessages } from '@/lib/hooks/useMessages';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useScrollBehavior } from '@/lib/hooks/useScrollBehavior';
+import { getSenderId, isOwnMessage } from '@/lib/utils/message';
 import type { Conversation } from '@/types/models';
 
 interface MessageListProps {
@@ -64,9 +65,9 @@ export function MessageList({ conversation }: MessageListProps) {
               <MessageBubble
                 key={message._id}
                 message={message}
-                isMine={message.sender?._id === user?._id}
+                isMine={isOwnMessage(message, user?._id)}
                 isGroup={isGroup}
-                showSender={previous?.sender?._id !== message.sender?._id}
+                showSender={getSenderId(previous) !== getSenderId(message)}
               />
             );
           })

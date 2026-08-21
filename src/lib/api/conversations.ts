@@ -1,5 +1,7 @@
 import { apiClient } from './client';
 import { unwrapArray, unwrapObject } from './normalize';
+import { useAuthStore } from '@/lib/store/authStore';
+import { normalizeMessage } from '@/lib/utils/message';
 import type {
   ListConversationsResponse,
   StartConversationRequest,
@@ -36,7 +38,10 @@ export const conversationsApi = {
     );
 
     const raw = res.data;
-    const messages = unwrapArray<Message>(raw);
+    const currentUser = useAuthStore.getState().user;
+    const messages = unwrapArray<Message>(raw)
+      .map((item) => normalizeMessage(item, currentUser))
+      .filter((item): item is Message => item !== null);
     const body = (raw && typeof raw === 'object' ? raw : {}) as Record<
       string,
       unknown
