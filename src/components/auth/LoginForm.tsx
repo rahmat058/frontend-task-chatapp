@@ -22,6 +22,7 @@ export function LoginForm() {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<LoginValues>({
     defaultValues: { phoneDigits: '', name: '' },
@@ -36,7 +37,9 @@ export function LoginForm() {
         if (!cancelled) setApiDown(res.status !== 'ok')
       })
       .catch(() => {
-        if (!cancelled) setApiDown(true)
+        // Probe failed locally (dev proxy, etc.). Login errors still surface
+        // a real outage — do not block the form with a false alarm.
+        if (!cancelled) setApiDown(false)
       })
     return () => {
       cancelled = true
@@ -44,7 +47,8 @@ export function LoginForm() {
   }, [])
 
   const onSubmit = async ({ phoneDigits, name }: LoginValues) => {
-    await login(toE164(phoneDigits), name.trim())
+    const ok = await login(toE164(phoneDigits), name.trim())
+    if (ok) reset({ phoneDigits: '', name: '' })
   }
 
   return (

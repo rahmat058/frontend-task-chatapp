@@ -1,14 +1,17 @@
-import axios from 'axios';
-import { API_ORIGIN } from './client';
+import axios from 'axios'
 
-/** Served at the host root, not under `/api`. */
+/**
+ * Same-origin proxy to the assignment `GET /health` (host root, not `/api`).
+ * Calling the remote URL from the browser is blocked by CORS, which made
+ * the login screen claim the API was down while login and chat still worked.
+ */
 export const systemApi = {
-  async health(): Promise<{ status: string }> {
-    const res = await axios.get<{ status?: string }>(`${API_ORIGIN}/health`, {
+  async health(): Promise<{ status: 'ok' | 'down' | string }> {
+    const res = await axios.get<{ status?: string }>('/api/health', {
       timeout: 8000,
-    });
-    const status =
-      typeof res.data?.status === 'string' ? res.data.status : 'ok';
-    return { status };
+      validateStatus: () => true,
+    })
+    const status = res.data?.status === 'ok' ? 'ok' : 'down'
+    return { status }
   },
-};
+}

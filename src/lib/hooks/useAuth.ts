@@ -19,8 +19,10 @@ export function useAuth() {
       const { user, token } = await authApi.login({ phone, name });
       setAuth(user, token);
       router.replace('/chat');
+      return true;
     } catch (err) {
       setError(getApiErrorMessage(err, 'Login failed. Please try again.'));
+      return false;
     } finally {
       setIsLoading(false);
     }
