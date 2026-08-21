@@ -19,6 +19,7 @@ import {
 } from '@/lib/hooks/useConversations';
 import { getApiErrorMessage } from '@/lib/api/normalize';
 import { isAdmin, resolveMembers } from '@/lib/utils/conversation';
+import { idsMatch } from '@/lib/utils/ids';
 import type { Conversation } from '@/types/models';
 
 interface GroupSettingsDialogProps {
@@ -34,7 +35,7 @@ export function GroupSettingsDialog({
   const user = useAuthStore((s) => s.user);
   const knownUsers = useUserDirectory((s) => s.byId);
 
-  const members = resolveMembers(conversation, knownUsers);
+  const members = resolveMembers(conversation, knownUsers, user);
   const admin = isAdmin(conversation, user?._id);
 
   const [name, setName] = useState(conversation.name ?? '');
@@ -182,7 +183,7 @@ export function GroupSettingsDialog({
           <div className="rounded-xl border border-[var(--color-border)] max-h-52 overflow-y-auto">
             {members.map((member) => {
               const memberIsAdmin = isAdmin(conversation, member._id);
-              const isSelf = member._id === user?._id;
+              const isSelf = idsMatch(member._id, user?._id);
               return (
                 <div
                   key={member._id}
@@ -191,7 +192,7 @@ export function GroupSettingsDialog({
                   <Avatar name={member.name} size="sm" />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm truncate">
-                      {member.name}
+                      {isSelf ? user?.name ?? member.name : member.name}
                       {isSelf ? ' (you)' : ''}
                     </p>
                     {memberIsAdmin && (

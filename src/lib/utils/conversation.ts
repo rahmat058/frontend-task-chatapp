@@ -1,6 +1,6 @@
 import type { Conversation, ConversationType, Participant, User } from '@/types/models';
 import { toTimestamp } from './formatDate';
-import { getEntityId } from './ids';
+import { getEntityId, idsMatch } from './ids';
 
 const PLACEHOLDER_NAMES = new Set(['direct message', 'direct', 'dm']);
 
@@ -157,10 +157,14 @@ export function getParticipantCount(conversation: Conversation): number {
 
 export function resolveMembers(
   conversation: Conversation,
-  knownUsers: Record<string, Pick<User, '_id' | 'name'> & { phone?: string }>
+  knownUsers: Record<string, Pick<User, '_id' | 'name'> & { phone?: string }>,
+  currentUser?: User | null
 ): User[] {
   return getParticipantIds(conversation).map((id) => {
-    const populated = getParticipants(conversation).find((p) => p._id === id);
+    if (currentUser && idsMatch(id, currentUser._id)) {
+      return currentUser;
+    }
+    const populated = getParticipants(conversation).find((p) => idsMatch(p._id, id));
     if (populated) return populated;
     const known = knownUsers[id];
     if (known) {
