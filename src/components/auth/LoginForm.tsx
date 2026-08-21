@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { ArrowRight, Lock, Phone, User } from 'lucide-react'
+import { ArrowRight, Check, ChevronsUpDown, Lock, User, X } from 'lucide-react'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
 import { useAuth } from '@/lib/hooks/useAuth'
@@ -14,6 +14,15 @@ interface LoginValues {
   name: string
 }
 
+function BangladeshMark() {
+  return (
+    <svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true" className="shrink-0 rounded-sm">
+      <rect width="18" height="12" fill="#006a4e" />
+      <circle cx="8" cy="6" r="3.2" fill="#f42a41" />
+    </svg>
+  )
+}
+
 export function LoginForm() {
   const { login, isLoading, error } = useAuth()
   const [apiDown, setApiDown] = useState(false)
@@ -23,11 +32,15 @@ export function LoginForm() {
     control,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<LoginValues>({
     defaultValues: { phoneDigits: '', name: '' },
     mode: 'onBlur',
   })
+
+  const nameValue = watch('name')
 
   useEffect(() => {
     let cancelled = false
@@ -37,8 +50,6 @@ export function LoginForm() {
         if (!cancelled) setApiDown(res.status !== 'ok')
       })
       .catch(() => {
-        // Probe failed locally (dev proxy, etc.). Login errors still surface
-        // a real outage — do not block the form with a false alarm.
         if (!cancelled) setApiDown(false)
       })
     return () => {
@@ -51,6 +62,11 @@ export function LoginForm() {
     if (ok) reset({ phoneDigits: '', name: '' })
   }
 
+  const nameField = register('name', {
+    required: 'Name is required',
+    validate: (value) => value.trim().length > 0 || 'Name is required',
+  })
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-5" noValidate>
       <Controller
@@ -61,25 +77,42 @@ export function LoginForm() {
           validate: (value) =>
             value.length === LOCAL_DIGITS || `Enter a ${LOCAL_DIGITS}-digit number after ${COUNTRY_CODE}`,
         }}
-        render={({ field }) => (
-          <Input
-            id="login-phone"
-            label="Phone number"
-            type="tel"
-            inputMode="numeric"
-            placeholder="1712345678"
-            autoComplete="tel-national"
-            leftIcon={<Phone className="h-4 w-4" />}
-            prefix={COUNTRY_CODE}
-            aria-label={`Phone number, country code ${COUNTRY_CODE}`}
-            error={errors.phoneDigits?.message}
-            value={field.value}
-            onBlur={field.onBlur}
-            onChange={(e) => field.onChange(toLocalDigits(e.target.value))}
-            name={field.name}
-            ref={field.ref}
-          />
-        )}
+        render={({ field }) => {
+          const valid = field.value.length === LOCAL_DIGITS
+          return (
+            <Input
+              id="login-phone"
+              label="Phone number"
+              type="tel"
+              inputMode="numeric"
+              placeholder="1712345678"
+              autoComplete="tel-national"
+              aria-label={`Phone number, country code ${COUNTRY_CODE}`}
+              error={errors.phoneDigits?.message}
+              valid={valid}
+              leading={
+                <span
+                  className="flex h-9 items-center gap-1 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--surface-3)] px-2 text-xs font-medium text-[var(--text-secondary)]"
+                  title="Bangladesh">
+                  <BangladeshMark />
+                  <ChevronsUpDown className="h-3 w-3 opacity-50" strokeWidth={1.75} aria-hidden="true" />
+                  <span className="text-[var(--text-primary)]">{COUNTRY_CODE}</span>
+                </span>
+              }
+              className="h-12"
+              rightIcon={
+                valid ? (
+                  <Check className="h-4 w-4 text-[var(--green-400)]" strokeWidth={1.75} aria-hidden="true" />
+                ) : undefined
+              }
+              value={field.value}
+              onBlur={field.onBlur}
+              onChange={(e) => field.onChange(toLocalDigits(e.target.value))}
+              name={field.name}
+              ref={field.ref}
+            />
+          )
+        }}
       />
 
       <Input
@@ -88,12 +121,22 @@ export function LoginForm() {
         type="text"
         placeholder="Ada Lovelace"
         autoComplete="name"
-        leftIcon={<User className="h-4 w-4" />}
+        leftIcon={<User className="h-4 w-4" strokeWidth={1.75} />}
+        className="h-12"
         error={errors.name?.message}
-        {...register('name', {
-          required: 'Name is required',
-          validate: (value) => value.trim().length > 0 || 'Name is required',
-        })}
+        valid={Boolean(nameValue?.trim()) && !errors.name}
+        rightIcon={
+          nameValue ? (
+            <button
+              type="button"
+              aria-label="Clear name"
+              className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] hover:text-[var(--text-primary)]"
+              onClick={() => setValue('name', '', { shouldValidate: true })}>
+              <X className="h-3.5 w-3.5" strokeWidth={1.75} />
+            </button>
+          ) : undefined
+        }
+        {...nameField}
       />
 
       {apiDown && (
@@ -117,13 +160,13 @@ export function LoginForm() {
         size="lg"
         isLoading={isLoading}
         disabled={isLoading}
-        rightIcon={!isLoading ? <ArrowRight className="h-4 w-4" /> : undefined}
+        rightIcon={!isLoading ? <ArrowRight className="h-4 w-4" strokeWidth={1.75} /> : undefined}
         className="mt-1 w-full">
         {isLoading ? 'Signing in…' : 'Continue'}
       </Button>
 
-      <p className="flex items-start gap-2 text-xs leading-relaxed text-[var(--text-muted)]">
-        <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+      <p className="flex items-center justify-center gap-2 text-center text-xs leading-relaxed text-[var(--text-muted)]">
+        <Lock className="h-3.5 w-3.5 shrink-0 text-[var(--green-400)]" strokeWidth={1.75} aria-hidden="true" />
         New here? We&apos;ll create your account automatically.
       </p>
     </form>
