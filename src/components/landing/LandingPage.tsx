@@ -1,3 +1,4 @@
+import { LandingCapabilities } from './LandingCapabilities'
 import { LandingCta } from './LandingCta'
 import { LandingFaq } from './LandingFaq'
 import { LandingFeatures } from './LandingFeatures'
@@ -19,6 +20,7 @@ export function LandingPage() {
         <MarketingNav />
         <main>
           <LandingHero />
+          <LandingCapabilities />
           <LandingFeatures />
           <LandingHowItWorks />
           <LandingFaq />

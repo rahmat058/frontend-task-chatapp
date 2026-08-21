@@ -46,13 +46,10 @@ export function MarketingNav() {
             {!signedIn && (
               <Link
                 href="/login"
-                className="inline-flex h-9 items-center px-3 text-sm text-[var(--text-secondary)] transition-colors duration-[var(--duration-fast)] hover:text-[var(--text-primary)] focus-visible:shadow-[var(--focus-ring)]">
+                className={cn(buttonClassName({ size: 'md' }), 'landing-btn-primary')}>
                 Log in
               </Link>
             )}
-            <Link href={appHref} className={cn(buttonClassName({ size: 'md' }), 'landing-btn-primary')}>
-              {signedIn ? 'Open ChatApp' : 'Sign up'}
-            </Link>
           </div>
 
           <button
