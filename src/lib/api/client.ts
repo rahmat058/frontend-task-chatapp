@@ -3,7 +3,7 @@ import { storage } from '@/lib/utils/storage';
 import { useAuthStore } from '@/lib/store/authStore';
 
 export const API_ORIGIN =
-  process.env.NEXT_PUBLIC_API_ORIGIN ??
+  process.env.NEXT_PUBLIC_CHAT_API_ORIGIN ??
   'https://frontend-task-chatapp.onrender.com';
 
 export const apiClient = axios.create({
