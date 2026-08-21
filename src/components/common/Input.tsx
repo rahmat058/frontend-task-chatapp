@@ -55,7 +55,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               leftIcon && !prefix && !leading && 'pl-10',
               leftIcon && prefix && !leading && 'pl-[5.75rem]',
               !leftIcon && prefix && !leading && 'pl-16',
-              leading && 'pl-[8.25rem]',
               rightIcon && 'pr-11',
               valid &&
                 !error &&

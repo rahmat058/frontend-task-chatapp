@@ -2,25 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { ArrowRight, Check, ChevronsUpDown, Lock, User, X } from 'lucide-react'
+import { ArrowRight, Lock, User, X } from 'lucide-react'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
+import { PhoneField } from '@/components/auth/PhoneField'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { systemApi } from '@/lib/api/system'
 import { COUNTRY_CODE, LOCAL_DIGITS, toE164, toLocalDigits } from '@/lib/utils/phone'
+import { cn } from '@/lib/utils/cn'
 
 interface LoginValues {
   phoneDigits: string
   name: string
-}
-
-function BangladeshMark() {
-  return (
-    <svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true" className="shrink-0 rounded-sm">
-      <rect width="18" height="12" fill="#006a4e" />
-      <circle cx="8" cy="6" r="3.2" fill="#f42a41" />
-    </svg>
-  )
 }
 
 export function LoginForm() {
@@ -77,42 +70,18 @@ export function LoginForm() {
           validate: (value) =>
             value.length === LOCAL_DIGITS || `Enter a ${LOCAL_DIGITS}-digit number after ${COUNTRY_CODE}`,
         }}
-        render={({ field }) => {
-          const valid = field.value.length === LOCAL_DIGITS
-          return (
-            <Input
-              id="login-phone"
-              label="Phone number"
-              type="tel"
-              inputMode="numeric"
-              placeholder="1712345678"
-              autoComplete="tel-national"
-              aria-label={`Phone number, country code ${COUNTRY_CODE}`}
-              error={errors.phoneDigits?.message}
-              valid={valid}
-              leading={
-                <span
-                  className="flex h-9 items-center gap-1 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--surface-3)] px-2 text-xs font-medium text-[var(--text-secondary)]"
-                  title="Bangladesh">
-                  <BangladeshMark />
-                  <ChevronsUpDown className="h-3 w-3 opacity-50" strokeWidth={1.75} aria-hidden="true" />
-                  <span className="text-[var(--text-primary)]">{COUNTRY_CODE}</span>
-                </span>
-              }
-              className="h-12"
-              rightIcon={
-                valid ? (
-                  <Check className="h-4 w-4 text-[var(--green-400)]" strokeWidth={1.75} aria-hidden="true" />
-                ) : undefined
-              }
-              value={field.value}
-              onBlur={field.onBlur}
-              onChange={(e) => field.onChange(toLocalDigits(e.target.value))}
-              name={field.name}
-              ref={field.ref}
-            />
-          )
-        }}
+        render={({ field }) => (
+          <PhoneField
+            id="login-phone"
+            label="Phone number"
+            value={field.value}
+            error={errors.phoneDigits?.message}
+            onChange={(next) => field.onChange(toLocalDigits(next))}
+            onBlur={field.onBlur}
+            name={field.name}
+            inputRef={field.ref}
+          />
+        )}
       />
 
       <Input
@@ -122,19 +91,24 @@ export function LoginForm() {
         placeholder="Ada Lovelace"
         autoComplete="name"
         leftIcon={<User className="h-4 w-4" strokeWidth={1.75} />}
-        className="h-12"
+        className={cn('h-12', nameValue ? 'pr-11' : 'pr-4')}
         error={errors.name?.message}
         valid={Boolean(nameValue?.trim()) && !errors.name}
         rightIcon={
-          nameValue ? (
+          <div
+            className={cn(
+              'flex items-center justify-center overflow-hidden transition-[width,opacity] duration-[var(--duration-base)] ease-[var(--ease-standard)]',
+              nameValue ? 'w-8 opacity-100' : 'w-0 opacity-0',
+            )}>
             <button
               type="button"
+              tabIndex={nameValue ? 0 : -1}
               aria-label="Clear name"
               className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] hover:text-[var(--text-primary)]"
               onClick={() => setValue('name', '', { shouldValidate: true })}>
               <X className="h-3.5 w-3.5" strokeWidth={1.75} />
             </button>
-          ) : undefined
+          </div>
         }
         {...nameField}
       />
