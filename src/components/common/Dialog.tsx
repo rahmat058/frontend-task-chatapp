@@ -33,7 +33,7 @@ export function Dialog({ title, description, onClose, children, footer, classNam
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--overlay)] px-0 max-sm:pt-0 sm:items-start sm:justify-center sm:px-4 sm:pt-24"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--overlay)] px-0 sm:items-center sm:px-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="dialog-title"
@@ -46,12 +46,12 @@ export function Dialog({ title, description, onClose, children, footer, classNam
         tabIndex={-1}
         className={cn(
           'flex w-full max-w-md flex-col overflow-hidden border border-[var(--border-default)] bg-[var(--surface-1)] shadow-[var(--shadow-dialog)]',
-          'rounded-t-[var(--radius-lg)] pb-[env(safe-area-inset-bottom)] max-sm:max-h-[92vh]',
-          'sm:rounded-[var(--radius-lg)] sm:pb-0',
+          'max-h-[min(92dvh,calc(100dvh-1rem))] rounded-t-[var(--radius-lg)] pb-[env(safe-area-inset-bottom)]',
+          'sm:max-h-[min(85dvh,calc(100dvh-2rem))] sm:rounded-[var(--radius-lg)] sm:pb-0',
           'outline-none',
           className,
         )}>
-        <div className="flex items-start justify-between gap-3 border-b border-[var(--border-subtle)] px-5 py-4">
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-[var(--border-subtle)] px-5 py-4">
           <div className="min-w-0">
             <h2 id="dialog-title" className="text-base leading-[1.35] font-semibold text-[var(--text-primary)]">
               {title}
@@ -67,10 +67,10 @@ export function Dialog({ title, description, onClose, children, footer, classNam
           </Button>
         </div>
 
-        {children}
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">{children}</div>
 
         {footer && (
-          <div className="flex justify-end gap-2 border-t border-[var(--border-subtle)] px-5 py-4">{footer}</div>
+          <div className="flex shrink-0 justify-end gap-2 border-t border-[var(--border-subtle)] px-5 py-4">{footer}</div>
         )}
       </div>
     </div>

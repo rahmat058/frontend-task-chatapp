@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { Ellipsis, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Dialog } from '@/components/common/Dialog'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
 import { Avatar } from '@/components/common/Avatar'
 import { Spinner } from '@/components/common/Spinner'
+import { OverflowMenu } from '@/components/common/OverflowMenu'
 import { useAuthStore } from '@/lib/store/authStore'
 import { useUserDirectory } from '@/lib/store/userDirectory'
 import { useToastStore } from '@/lib/store/toastStore'
@@ -51,7 +52,6 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
   const name = watch('name')
   const [query, setQuery] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const [menuFor, setMenuFor] = useState<string | null>(null)
   const [confirm, setConfirm] = useState<null | { kind: 'remove'; id: string; name: string } | { kind: 'leave' }>(null)
   const [pending, setPending] = useState<{
     kind: 'add' | 'promote' | 'remove' | 'leave'
@@ -80,7 +80,6 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
     setPending({ kind, id })
     try {
       await action()
-      setMenuFor(null)
       setConfirm(null)
     } catch (err) {
       setError(getApiErrorMessage(err, fallback))
@@ -121,29 +120,27 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
       description={`${members.length} ${members.length === 1 ? 'member' : 'members'}`}
       onClose={onClose}
       className="max-w-[560px]">
-      <div className="flex min-h-0 flex-col gap-6 overflow-y-auto p-5">
+      <div className="flex flex-col gap-6 p-5">
         {admin && (
-          <form onSubmit={onRename} className="flex flex-col gap-3" noValidate>
-            <div className="flex items-center gap-3">
-              <Avatar name={conversation.name || 'Group'} size="lg" isGroup />
-              <div className="min-w-0 flex-1">
-                <Input
-                  id="rename-group-input"
-                  label="Group name"
-                  error={renameErrors.name?.message}
-                  {...register('name', {
-                    required: 'Group name is required',
-                    validate: (value) => value.trim().length > 0 || 'Group name is required',
-                  })}
-                />
-              </div>
+          <form onSubmit={onRename} className="flex flex-wrap items-end gap-3" noValidate>
+            <Avatar name={conversation.name || 'Group'} size="lg" isGroup className="mb-0.5" />
+            <div className="min-w-0 flex-1">
+              <Input
+                id="rename-group-input"
+                label="Group name"
+                error={renameErrors.name?.message}
+                {...register('name', {
+                  required: 'Group name is required',
+                  validate: (value) => value.trim().length > 0 || 'Group name is required',
+                })}
+              />
             </div>
             <Button
               type="submit"
-              size="sm"
+              size="md"
               isLoading={rename.isPending}
               disabled={!name.trim() || name.trim() === conversation.name}
-              className="self-start">
+              className="mb-0.5 ml-auto shrink-0">
               Save changes
             </Button>
           </form>
@@ -200,7 +197,6 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
               const role = roleLabel(conversation, member._id)
               const memberIsAdmin = role === 'Admin'
               const isSelf = idsMatch(member._id, user?._id)
-              const open = menuFor === member._id
               return (
                 <div key={member._id} className="border-b border-[var(--border-subtle)] last:border-b-0">
                   <div className="flex items-center gap-3 px-3 py-2.5">
@@ -221,43 +217,33 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
                       </span>
                     </div>
                     {!isSelf && admin && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label={`Actions for ${member.name}`}
-                        aria-expanded={open}
-                        onClick={() => setMenuFor(open ? null : member._id)}>
-                        <Ellipsis className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
-                      </Button>
+                      <OverflowMenu
+                        label={`Actions for ${member.name}`}
+                        disabled={isBusy('promote', member._id) || isBusy('remove', member._id)}
+                        items={[
+                          {
+                            id: 'promote',
+                            label: memberIsAdmin ? 'Already an admin' : 'Promote to admin',
+                            disabled: memberIsAdmin || isBusy('promote', member._id),
+                            onSelect: () =>
+                              void run(
+                                'promote',
+                                member._id,
+                                () => promote.mutateAsync(member._id),
+                                'Could not promote that member.',
+                              ),
+                          },
+                          {
+                            id: 'remove',
+                            label: 'Remove member',
+                            danger: true,
+                            disabled: isBusy('remove', member._id),
+                            onSelect: () => setConfirm({ kind: 'remove', id: member._id, name: member.name }),
+                          },
+                        ]}
+                      />
                     )}
                   </div>
-                  {open && !isSelf && (
-                    <div className="flex gap-2 border-t border-[var(--border-subtle)] bg-[var(--surface-2)] px-3 py-2">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        disabled={memberIsAdmin}
-                        title={memberIsAdmin ? 'Already an admin' : 'Promote to admin'}
-                        onClick={() =>
-                          run(
-                            'promote',
-                            member._id,
-                            () => promote.mutateAsync(member._id),
-                            'Could not promote that member.',
-                          )
-                        }
-                        isLoading={isBusy('promote', member._id)}>
-                        Promote to admin
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="danger"
-                        onClick={() => setConfirm({ kind: 'remove', id: member._id, name: member.name })}
-                        isLoading={isBusy('remove', member._id)}>
-                        Remove member
-                      </Button>
-                    </div>
-                  )}
                 </div>
               )
             })}
