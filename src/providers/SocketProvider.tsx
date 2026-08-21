@@ -8,6 +8,7 @@ import { SOCKET_EVENTS } from '@/types/socket';
 import type { SocketNewMessagePayload } from '@/types/socket';
 import { isOptimistic, messagesQueryKey } from '@/lib/hooks/useMessages';
 import { getSenderId, normalizeMessage } from '@/lib/utils/message';
+import { useUserDirectory } from '@/lib/store/userDirectory';
 import type { Message } from '@/types/models';
 import type { MessageHistoryResponse } from '@/types/api';
 
@@ -33,6 +34,8 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         useAuthStore.getState().user
       );
       if (!incoming?.conversationId) return;
+
+      useUserDirectory.getState().remember([incoming.sender]);
 
       queryClient.setQueryData(
         messagesQueryKey(incoming.conversationId),

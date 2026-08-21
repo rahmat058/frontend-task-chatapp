@@ -18,7 +18,7 @@ export interface Conversation {
   lastMessage?: {
     _id?: string;
     text: string;
-    sender?: Pick<User, '_id' | 'name'>;
+    sender?: Participant;
     createdAt?: string;
   };
   updatedAt?: string;

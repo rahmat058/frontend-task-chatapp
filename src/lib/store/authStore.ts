@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { User } from '@/types/models';
 import { storage } from '@/lib/utils/storage';
+import { useUserDirectory } from '@/lib/store/userDirectory';
 
 /**
  * `restoring` is the initial state on every load: the JWT lives in
@@ -28,6 +29,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
   setAuth: (user, token) => {
     storage.setToken(token);
+    useUserDirectory.getState().remember([user]);
     set({ user, token, status: 'authenticated', isAuthenticated: true });
   },
 

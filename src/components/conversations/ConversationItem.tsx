@@ -3,10 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { Users } from 'lucide-react';
 import { Avatar } from '@/components/common/Avatar';
-import { useAuthStore } from '@/lib/store/authStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { formatConversationTime } from '@/lib/utils/formatDate';
-import { getConversationName, getLastActivity } from '@/lib/utils/conversation';
+import { getLastActivity } from '@/lib/utils/conversation';
+import { useConversationName } from '@/lib/hooks/useConversationName';
 import { cn } from '@/lib/utils/cn';
 import type { Conversation } from '@/types/models';
 
@@ -17,11 +17,10 @@ interface ConversationItemProps {
 
 export function ConversationItem({ conversation, isActive }: ConversationItemProps) {
   const router = useRouter();
-  const user = useAuthStore((s) => s.user);
   const setActiveConversation = useUIStore((s) => s.setActiveConversation);
 
   const isGroup = conversation.type === 'group';
-  const displayName = getConversationName(conversation, user?._id);
+  const displayName = useConversationName(conversation);
   const lastMessage = conversation.lastMessage;
   const timestamp = formatConversationTime(getLastActivity(conversation));
 

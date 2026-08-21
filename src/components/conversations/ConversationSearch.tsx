@@ -30,7 +30,10 @@ export function ConversationSearch() {
   const handleSelectUser = async (selected: User) => {
     setError(null);
     try {
-      const conversation = await startConversation({ userId: selected._id });
+      const conversation = await startConversation({
+        userId: selected._id,
+        peer: selected,
+      });
       setActiveConversation(conversation._id);
       close();
       router.push(`/chat/${conversation._id}`);

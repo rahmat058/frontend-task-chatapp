@@ -18,6 +18,16 @@ export function unwrapArray<T>(raw: unknown): T[] {
   if (!raw || typeof raw !== 'object') return [];
 
   const obj = raw as Record<string, unknown>;
+  for (const key of [
+    'conversations',
+    'messages',
+    'users',
+    'data',
+    'items',
+    'results',
+  ]) {
+    if (Array.isArray(obj[key])) return obj[key] as T[];
+  }
   const arrayKey = Object.keys(obj).find((k) => Array.isArray(obj[k]));
   return arrayKey ? (obj[arrayKey] as T[]) : [];
 }

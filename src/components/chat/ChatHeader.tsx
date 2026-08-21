@@ -3,9 +3,8 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Avatar } from '@/components/common/Avatar';
-import { useAuthStore } from '@/lib/store/authStore';
+import { useConversationName } from '@/lib/hooks/useConversationName';
 import {
-  getConversationName,
   getParticipantCount,
 } from '@/lib/utils/conversation';
 import type { Conversation } from '@/types/models';
@@ -15,10 +14,9 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({ conversation }: ChatHeaderProps) {
-  const user = useAuthStore((s) => s.user);
   const isGroup = conversation.type === 'group';
 
-  const displayName = getConversationName(conversation, user?._id);
+  const displayName = useConversationName(conversation);
   const memberCount = getParticipantCount(conversation);
   const subtitle = isGroup
     ? `${memberCount} ${memberCount === 1 ? 'member' : 'members'}`

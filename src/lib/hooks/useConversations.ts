@@ -3,9 +3,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { conversationsApi } from '@/lib/api/conversations';
 import { groupsApi } from '@/lib/api/groups';
-import { sortByRecency } from '@/lib/utils/conversation';
+import { sortByRecency, hydrateConversation } from '@/lib/utils/conversation';
 import { useAuthStore } from '@/lib/store/authStore';
+import { useUserDirectory } from '@/lib/store/userDirectory';
 import type { CreateGroupRequest, StartConversationRequest } from '@/types/api';
+import type { Conversation, User } from '@/types/models';
 
 export const CONVERSATIONS_QUERY_KEY = ['conversations'];
 
@@ -24,9 +26,31 @@ export function useConversations() {
 export function useStartConversation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: StartConversationRequest) =>
-      conversationsApi.startDirect(data),
-    onSuccess: () => {
+    mutationFn: async ({
+      userId,
+      peer,
+    }: StartConversationRequest & { peer: User }) => {
+      const conversation = await conversationsApi.startDirect({ userId });
+      const directory = useUserDirectory.getState();
+      directory.rememberPeer(conversation._id, peer);
+      return hydrateConversation(
+        conversation,
+        useAuthStore.getState().user?._id,
+        directory.byId,
+        peer
+      );
+    },
+    onSuccess: (conversation) => {
+      queryClient.setQueryData(
+        CONVERSATIONS_QUERY_KEY,
+        (old: Conversation[] | undefined) => {
+          const list = Array.isArray(old) ? old : [];
+          return [
+            conversation,
+            ...list.filter((item) => item._id !== conversation._id),
+          ];
+        }
+      );
       queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY });
     },
   });
