@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { LandingContainer } from './LandingContainer'
 import { Reveal } from './Reveal'
 import { cn } from '@/lib/utils/cn'
@@ -26,8 +27,26 @@ const items = [
   },
 ]
 
+const ease = [0.2, 0.8, 0.2, 1] as const
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setReduced(media.matches)
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  return reduced
+}
+
 export function LandingFaq() {
   const [open, setOpen] = useState(0)
+  const reduce = usePrefersReducedMotion()
+  const baseId = useId()
 
   return (
     <section id="faq" className="scroll-mt-28">
@@ -45,31 +64,64 @@ export function LandingFaq() {
           </p>
         </Reveal>
 
-        <div className="landing-panel-glass mx-auto mt-10 max-w-[760px] overflow-hidden rounded-[var(--radius-xl)] px-5 sm:px-6">
+        <div className="landing-panel-glass mx-auto mt-10 max-w-[760px] overflow-hidden rounded-[var(--radius-xl)]">
           {items.map((item, index) => {
             const expanded = open === index
+            const panelId = `${baseId}-panel-${index}`
+            const headerId = `${baseId}-header-${index}`
+
             return (
-              <div key={item.q} className="border-b border-[var(--border-subtle)]">
+              <div
+                key={item.q}
+                className="border-b border-[var(--border-subtle)] last:border-b-0">
                 <h3>
                   <button
                     type="button"
-                    className="flex min-h-14 w-full items-center justify-between gap-4 py-4 text-left text-base font-medium text-[var(--text-primary)] focus-visible:shadow-[var(--focus-ring)]"
+                    id={headerId}
                     aria-expanded={expanded}
+                    aria-controls={panelId}
+                    className="group flex min-h-14 w-full items-center justify-between gap-4 px-5 py-4 text-left focus-visible:shadow-[var(--focus-ring)] sm:px-6"
                     onClick={() => setOpen(expanded ? -1 : index)}>
-                    {item.q}
-                    <ChevronDown
+                    <span
                       className={cn(
-                        'h-[18px] w-[18px] shrink-0 text-[var(--text-muted)] transition-transform duration-[var(--duration-base)] ease-[var(--ease-standard)]',
-                        expanded && 'rotate-180',
+                        'text-base font-medium transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)]',
+                        expanded
+                          ? 'text-[var(--text-primary)]'
+                          : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]',
+                      )}>
+                      {item.q}
+                    </span>
+                    <motion.span
+                      className={cn(
+                        'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border',
+                        expanded
+                          ? 'border-[var(--green-border)] bg-[var(--green-soft)] text-[var(--green-400)]'
+                          : 'border-[var(--border-subtle)] bg-[var(--surface-2)] text-[var(--text-muted)] group-hover:border-[var(--border-default)] group-hover:text-[var(--text-secondary)]',
                       )}
-                      strokeWidth={1.75}
-                      aria-hidden="true"
-                    />
+                      animate={reduce ? undefined : { rotate: expanded ? 180 : 0 }}
+                      transition={{ duration: 0.22, ease }}
+                      aria-hidden="true">
+                      <ChevronDown className="h-[16px] w-[16px]" strokeWidth={1.75} />
+                    </motion.span>
                   </button>
                 </h3>
-                <div hidden={!expanded} className="pb-5">
-                  <p className="max-w-prose text-sm leading-relaxed text-[var(--text-secondary)]">{item.a}</p>
-                </div>
+                <AnimatePresence initial={false}>
+                  {expanded && (
+                    <motion.div
+                      id={panelId}
+                      role="region"
+                      aria-labelledby={headerId}
+                      initial={reduce ? false : { height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={reduce ? undefined : { height: 0, opacity: 0 }}
+                      transition={{ duration: reduce ? 0 : 0.28, ease }}
+                      className="overflow-hidden">
+                      <p className="max-w-prose px-5 pb-5 text-sm leading-relaxed text-[var(--text-secondary)] sm:px-6">
+                        {item.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )
           })}
