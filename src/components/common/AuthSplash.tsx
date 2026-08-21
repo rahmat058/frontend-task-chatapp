@@ -10,7 +10,7 @@ export function AuthSplash({ label = 'Restoring your session…' }: { label?: st
       role="status"
       aria-live="polite"
     >
-      <Spinner size="md" />
+      <Spinner size="md" className="text-[var(--color-primary)]" />
       <p className="text-sm text-[var(--color-text-secondary)]">{label}</p>
     </div>
   );

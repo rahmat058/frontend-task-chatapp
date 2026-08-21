@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { MessageSquare } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Sign in — ChatApp',
@@ -12,24 +13,10 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[var(--color-bg)]">
-      <div
-        className="
-          relative w-full max-w-sm
-          bg-[var(--color-surface-1)]
-          rounded-2xl border border-[var(--color-border)]
-          shadow-2xl p-8
-          animate-fade-in
-        "
-      >
-        {/* Glow effect */}
-        <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-violet-500/10 to-indigo-500/5 pointer-events-none" />
-
-        {/* Logo */}
+      <div className="relative w-full max-w-sm bg-[var(--color-surface-1)] rounded-2xl border border-[var(--color-border)] shadow-2xl p-8 animate-fade-in">
         <div className="flex flex-col items-center gap-3 mb-8">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg">
-            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-            </svg>
+            <MessageSquare className="w-6 h-6 text-white" aria-hidden="true" />
           </div>
           <div className="text-center">
             <h1 className="text-xl font-bold text-[var(--color-text-primary)]">

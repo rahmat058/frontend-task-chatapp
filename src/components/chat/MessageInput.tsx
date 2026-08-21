@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { SendHorizontal, X } from 'lucide-react';
 import { useSendMessage } from '@/lib/hooks/useMessages';
 import { getApiErrorMessage } from '@/lib/api/normalize';
+import { cn } from '@/lib/utils/cn';
 
 interface MessageInputProps {
   conversationId: string;
@@ -16,29 +18,20 @@ export function MessageInput({ conversationId }: MessageInputProps) {
 
   const canSend = text.trim().length > 0 && !isPending;
 
-  const resetHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-    }
-  };
-
-  const submit = (body: string) => {
-    setError(null);
-    sendMessage(body, {
-      onError: (err) => {
-        setError(getApiErrorMessage(err, 'Message failed to send.'));
-        // Restore the text so the send can be retried without retyping.
-        setText((current) => (current.length === 0 ? body : current));
-      },
-    });
-  };
-
   const handleSend = () => {
     if (!canSend) return;
     const trimmed = text.trim();
     setText('');
-    resetHeight();
-    submit(trimmed);
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
+
+    setError(null);
+    sendMessage(trimmed, {
+      onError: (err) => {
+        setError(getApiErrorMessage(err, 'Message failed to send.'));
+        // Restore the text so the send can be retried without retyping.
+        setText((current) => (current.length === 0 ? trimmed : current));
+      },
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -48,7 +41,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
     }
   };
 
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
     const el = e.target;
     el.style.height = 'auto';
@@ -65,9 +58,10 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           <span>{error}</span>
           <button
             onClick={() => setError(null)}
-            className="shrink-0 underline underline-offset-2 hover:text-red-200"
+            aria-label="Dismiss error"
+            className="shrink-0 rounded p-0.5 hover:text-red-200"
           >
-            Dismiss
+            <X className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
         </div>
       )}
@@ -78,18 +72,17 @@ export function MessageInput({ conversationId }: MessageInputProps) {
             id="message-input"
             ref={textareaRef}
             value={text}
-            onChange={handleTextareaChange}
+            onChange={handleChange}
             onKeyDown={handleKeyDown}
             placeholder="Type a message…"
             rows={1}
             aria-label="Message input"
-            className="
-              flex-1 resize-none bg-transparent px-4 py-3 text-sm
-              text-[var(--color-text-primary)]
-              placeholder:text-[var(--color-text-muted)]
-              focus:outline-none leading-relaxed
-              min-h-[44px] max-h-[140px] overflow-y-auto
-            "
+            className={cn(
+              'flex-1 resize-none bg-transparent px-4 py-3 text-sm',
+              'text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]',
+              'focus:outline-none leading-relaxed',
+              'min-h-[44px] max-h-[140px] overflow-y-auto'
+            )}
           />
         </div>
 
@@ -98,18 +91,15 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           onClick={handleSend}
           disabled={!canSend}
           aria-label="Send message"
-          className="
-            w-11 h-11 rounded-2xl flex items-center justify-center shrink-0
-            transition-all duration-150
-            disabled:opacity-40 disabled:cursor-not-allowed
-            active:scale-95
-            bg-[var(--color-primary)] text-white
-            hover:bg-[var(--color-primary-hover)] disabled:hover:bg-[var(--color-primary)]
-          "
+          className={cn(
+            'w-11 h-11 rounded-2xl flex items-center justify-center shrink-0',
+            'bg-[var(--color-primary)] text-white',
+            'transition-all duration-150 active:scale-95',
+            'hover:bg-[var(--color-primary-hover)]',
+            'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-primary)]'
+          )}
         >
-          <svg className="w-4 h-4 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-          </svg>
+          <SendHorizontal className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
     </div>

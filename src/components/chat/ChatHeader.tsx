@@ -1,23 +1,24 @@
 'use client';
 
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import { Avatar } from '@/components/common/Avatar';
-import type { Conversation } from '@/types/models';
 import { useAuthStore } from '@/lib/store/authStore';
 import {
   getConversationName,
   getParticipantCount,
 } from '@/lib/utils/conversation';
+import type { Conversation } from '@/types/models';
 
 interface ChatHeaderProps {
   conversation: Conversation;
 }
 
 export function ChatHeader({ conversation }: ChatHeaderProps) {
-  const { user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
   const isGroup = conversation.type === 'group';
 
   const displayName = getConversationName(conversation, user?._id);
-
   const memberCount = getParticipantCount(conversation);
   const subtitle = isGroup
     ? `${memberCount} ${memberCount === 1 ? 'member' : 'members'}`
@@ -25,6 +26,15 @@ export function ChatHeader({ conversation }: ChatHeaderProps) {
 
   return (
     <header className="flex items-center gap-3 px-5 py-3.5 bg-[var(--color-surface-1)] border-b border-[var(--color-border)] shrink-0">
+      {/* The sidebar is hidden on small screens, so this is the only way back. */}
+      <Link
+        href="/chat"
+        aria-label="Back to conversations"
+        className="sm:hidden -ml-1 p-1.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text-primary)] transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+      </Link>
+
       <Avatar name={displayName} size="md" isGroup={isGroup} />
       <div className="min-w-0">
         <h1 className="text-sm font-semibold text-[var(--color-text-primary)] truncate">

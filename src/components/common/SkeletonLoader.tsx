@@ -1,8 +1,11 @@
 'use client';
 
+import { cn } from '@/lib/utils/cn';
+
 interface SkeletonLoaderProps {
-  variant?: 'conversation' | 'message' | 'text';
+  variant?: 'conversation' | 'message';
   count?: number;
+  className?: string;
 }
 
 function ConversationSkeleton() {
@@ -18,32 +21,44 @@ function ConversationSkeleton() {
   );
 }
 
-function MessageSkeleton({ isMe = false }: { isMe?: boolean }) {
+function MessageSkeleton({ isMine = false }: { isMine?: boolean }) {
   return (
-    <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-pulse-soft`}>
+    <div
+      className={cn(
+        'flex animate-pulse-soft',
+        isMine ? 'justify-end' : 'justify-start'
+      )}
+    >
       <div
-        className={`
-          h-10 rounded-2xl bg-[var(--color-surface-3)]
-          ${isMe ? 'w-48' : 'w-56'}
-        `}
+        className={cn(
+          'h-10 rounded-2xl bg-[var(--color-surface-3)]',
+          isMine ? 'w-48' : 'w-56'
+        )}
       />
     </div>
   );
 }
 
-export function SkeletonLoader({ variant = 'conversation', count = 5 }: SkeletonLoaderProps) {
+export function SkeletonLoader({
+  variant = 'conversation',
+  count = 5,
+  className,
+}: SkeletonLoaderProps) {
   if (variant === 'message') {
     return (
-      <div className="flex flex-col gap-3 p-4">
+      <div
+        className={cn('flex flex-col gap-3 p-4', className)}
+        aria-hidden="true"
+      >
         {Array.from({ length: count }).map((_, i) => (
-          <MessageSkeleton key={i} isMe={i % 3 === 0} />
+          <MessageSkeleton key={i} isMine={i % 3 === 0} />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col">
+    <div className={cn('flex flex-col', className)} aria-hidden="true">
       {Array.from({ length: count }).map((_, i) => (
         <ConversationSkeleton key={i} />
       ))}

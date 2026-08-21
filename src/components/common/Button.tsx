@@ -2,9 +2,10 @@
 
 import { forwardRef } from 'react';
 import { Spinner } from './Spinner';
+import { cn } from '@/lib/utils/cn';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
-type Size = 'sm' | 'md' | 'lg';
+type Size = 'sm' | 'md' | 'lg' | 'icon';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
@@ -32,6 +33,7 @@ const sizes: Record<Size, string> = {
   sm: 'text-xs px-3 py-1.5 h-7',
   md: 'text-sm px-4 py-2 h-9',
   lg: 'text-base px-6 py-2.5 h-11',
+  icon: 'w-8 h-8 p-0',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -44,7 +46,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       children,
       disabled,
-      className = '',
+      className,
       ...props
     },
     ref
@@ -53,7 +55,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+        className={cn(baseStyles, variants[variant], sizes[size], className)}
         {...props}
       >
         {isLoading ? (

@@ -1,5 +1,6 @@
 'use client';
 
+import { WifiOff } from 'lucide-react';
 import { useSocket } from '@/lib/hooks/useSocket';
 
 export function ConnectionBanner() {
@@ -13,7 +14,7 @@ export function ConnectionBanner() {
       role="status"
       aria-live="polite"
     >
-      <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse-soft" />
+      <WifiOff className="w-3.5 h-3.5 animate-pulse-soft" aria-hidden="true" />
       Connection lost. Reconnecting…
     </div>
   );
