@@ -73,7 +73,7 @@ export function ConversationSearch() {
             id={`user-result-${u._id}`}
             onClick={() => handleSelectUser(u)}
             disabled={isPending}
-            className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[var(--color-surface-2)] transition-colors text-left disabled:opacity-50"
+            className="w-full flex items-center gap-3 px-5 py-3 rounded-none hover:bg-[var(--color-surface-2)] transition-colors text-left disabled:opacity-50"
           >
             <Avatar name={u.name} size="sm" />
             <div className="min-w-0">

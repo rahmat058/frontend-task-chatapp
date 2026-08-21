@@ -59,7 +59,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           <button
             onClick={() => setError(null)}
             aria-label="Dismiss error"
-            className="shrink-0 rounded p-0.5 hover:text-red-200"
+            className="shrink-0 rounded-md p-0.5 hover:text-red-200"
           >
             <X className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
@@ -67,7 +67,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
       )}
 
       <div className="flex items-end gap-2 px-4 py-3">
-        <div className="flex-1 flex items-end bg-[var(--color-surface-2)] rounded-2xl border border-[var(--color-border)] focus-within:border-[var(--color-primary)] focus-within:ring-2 focus-within:ring-[var(--color-primary-soft)] transition-all duration-150">
+        <div className="flex-1 flex items-end bg-[var(--color-surface-2)] rounded-md border border-[var(--color-border)] focus-within:border-[var(--color-primary)] focus-within:ring-2 focus-within:ring-[var(--color-primary-soft)] transition-all duration-150">
           <textarea
             id="message-input"
             ref={textareaRef}
@@ -92,7 +92,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           disabled={!canSend}
           aria-label="Send message"
           className={cn(
-            'w-11 h-11 rounded-2xl flex items-center justify-center shrink-0',
+            'w-11 h-11 rounded-md flex items-center justify-center shrink-0',
             'bg-[var(--color-primary)] text-white',
             'transition-all duration-150 active:scale-95',
             'hover:bg-[var(--color-primary-hover)]',

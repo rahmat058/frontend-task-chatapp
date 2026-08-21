@@ -36,7 +36,8 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
       onClick={handleClick}
       aria-current={isActive ? 'page' : undefined}
       className={cn(
-        'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors duration-150',
+        // Flush edges: these rows tile a list rather than read as buttons.
+        'w-full flex items-center gap-3 px-4 py-3 text-left rounded-none transition-colors duration-150',
         isActive
           ? 'bg-[var(--color-primary-soft)] border-r-2 border-[var(--color-primary)]'
           : 'hover:bg-[var(--color-surface-2)]'

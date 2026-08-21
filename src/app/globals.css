@@ -31,10 +31,10 @@
   --color-bubble-received-text: #f1f1f5;
 
   /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Only `--radius-control` is defined here. Redefining --radius-sm/md/lg/xl
+     would silently rescale every Tailwind `rounded-*` utility, since v4 reads
+     them from this same custom-property namespace. */
+  --radius-control: 6px; /* shared shape for every input and button */
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -90,9 +90,23 @@ html, body {
 .animate-slide-in-right { animation: slideInRight 200ms ease both; }
 .animate-pulse-soft { animation: pulse-soft 1.5s ease-in-out infinite; }
 
-/* ─── Focus ring ──────────────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
+/* ─── Form controls ───────────────────────────────────────────────────────── */
+/* Declared in `@layer base` on purpose: unlayered rules outrank every Tailwind
+   utility regardless of specificity, which would stop `rounded-none` and
+   friends from overriding the shared radius below. */
+@layer base {
+  button,
+  input,
+  textarea,
+  select {
+    border-radius: var(--radius-control);
+    outline: none;
+  }
+
+  /* Focus is not removed, only moved off `outline` onto a box-shadow ring, so
+     keyboard navigation stays visible. */
+  :focus,
+  :focus-visible {
+    outline: none;
+  }
 }

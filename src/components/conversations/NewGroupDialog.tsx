@@ -107,7 +107,7 @@ export function NewGroupDialog() {
                 {u.name}
                 <button
                   onClick={() => toggleUser(u)}
-                  className="rounded-full hover:text-red-400 transition-colors"
+                  className="hover:text-red-400 transition-colors"
                   aria-label={`Remove ${u.name}`}
                 >
                   <X className="w-3 h-3" aria-hidden="true" />
@@ -127,7 +127,7 @@ export function NewGroupDialog() {
                   onClick={() => toggleUser(u)}
                   aria-pressed={isSelected}
                   className={cn(
-                    'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
+                    'w-full flex items-center gap-3 px-4 py-2.5 text-left rounded-none transition-colors',
                     'hover:bg-[var(--color-surface-3)]',
                     isSelected && 'opacity-60'
                   )}
