@@ -1,12 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Settings2 } from 'lucide-react';
 import { Avatar } from '@/components/common/Avatar';
+import { Button } from '@/components/common/Button';
+import { GroupSettingsDialog } from './GroupSettingsDialog';
 import { useConversationName } from '@/lib/hooks/useConversationName';
-import {
-  getParticipantCount,
-} from '@/lib/utils/conversation';
+import { getParticipantCount } from '@/lib/utils/conversation';
 import type { Conversation } from '@/types/models';
 
 interface ChatHeaderProps {
@@ -15,6 +16,7 @@ interface ChatHeaderProps {
 
 export function ChatHeader({ conversation }: ChatHeaderProps) {
   const isGroup = conversation.type === 'group';
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const displayName = useConversationName(conversation);
   const memberCount = getParticipantCount(conversation);
@@ -34,12 +36,32 @@ export function ChatHeader({ conversation }: ChatHeaderProps) {
       </Link>
 
       <Avatar name={displayName} size="md" isGroup={isGroup} />
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <h1 className="text-sm font-semibold text-[var(--color-text-primary)] truncate">
           {displayName}
         </h1>
         <p className="text-xs text-[var(--color-text-muted)]">{subtitle}</p>
       </div>
+
+      {isGroup && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="ml-auto"
+          aria-label="Group settings"
+          title="Group settings"
+          onClick={() => setSettingsOpen(true)}
+        >
+          <Settings2 className="w-4 h-4" aria-hidden="true" />
+        </Button>
+      )}
+
+      {settingsOpen && (
+        <GroupSettingsDialog
+          conversation={conversation}
+          onClose={() => setSettingsOpen(false)}
+        />
+      )}
     </header>
   );
 }

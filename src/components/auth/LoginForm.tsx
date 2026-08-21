@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowRight, Phone, User } from 'lucide-react';
 import { Input } from '@/components/common/Input';
 import { Button } from '@/components/common/Button';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { systemApi } from '@/lib/api/system';
 
 /** Permissive on formatting, strict on being a usable phone number. */
 const PHONE_PATTERN = /^\+?[\d\s()-]{7,20}$/;
@@ -14,6 +15,22 @@ export function LoginForm() {
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
   const [touched, setTouched] = useState({ phone: false, name: false });
+  const [apiDown, setApiDown] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    systemApi
+      .health()
+      .then((res) => {
+        if (!cancelled) setApiDown(res.status !== 'ok');
+      })
+      .catch(() => {
+        if (!cancelled) setApiDown(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const validatePhone = (value: string) => {
     if (!value.trim()) return 'Phone number is required';
@@ -60,6 +77,16 @@ export function LoginForm() {
         autoComplete="name"
         leftIcon={<User className="w-4 h-4" />}
       />
+
+      {apiDown && (
+        <div
+          className="text-sm text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3"
+          role="status"
+        >
+          The chat API is not reachable right now. Check your connection and try
+          again.
+        </div>
+      )}
 
       {error && (
         <div

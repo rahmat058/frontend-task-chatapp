@@ -147,6 +147,21 @@ export function getParticipantCount(conversation: Conversation): number {
   return getParticipantIds(conversation).length;
 }
 
+export function resolveMembers(
+  conversation: Conversation,
+  knownUsers: Record<string, Pick<User, '_id' | 'name'> & { phone?: string }>
+): User[] {
+  return getParticipantIds(conversation).map((id) => {
+    const populated = getParticipants(conversation).find((p) => p._id === id);
+    if (populated) return populated;
+    const known = knownUsers[id];
+    if (known) {
+      return { _id: known._id, name: known.name, phone: known.phone ?? '' };
+    }
+    return { _id: id, name: 'Member', phone: '' };
+  });
+}
+
 export function isGroup(conversation: Conversation): boolean {
   return conversation.type === 'group';
 }

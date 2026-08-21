@@ -9,6 +9,7 @@ import type { SocketNewMessagePayload } from '@/types/socket';
 import { isOptimistic, messagesQueryKey } from '@/lib/hooks/useMessages';
 import { getSenderId, normalizeMessage } from '@/lib/utils/message';
 import { useUserDirectory } from '@/lib/store/userDirectory';
+import { useUIStore } from '@/lib/store/uiStore';
 import type { Message } from '@/types/models';
 import type { MessageHistoryResponse } from '@/types/api';
 
@@ -36,6 +37,13 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       if (!incoming?.conversationId) return;
 
       useUserDirectory.getState().remember([incoming.sender]);
+
+      const viewing =
+        typeof window !== 'undefined' &&
+        window.location.pathname === `/chat/${incoming.conversationId}`;
+      if (!viewing) {
+        useUIStore.getState().incrementUnread(incoming.conversationId);
+      }
 
       queryClient.setQueryData(
         messagesQueryKey(incoming.conversationId),

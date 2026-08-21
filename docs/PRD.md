@@ -51,7 +51,7 @@ Write your own API documentation **before** you start building. This is a **stan
 - Format: Markdown, Postman collection, or OpenAPI/Swagger YAML — your choice
 - Must cover: endpoints, HTTP methods, request body, response body/shape (inspect the live API), parameters, status codes
 - You **may rename** endpoints, add new ones, or remove ones — it's your call
-- Suggested output: `docs/API.md`
+- Suggested output: `docs/API.md` ✅ — see [`docs/API.md`](./API.md) (mapped to the [live spec](https://frontend-task-chatapp.onrender.com/docs/))
 
 ---
 
@@ -109,51 +109,51 @@ const socket = io('https://frontend-task-chatapp.onrender.com', {
 
 #### F1 — Login Screen
 
-| ID | Requirement |
-|----|-------------|
-| F1.1 | User enters **phone number** and **name** to log in/register |
-| F1.2 | New phone number triggers auto-registration; existing phone logs in |
-| F1.3 | JWT stored and reused across sessions (localStorage) |
-| F1.4 | On page reload → call `GET /api/auth/me` with stored token to restore session |
-| F1.5 | Clear error state shown on failed login |
+| ID | Requirement | Done |
+|----|-------------|------|
+| F1.1 | User enters **phone number** and **name** to log in/register | ✅ |
+| F1.2 | New phone number triggers auto-registration; existing phone logs in | ✅ |
+| F1.3 | JWT stored and reused across sessions (localStorage) | ✅ |
+| F1.4 | On page reload → call `GET /api/auth/me` with stored token to restore session | ✅ |
+| F1.5 | Clear error state shown on failed login | ✅ |
 
 ---
 
 #### F2 — Conversation List Screen
 
-| ID | Requirement |
-|----|-------------|
-| F2.1 | Fetch all conversations the user is part of via `GET /api/conversations` |
-| F2.2 | Show: name (or participant name for DMs), last message preview, timestamp |
-| F2.3 | Visually distinguish **direct** (1-to-1) vs **group** conversations |
-| F2.4 | Real-time: `message:new` bumps conversation to top and updates preview |
-| F2.5 | Empty state: "No conversations yet — start one!" |
-| F2.6 | Loading skeleton while fetching |
+| ID | Requirement | Done |
+|----|-------------|------|
+| F2.1 | Fetch all conversations the user is part of via `GET /api/conversations` | ✅ |
+| F2.2 | Show: name (or participant name for DMs), last message preview, timestamp | ✅ |
+| F2.3 | Visually distinguish **direct** (1-to-1) vs **group** conversations | ✅ |
+| F2.4 | Real-time: `message:new` bumps conversation to top and updates preview | ✅ |
+| F2.5 | Empty state: "No conversations yet — start one!" | ✅ |
+| F2.6 | Loading skeleton while fetching | ✅ |
 
 ---
 
 #### F3 — Starting a Direct Conversation
 
-| ID | Requirement |
-|----|-------------|
-| F3.1 | User searches by **name or phone number** via `GET /api/users/search?q=` |
-| F3.2 | Trigger search on minimum 1 character |
-| F3.3 | Selecting a result → `POST /api/conversations` with `{ userId }` |
-| F3.4 | If conversation already exists, open the existing one (no duplicate) |
-| F3.5 | Navigate to the chat panel on creation |
+| ID | Requirement | Done |
+|----|-------------|------|
+| F3.1 | User searches by **name or phone number** via `GET /api/users/search?q=` | ✅ |
+| F3.2 | Trigger search on minimum 1 character | ✅ |
+| F3.3 | Selecting a result → `POST /api/conversations` with `{ userId }` | ✅ |
+| F3.4 | If conversation already exists, open the existing one (no duplicate) | ✅ |
+| F3.5 | Navigate to the chat panel on creation | ✅ |
 
 ---
 
 #### F4 — Group Conversations
 
-| ID | Requirement |
-|----|-------------|
-| F4.1 | Create a group with a **name** and **multiple participants** |
-| F4.2 | `POST /api/conversations/group` with `{ name, participantIds }` |
-| F4.3 | Creator automatically becomes an **admin** |
-| F4.4 | Admins can: add members, remove members, promote to admin, rename group |
-| F4.5 | Any member can **leave** (DELETE their own userId from participants) |
-| F4.6 | `conversation:updated` socket event refreshes group state in real-time |
+| ID | Requirement | Done |
+|----|-------------|------|
+| F4.1 | Create a group with a **name** and **multiple participants** | ✅ |
+| F4.2 | `POST /api/conversations/group` with `{ name, participantIds }` | ✅ |
+| F4.3 | Creator automatically becomes an **admin** | ✅ |
+| F4.4 | Admins can: add members, remove members, promote to admin, rename group | ✅ |
+| F4.5 | Any member can **leave** (DELETE their own userId from participants) | ✅ |
+| F4.6 | `conversation:updated` socket event refreshes group state in real-time | ✅ |
 
 **Group API operations at a glance:**
 
@@ -169,51 +169,51 @@ const socket = io('https://frontend-task-chatapp.onrender.com', {
 
 #### F5 — Message List (Chat Panel)
 
-| ID | Requirement |
-|----|-------------|
-| F5.1 | Fetch history via `GET /api/conversations/:id/messages` |
-| F5.2 | Pagination: `limit` (default 20) + `before` cursor for loading older messages |
-| F5.3 | **Sent** messages right-aligned; **received** messages left-aligned |
-| F5.4 | Each message shows: sender name (groups), message text, timestamp |
-| F5.5 | Loading state while fetching |
-| F5.6 | Empty state: "No messages yet — say hello!" |
+| ID | Requirement | Done |
+|----|-------------|------|
+| F5.1 | Fetch history via `GET /api/conversations/:id/messages` | ✅ |
+| F5.2 | Pagination: `limit` (default 20) + `before` cursor for loading older messages | ✅ |
+| F5.3 | **Sent** messages right-aligned; **received** messages left-aligned | ✅ |
+| F5.4 | Each message shows: sender name (groups), message text, timestamp | ✅ |
+| F5.5 | Loading state while fetching | ✅ |
+| F5.6 | Empty state: "No messages yet — say hello!" | ✅ |
 
 ---
 
 #### F6 — Sending Messages
 
-| ID | Requirement |
-|----|-------------|
-| F6.1 | Text input fixed at the bottom of the chat panel |
-| F6.2 | Submit via **Enter key** or **Send button** |
-| F6.3 | **Empty messages must not be sendable** — button disabled, Enter no-ops |
-| F6.4 | Send via `POST /api/messages` with `{ conversationId, text }` |
-| F6.5 | Or send via socket `message:send` event — both approaches are valid |
-| F6.6 | Optimistic UI: show message immediately; confirm/revert on response |
-| F6.7 | Input clears after successful send |
+| ID | Requirement | Done |
+|----|-------------|------|
+| F6.1 | Text input fixed at the bottom of the chat panel | ✅ |
+| F6.2 | Submit via **Enter key** or **Send button** | ✅ |
+| F6.3 | **Empty messages must not be sendable** — button disabled, Enter no-ops | ✅ |
+| F6.4 | Send via `POST /api/messages` with `{ conversationId, text }` | ✅ |
+| F6.5 | Or send via socket `message:send` event — both approaches are valid | ✅ REST send |
+| F6.6 | Optimistic UI: show message immediately; confirm/revert on response | ✅ |
+| F6.7 | Input clears after successful send | ✅ |
 
 ---
 
 #### F7 — Real-time Updates
 
-| ID | Requirement |
-|----|-------------|
-| F7.1 | `message:new` socket event appends new message to the active conversation |
-| F7.2 | New message in a non-active conversation → show unread badge/count |
-| F7.3 | No manual refresh ever required |
-| F7.4 | Socket disconnect → show "Reconnecting..." indicator |
-| F7.5 | On reconnect → re-fetch recent messages to close any message gap |
+| ID | Requirement | Done |
+|----|-------------|------|
+| F7.1 | `message:new` socket event appends new message to the active conversation | ✅ |
+| F7.2 | New message in a non-active conversation → show unread badge/count | ✅ |
+| F7.3 | No manual refresh ever required | ✅ |
+| F7.4 | Socket disconnect → show "Reconnecting..." indicator | ✅ |
+| F7.5 | On reconnect → re-fetch recent messages to close any message gap | ✅ |
 
 ---
 
 #### F8 — Auto-scroll Behavior
 
-| ID | Requirement |
-|----|-------------|
-| F8.1 | Auto-scroll to latest message when the chat panel first opens |
-| F8.2 | Auto-scroll on new message **only if** the user is already at the bottom |
-| F8.3 | **Do NOT force-scroll** if the user has scrolled up to read earlier messages |
-| F8.4 | Show "↓ New message" / scroll-to-bottom FAB when scrolled up and new message arrives |
+| ID | Requirement | Done |
+|----|-------------|------|
+| F8.1 | Auto-scroll to latest message when the chat panel first opens | ✅ |
+| F8.2 | Auto-scroll on new message **only if** the user is already at the bottom | ✅ |
+| F8.3 | **Do NOT force-scroll** if the user has scrolled up to read earlier messages | ✅ |
+| F8.4 | Show "↓ New message" / scroll-to-bottom FAB when scrolled up and new message arrives | ✅ |
 
 ---
 
@@ -344,17 +344,19 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 
 **Observed Response:**
 ```json
-[
-  {
-    "_id": "string",
-    "type": "direct | group",
-    "name": "string (group only)",
-    "participants": ["userId"],
-    "admins": ["userId (group only)"],
-    "lastMessage": { "text": "string", "createdAt": "ISO string" },
-    "updatedAt": "ISO string"
-  }
-]
+{
+  "data": [
+    {
+      "_id": "string",
+      "type": "direct | group",
+      "name": "string (group only)",
+      "participants": ["userId"],
+      "admins": ["userId (group only)"],
+      "lastMessage": { "text": "string", "createdAt": "ISO string" },
+      "updatedAt": "ISO string"
+    }
+  ]
+}
 ```
 
 ---
@@ -456,6 +458,10 @@ Include in `README.md` or a separate `docs/WRITEUP.md`.
 
 #### `GET /health` — Health Check
 🔓 No auth required
+
+**Path:** host root (`https://frontend-task-chatapp.onrender.com/health`), **not** `/api/health`.
+
+**Observed Response:** `{ "status": "ok" }`
 
 ---
 
@@ -630,18 +636,18 @@ Socket event: message:new
 | `README.md` with setup/run instructions | ✅ | ☐ |
 | Tech stack listed in README | ✅ | ☐ |
 | Part 3 write-up in README or separate doc | ✅ | ☐ |
-| **Standalone API documentation** (Part 1 deliverable) | ✅ | ☐ |
+| **Standalone API documentation** (Part 1 deliverable) | ✅ | ✅ [`docs/API.md`](./API.md) |
 | Part 1 — Live hosted demo URL (chat app) | ✅ | ☐ |
 | Part 2 — Live hosted demo URL (landing page) | ✅ | ☐ |
-| F1: Login screen (phone + name, JWT, session restore) | ✅ | ☐ |
-| F2: Conversation list (direct + group, loading/empty states) | ✅ | ☐ |
-| F3: Start a direct conversation (user search → new chat) | ✅ | ☐ |
-| F4: Group conversations (create, add/remove members, admin) | ✅ | ☐ |
-| F5: Message list (paginated, sender/receiver distinction) | ✅ | ☐ |
-| F6: Send messages (empty prevention, optimistic UI) | ✅ | ☐ |
-| F7: Real-time updates via Socket.io | ✅ | ☐ |
-| F8: Auto-scroll (smart — does not force-scroll when reading) | ✅ | ☐ |
-| Loading, empty, and error states throughout | ✅ | ☐ |
+| F1: Login screen (phone + name, JWT, session restore) | ✅ | ✅ |
+| F2: Conversation list (direct + group, loading/empty states) | ✅ | ✅ |
+| F3: Start a direct conversation (user search → new chat) | ✅ | ✅ |
+| F4: Group conversations (create, add/remove members, admin) | ✅ | ✅ |
+| F5: Message list (paginated, sender/receiver distinction) | ✅ | ✅ |
+| F6: Send messages (empty prevention, optimistic UI) | ✅ | ✅ |
+| F7: Real-time updates via Socket.io | ✅ | ✅ |
+| F8: Auto-scroll (smart — does not force-scroll when reading) | ✅ | ✅ |
+| Loading, empty, and error states throughout | ✅ | ✅ |
 
 ---
 

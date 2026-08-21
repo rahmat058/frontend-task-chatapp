@@ -65,3 +65,44 @@ export function useCreateGroup() {
     },
   });
 }
+
+function useInvalidateConversations() {
+  const queryClient = useQueryClient();
+  return () =>
+    queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY });
+}
+
+export function useAddParticipants(conversationId: string) {
+  const invalidate = useInvalidateConversations();
+  return useMutation({
+    mutationFn: (userIds: string[]) =>
+      groupsApi.addParticipants(conversationId, { userIds }),
+    onSuccess: invalidate,
+  });
+}
+
+export function useRemoveParticipant(conversationId: string) {
+  const invalidate = useInvalidateConversations();
+  return useMutation({
+    mutationFn: (userId: string) =>
+      groupsApi.removeParticipant(conversationId, userId),
+    onSuccess: invalidate,
+  });
+}
+
+export function usePromoteAdmin(conversationId: string) {
+  const invalidate = useInvalidateConversations();
+  return useMutation({
+    mutationFn: (userId: string) =>
+      groupsApi.promoteAdmin(conversationId, { userId }),
+    onSuccess: invalidate,
+  });
+}
+
+export function useRenameGroup(conversationId: string) {
+  const invalidate = useInvalidateConversations();
+  return useMutation({
+    mutationFn: (name: string) => groupsApi.rename(conversationId, { name }),
+    onSuccess: invalidate,
+  });
+}

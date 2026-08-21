@@ -1,12 +1,21 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useConversations } from '@/lib/hooks/useConversations';
 import { ChatPanel } from '@/components/chat/ChatPanel';
 import { ErrorState } from '@/components/common/ErrorState';
 import { SkeletonLoader } from '@/components/common/SkeletonLoader';
+import { useUIStore } from '@/lib/store/uiStore';
 
 export function ConversationView({ conversationId }: { conversationId: string }) {
   const { data: conversations, isLoading, error, refetch } = useConversations();
+  const clearUnread = useUIStore((s) => s.clearUnread);
+  const setActiveConversation = useUIStore((s) => s.setActiveConversation);
+
+  useEffect(() => {
+    setActiveConversation(conversationId);
+    clearUnread(conversationId);
+  }, [conversationId, clearUnread, setActiveConversation]);
 
   if (isLoading) {
     return <SkeletonLoader variant="message" count={6} />;

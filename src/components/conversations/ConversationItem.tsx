@@ -17,6 +17,7 @@ interface ConversationItemProps {
 
 export function ConversationItem({ conversation, isActive }: ConversationItemProps) {
   const router = useRouter();
+  const unread = useUIStore((s) => s.unreadById[conversation._id] ?? 0);
   const setActiveConversation = useUIStore((s) => s.setActiveConversation);
 
   const isGroup = conversation.type === 'group';
@@ -57,11 +58,18 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
               {displayName}
             </span>
           </span>
-          {timestamp && (
-            <span className="text-xs text-[var(--color-text-muted)] shrink-0">
-              {timestamp}
-            </span>
-          )}
+          <span className="flex items-center gap-2 shrink-0">
+            {timestamp && (
+              <span className="text-xs text-[var(--color-text-muted)]">
+                {timestamp}
+              </span>
+            )}
+            {unread > 0 && !isActive && (
+              <span className="min-w-4 h-4 px-1 rounded-full bg-[var(--color-primary)] text-[10px] font-semibold text-white flex items-center justify-center">
+                {unread > 9 ? '9+' : unread}
+              </span>
+            )}
+          </span>
         </div>
         <p className="text-xs text-[var(--color-text-secondary)] truncate mt-0.5">
           {lastMessage?.text || 'No messages yet'}
