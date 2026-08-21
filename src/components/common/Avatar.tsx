@@ -8,38 +8,39 @@ interface AvatarProps {
   size?: 'sm' | 'md' | 'lg' | 'xl'
   className?: string
   isGroup?: boolean
+  online?: boolean
 }
 
 const sizes = {
-  sm: 'w-8 h-8 text-xs',
-  md: 'w-10 h-10 text-sm',
-  lg: 'w-12 h-12 text-base',
-  xl: 'w-16 h-16 text-xl',
+  sm: 'h-8 w-8 text-[12px]',
+  md: 'h-10 w-10 text-[13px]',
+  lg: 'h-12 w-12 text-sm',
+  xl: 'h-16 w-16 text-lg',
 } as const
 
 const iconSizes = {
-  sm: 'w-3.5 h-3.5',
-  md: 'w-4.5 h-4.5',
-  lg: 'w-5 h-5',
-  xl: 'w-7 h-7',
+  sm: 'h-3.5 w-3.5',
+  md: 'h-4 w-4',
+  lg: 'h-5 w-5',
+  xl: 'h-7 w-7',
 } as const
 
-const gradients = [
-  'from-violet-500 to-indigo-600',
-  'from-pink-500 to-rose-600',
-  'from-cyan-500 to-blue-600',
-  'from-emerald-500 to-teal-600',
-  'from-amber-500 to-orange-600',
-  'from-fuchsia-500 to-purple-600',
-]
+const presence = {
+  sm: 'h-2 w-2',
+  md: 'h-2.5 w-2.5',
+  lg: 'h-3 w-3',
+  xl: 'h-4 w-4',
+} as const
 
-/** Stable per-name color so an avatar looks the same on every render. */
-function getGradient(name: string): string {
+/** Moderate, readable fills — not neon and not a purple brand. */
+const fills = ['#1d4a45', '#2a3f54', '#3d3a28', '#3b2f3a', '#2c3d32', '#3a3328']
+
+function getFill(name: string): string {
   let hash = 0
   for (let i = 0; i < name.length; i++) {
     hash = (hash * 31 + name.charCodeAt(i)) & 0xffffffff
   }
-  return gradients[Math.abs(hash) % gradients.length]
+  return fills[Math.abs(hash) % fills.length]
 }
 
 function getInitials(name: string): string {
@@ -48,19 +49,28 @@ function getInitials(name: string): string {
   return name.trim().slice(0, 2).toUpperCase() || '?'
 }
 
-export function Avatar({ name, size = 'md', className, isGroup }: AvatarProps) {
+export function Avatar({ name, size = 'md', className, isGroup, online }: AvatarProps) {
   return (
-    <div
-      className={cn(
-        sizes[size],
-        'flex items-center justify-center rounded-full bg-gradient-to-br',
-        getGradient(name),
-        'shrink-0 font-semibold text-white select-none',
-        className,
+    <span className={cn('relative inline-flex shrink-0', className)}>
+      <span
+        className={cn(
+          sizes[size],
+          'flex items-center justify-center rounded-full font-semibold text-[var(--text-primary)] select-none',
+        )}
+        style={{ backgroundColor: getFill(name) }}
+        aria-label={name}
+        title={name}>
+        {isGroup ? <Users className={iconSizes[size]} strokeWidth={1.75} aria-hidden="true" /> : getInitials(name)}
+      </span>
+      {online && (
+        <span
+          className={cn(
+            presence[size],
+            'absolute right-0 bottom-0 rounded-full border-2 border-[var(--bg-app)] bg-[var(--green-500)]',
+          )}
+          aria-label="Online"
+        />
       )}
-      aria-label={name}
-      title={name}>
-      {isGroup ? <Users className={iconSizes[size]} aria-hidden="true" /> : getInitials(name)}
-    </div>
+    </span>
   )
 }

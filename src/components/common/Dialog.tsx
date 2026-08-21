@@ -1,51 +1,77 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 import { Button } from './Button'
 import { cn } from '@/lib/utils/cn'
 
 interface DialogProps {
   title: string
+  description?: string
   onClose: () => void
   children: React.ReactNode
   footer?: React.ReactNode
   className?: string
 }
 
-export function Dialog({ title, onClose, children, footer, className }: DialogProps) {
+export function Dialog({ title, description, onClose, children, footer, className }: DialogProps) {
+  const panelRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    panelRef.current?.focus()
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
     document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      previous?.focus()
+    }
   }, [onClose])
 
   return (
     <div
-      className="animate-fade-in fixed inset-0 z-50 flex items-start justify-center bg-black/60 px-4 pt-16 backdrop-blur-sm sm:pt-24"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--overlay)] px-0 max-sm:pt-0 sm:items-start sm:justify-center sm:px-4 sm:pt-24"
       role="dialog"
       aria-modal="true"
-      aria-label={title}
+      aria-labelledby="dialog-title"
+      aria-describedby={description ? 'dialog-desc' : undefined}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}>
       <div
+        ref={panelRef}
+        tabIndex={-1}
         className={cn(
-          'w-full max-w-md overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)] shadow-2xl',
+          'flex w-full max-w-md flex-col overflow-hidden border border-[var(--border-default)] bg-[var(--surface-1)] shadow-[var(--shadow-dialog)]',
+          'rounded-t-[var(--radius-lg)] pb-[env(safe-area-inset-bottom)] max-sm:max-h-[92vh]',
+          'sm:rounded-[var(--radius-lg)] sm:pb-0',
+          'outline-none',
           className,
         )}>
-        <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 pt-5 pb-4">
-          <h2 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h2>
-          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close dialog">
-            <X className="h-4 w-4" aria-hidden="true" />
+        <div className="flex items-start justify-between gap-3 border-b border-[var(--border-subtle)] px-5 py-4">
+          <div className="min-w-0">
+            <h2 id="dialog-title" className="text-base leading-[1.35] font-semibold text-[var(--text-primary)]">
+              {title}
+            </h2>
+            {description && (
+              <p id="dialog-desc" className="mt-1 text-xs text-[var(--text-muted)]">
+                {description}
+              </p>
+            )}
+          </div>
+          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close dialog" className="shrink-0">
+            <X className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
           </Button>
         </div>
 
         {children}
 
-        {footer && <div className="flex justify-end gap-2 px-5 pt-1 pb-5">{footer}</div>}
+        {footer && (
+          <div className="flex justify-end gap-2 border-t border-[var(--border-subtle)] px-5 py-4">{footer}</div>
+        )}
       </div>
     </div>
   )

@@ -2,43 +2,86 @@
 
 /* ─── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
-  /* Brand */
-  --color-primary: #6366f1; /* indigo-500 */
-  --color-primary-hover: #4f46e5; /* indigo-600 */
-  --color-primary-soft: rgba(99, 102, 241, 0.12);
+  color-scheme: dark;
 
-  /* Surface */
-  --color-bg: #0f0f13;
-  --color-surface-1: #16161d;
-  --color-surface-2: #1e1e28;
-  --color-surface-3: #26263a;
-  --color-border: rgba(255, 255, 255, 0.07);
+  /* Background and surfaces */
+  --bg-canvas: #080c0e;
+  --bg-app: #0c1114;
+  --surface-1: #10161a;
+  --surface-2: #151c20;
+  --surface-3: #1a2227;
+  --surface-hover: #1d272c;
+  --surface-active: #173d2d;
+  --overlay: rgb(0 0 0 / 72%);
+
+  /* Borders */
+  --border-subtle: #202a2f;
+  --border-default: #2b353b;
+  --border-strong: #3a464c;
 
   /* Text */
-  --color-text-primary: #f1f1f5;
-  --color-text-secondary: #8b8ba0;
-  --color-text-muted: #5c5c73;
+  --text-primary: #f1f5f3;
+  --text-secondary: #a9b4af;
+  --text-muted: #718079;
+  --text-disabled: #505c57;
+  --text-inverse: #06130d;
 
-  /* Semantic */
-  --color-success: #22c55e;
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
+  /* Brand and status */
+  --green-50: #e9fff4;
+  --green-100: #c9f9df;
+  --green-300: #63e6a5;
+  --green-400: #35d07f;
+  --green-500: #20bd70;
+  --green-600: #079455;
+  --green-700: #087443;
+  --green-soft: rgb(32 189 112 / 12%);
+  --green-border: rgb(53 208 127 / 34%);
 
-  /* Chat bubbles */
-  --color-bubble-sent: #6366f1;
-  --color-bubble-sent-text: #ffffff;
-  --color-bubble-received: #1e1e28;
-  --color-bubble-received-text: #f1f1f5;
+  --danger: #ff6673;
+  --danger-soft: rgb(255 102 115 / 10%);
+  --warning: #f5b942;
+  --info: #4da3ff;
 
-  /* Radii */
-  /* Only `--radius-control` is defined here. Redefining --radius-sm/md/lg/xl
-     would silently rescale every Tailwind `rounded-*` utility, since v4 reads
-     them from this same custom-property namespace. */
-  --radius-control: 6px; /* shared shape for every input and button */
+  /* Geometry */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
 
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 200ms ease;
+  /* Effects */
+  --shadow-card: 0 12px 32px rgb(0 0 0 / 28%);
+  --shadow-dialog: 0 24px 64px rgb(0 0 0 / 48%);
+  --focus-ring: 0 0 0 3px rgb(53 208 127 / 22%);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+
+  /* Backward-compatible aliases used by existing product UI */
+  --color-primary: var(--green-600);
+  --color-primary-hover: var(--green-500);
+  --color-primary-soft: var(--green-soft);
+  --color-bg: var(--bg-canvas);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-success: var(--green-500);
+  --color-error: var(--danger);
+  --color-warning: var(--warning);
+  --color-bubble-sent: #123d2c;
+  --color-bubble-sent-text: var(--text-primary);
+  --color-bubble-received: var(--surface-2);
+  --color-bubble-received-text: var(--text-primary);
+  --radius-control: var(--radius-md);
+  --transition-fast: var(--duration-fast) var(--ease-standard);
+  --transition-base: var(--duration-base) var(--ease-standard);
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────────── */
@@ -51,12 +94,33 @@
 html,
 body {
   margin: 0;
-  background-color: var(--color-bg);
+  background-color: var(--bg-canvas);
   padding: 0;
   height: 100%;
-  color: var(--color-text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text-primary);
+  caret-color: var(--green-400);
+  font-family:
+    var(--font-geist),
+    var(--font-inter),
+    'Inter',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--green-soft);
+  color: var(--text-primary);
+}
+
+a {
+  text-underline-offset: 0.2em;
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
@@ -68,11 +132,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 99px;
-  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+  background: var(--surface-3);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
+  background: var(--text-muted);
 }
 
 /* ─── Animations ─────────────────────────────────────────────────────────── */
@@ -129,40 +193,42 @@ body {
 }
 
 .animate-fade-in {
-  animation: fadeIn 200ms ease both;
+  animation: fadeIn var(--duration-base) var(--ease-standard) both;
 }
 .animate-slide-in-left {
-  animation: slideInLeft 200ms ease both;
+  animation: slideInLeft var(--duration-base) var(--ease-standard) both;
 }
 .animate-slide-in-right {
-  animation: slideInRight 200ms ease both;
+  animation: slideInRight var(--duration-base) var(--ease-standard) both;
 }
 .animate-pulse-soft {
-  animation: pulse-soft 1.5s ease-in-out infinite;
+  animation: pulse-soft 1.5s var(--ease-standard) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-pulse-soft {
+    animation: none;
+  }
 }
 
 /* ─── Form controls ───────────────────────────────────────────────────────── */
-/* Declared in `@layer base` on purpose: unlayered rules outrank every Tailwind
-   utility regardless of specificity, which would stop `rounded-none` and
-   friends from overriding the shared radius below. */
 @layer base {
   button,
   input,
   textarea,
   select {
     outline: none;
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-md);
   }
 
-  /* Focus is not removed, only moved off `outline` onto a box-shadow ring, so
-     keyboard navigation stays visible. */
   :focus,
   :focus-visible {
     outline: none;
   }
 
-  /* Browsers default `<button>` to `cursor: default`, and Tailwind's preflight
-     no longer overrides it. `a` also covers `next/link`, which renders one. */
   button,
   a,
   summary,

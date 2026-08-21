@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">ChatApp navbar logo</title>
+  <desc id="desc">Emerald rounded chat bubble with two message dots.</desc>
+  <defs>
+    <linearGradient id="navbar-bg" x1="5" y1="4" x2="27" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#35D07F"/>
+      <stop offset="1" stop-color="#079455"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#navbar-bg)" d="M5 7.5A4.5 4.5 0 0 1 9.5 3h13A4.5 4.5 0 0 1 27 7.5v10a4.5 4.5 0 0 1-4.5 4.5H13l-6.45 5.12A.95.95 0 0 1 5 26.38V7.5Z"/>
+  <rect x="9" y="8" width="14" height="10" rx="3" fill="#071A13" fill-opacity=".9"/>
+  <circle cx="13" cy="13" r="1.25" fill="#55E6A5"/>
+  <circle cx="18.5" cy="13" r="1.25" fill="#55E6A5"/>
+</svg>

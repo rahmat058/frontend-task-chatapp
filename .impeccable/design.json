@@ -1,0 +1,380 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-21T19:20:00.000Z",
+  "title": "Design System: ChatApp",
+  "extensions": {
+    "colorMeta": {
+      "signal-indigo": {
+        "role": "primary",
+        "displayName": "Signal Indigo",
+        "canonical": "#6366f1",
+        "tonalRamp": [
+          "oklch(28% 0.14 275)",
+          "oklch(38% 0.16 275)",
+          "oklch(48% 0.18 275)",
+          "oklch(58% 0.2 275)",
+          "oklch(66% 0.19 275)",
+          "oklch(74% 0.14 275)",
+          "oklch(84% 0.08 275)",
+          "oklch(94% 0.03 275)"
+        ]
+      },
+      "signal-indigo-hover": {
+        "role": "primary",
+        "displayName": "Signal Indigo Hover",
+        "canonical": "#4f46e5",
+        "tonalRamp": [
+          "oklch(26% 0.14 280)",
+          "oklch(36% 0.16 280)",
+          "oklch(44% 0.18 280)",
+          "oklch(52% 0.2 280)",
+          "oklch(62% 0.17 280)",
+          "oklch(72% 0.12 280)",
+          "oklch(84% 0.07 280)",
+          "oklch(94% 0.03 280)"
+        ]
+      },
+      "signal-indigo-soft": {
+        "role": "primary",
+        "displayName": "Signal Indigo Soft",
+        "canonical": "rgba(99, 102, 241, 0.12)",
+        "tonalRamp": [
+          "rgba(99, 102, 241, 0.28)",
+          "rgba(99, 102, 241, 0.24)",
+          "rgba(99, 102, 241, 0.2)",
+          "rgba(99, 102, 241, 0.16)",
+          "rgba(99, 102, 241, 0.12)",
+          "rgba(99, 102, 241, 0.08)",
+          "rgba(99, 102, 241, 0.05)",
+          "rgba(99, 102, 241, 0.02)"
+        ]
+      },
+      "switchboard-void": {
+        "role": "neutral",
+        "displayName": "Switchboard Void",
+        "canonical": "#0f0f13",
+        "tonalRamp": [
+          "oklch(8% 0.012 280)",
+          "oklch(14% 0.012 280)",
+          "oklch(20% 0.012 280)",
+          "oklch(28% 0.01 280)",
+          "oklch(40% 0.008 280)",
+          "oklch(58% 0.006 280)",
+          "oklch(78% 0.004 280)",
+          "oklch(94% 0.002 280)"
+        ]
+      },
+      "plate-1": {
+        "role": "neutral",
+        "displayName": "Plate 1",
+        "canonical": "#16161d",
+        "tonalRamp": [
+          "oklch(10% 0.014 280)",
+          "oklch(16% 0.014 280)",
+          "oklch(22% 0.014 280)",
+          "oklch(30% 0.012 280)",
+          "oklch(42% 0.01 280)",
+          "oklch(58% 0.008 280)",
+          "oklch(78% 0.004 280)",
+          "oklch(94% 0.002 280)"
+        ]
+      },
+      "plate-2": {
+        "role": "neutral",
+        "displayName": "Plate 2",
+        "canonical": "#1e1e28",
+        "tonalRamp": [
+          "oklch(12% 0.016 280)",
+          "oklch(18% 0.016 280)",
+          "oklch(24% 0.016 280)",
+          "oklch(32% 0.014 280)",
+          "oklch(44% 0.01 280)",
+          "oklch(60% 0.008 280)",
+          "oklch(78% 0.004 280)",
+          "oklch(94% 0.002 280)"
+        ]
+      },
+      "plate-3": {
+        "role": "neutral",
+        "displayName": "Plate 3",
+        "canonical": "#26263a",
+        "tonalRamp": [
+          "oklch(14% 0.03 280)",
+          "oklch(20% 0.03 280)",
+          "oklch(28% 0.03 280)",
+          "oklch(36% 0.028 280)",
+          "oklch(48% 0.02 280)",
+          "oklch(62% 0.014 280)",
+          "oklch(80% 0.006 280)",
+          "oklch(94% 0.003 280)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgba(255, 255, 255, 0.07)",
+        "tonalRamp": [
+          "rgba(255, 255, 255, 0.18)",
+          "rgba(255, 255, 255, 0.14)",
+          "rgba(255, 255, 255, 0.11)",
+          "rgba(255, 255, 255, 0.09)",
+          "rgba(255, 255, 255, 0.07)",
+          "rgba(255, 255, 255, 0.05)",
+          "rgba(255, 255, 255, 0.03)",
+          "rgba(255, 255, 255, 0.015)"
+        ]
+      },
+      "text-bright": {
+        "role": "neutral",
+        "displayName": "Text Bright",
+        "canonical": "#f1f1f5",
+        "tonalRamp": [
+          "oklch(45% 0.01 280)",
+          "oklch(55% 0.01 280)",
+          "oklch(65% 0.01 280)",
+          "oklch(75% 0.008 280)",
+          "oklch(82% 0.006 280)",
+          "oklch(88% 0.005 280)",
+          "oklch(93% 0.004 280)",
+          "oklch(97% 0.003 280)"
+        ]
+      },
+      "text-dim": {
+        "role": "neutral",
+        "displayName": "Text Dim",
+        "canonical": "#8b8ba0",
+        "tonalRamp": [
+          "oklch(32% 0.03 280)",
+          "oklch(40% 0.03 280)",
+          "oklch(48% 0.032 280)",
+          "oklch(56% 0.032 280)",
+          "oklch(64% 0.03 280)",
+          "oklch(72% 0.024 280)",
+          "oklch(82% 0.014 280)",
+          "oklch(92% 0.008 280)"
+        ]
+      },
+      "text-faint": {
+        "role": "neutral",
+        "displayName": "Text Faint",
+        "canonical": "#5c5c73",
+        "tonalRamp": [
+          "oklch(22% 0.03 280)",
+          "oklch(30% 0.032 280)",
+          "oklch(38% 0.034 280)",
+          "oklch(44% 0.034 280)",
+          "oklch(52% 0.03 280)",
+          "oklch(64% 0.02 280)",
+          "oklch(78% 0.012 280)",
+          "oklch(90% 0.006 280)"
+        ]
+      },
+      "on-signal": {
+        "role": "neutral",
+        "displayName": "On Signal",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(40% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(60% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(88% 0 0)",
+          "oklch(94% 0 0)",
+          "oklch(99% 0 0)"
+        ]
+      },
+      "success": {
+        "role": "primary",
+        "displayName": "Success",
+        "canonical": "#22c55e",
+        "tonalRamp": [
+          "oklch(28% 0.12 145)",
+          "oklch(38% 0.14 145)",
+          "oklch(48% 0.16 145)",
+          "oklch(58% 0.17 145)",
+          "oklch(68% 0.16 145)",
+          "oklch(76% 0.12 145)",
+          "oklch(86% 0.07 145)",
+          "oklch(94% 0.03 145)"
+        ]
+      },
+      "error": {
+        "role": "primary",
+        "displayName": "Error",
+        "canonical": "#ef4444",
+        "tonalRamp": [
+          "oklch(30% 0.16 25)",
+          "oklch(40% 0.18 25)",
+          "oklch(50% 0.2 25)",
+          "oklch(58% 0.21 25)",
+          "oklch(66% 0.18 25)",
+          "oklch(74% 0.13 25)",
+          "oklch(84% 0.08 25)",
+          "oklch(94% 0.03 25)"
+        ]
+      },
+      "warning": {
+        "role": "primary",
+        "displayName": "Warning",
+        "canonical": "#f59e0b",
+        "tonalRamp": [
+          "oklch(32% 0.12 75)",
+          "oklch(42% 0.14 75)",
+          "oklch(52% 0.15 75)",
+          "oklch(62% 0.16 75)",
+          "oklch(70% 0.14 75)",
+          "oklch(78% 0.1 75)",
+          "oklch(86% 0.06 75)",
+          "oklch(94% 0.03 75)"
+        ]
+      },
+      "danger-soft": {
+        "role": "primary",
+        "displayName": "Danger Soft",
+        "canonical": "rgba(239, 68, 68, 0.1)",
+        "tonalRamp": [
+          "rgba(239, 68, 68, 0.28)",
+          "rgba(239, 68, 68, 0.22)",
+          "rgba(239, 68, 68, 0.18)",
+          "rgba(239, 68, 68, 0.14)",
+          "rgba(239, 68, 68, 0.1)",
+          "rgba(239, 68, 68, 0.07)",
+          "rgba(239, 68, 68, 0.04)",
+          "rgba(239, 68, 68, 0.02)"
+        ]
+      },
+      "warning-soft": {
+        "role": "primary",
+        "displayName": "Warning Soft",
+        "canonical": "rgba(245, 158, 11, 0.1)",
+        "tonalRamp": [
+          "rgba(245, 158, 11, 0.28)",
+          "rgba(245, 158, 11, 0.22)",
+          "rgba(245, 158, 11, 0.18)",
+          "rgba(245, 158, 11, 0.14)",
+          "rgba(245, 158, 11, 0.1)",
+          "rgba(245, 158, 11, 0.07)",
+          "rgba(245, 158, 11, 0.04)",
+          "rgba(245, 158, 11, 0.02)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "Login welcome only. The operate shell does not use a marketing display size." },
+      "title": { "displayName": "Title", "purpose": "Dialog titles." },
+      "body": { "displayName": "Body", "purpose": "Message text, list names, form fields." },
+      "label": { "displayName": "Label", "purpose": "Timestamps, previews, reconnect copy." }
+    },
+    "shadows": [
+      {
+        "name": "sheet-lift",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "Login card and modal sheet only."
+      }
+    ],
+    "motion": [
+      { "name": "fast", "value": "150ms ease", "purpose": "Control hover, row color, focus." },
+      { "name": "base", "value": "200ms ease", "purpose": "Fade-in sheets; bubble slide-in." }
+    ],
+    "breakpoints": [{ "name": "sm", "value": "640px" }]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Live-line action: confirm, create, send-adjacent submits.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Continue</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 8px 16px; border: none; border-radius: var(--radius-control, 6px); background: var(--color-primary); color: #fff; font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background 150ms ease, transform 150ms ease; } .ds-btn-primary:hover { background: var(--color-primary-hover); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-primary); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Plate-2 action: Manage group, dialog cancel-adjacent.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">Manage group</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 8px 16px; border: 1px solid var(--color-border); border-radius: var(--radius-control, 6px); background: var(--color-surface-2); color: var(--color-text-primary); font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background 150ms ease; } .ds-btn-secondary:hover { background: var(--color-surface-3); } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-primary); }"
+    },
+    {
+      "name": "Ghost Icon Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Sidebar tools: new chat, new group, sign out.",
+      "html": "<button class=\"ds-btn-ghost\" type=\"button\" aria-label=\"New chat\"><svg class=\"ds-btn-ghost-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 5v14M5 12h14\"/></svg></button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: none; border-radius: var(--radius-control, 6px); background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: background 150ms ease, color 150ms ease; } .ds-btn-ghost:hover { background: var(--color-surface-2); color: var(--color-text-primary); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-primary); } .ds-btn-ghost-icon { width: 16px; height: 16px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Login and dialog fields on Plate 2 with indigo focus ring.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Name</span><input class=\"ds-input\" type=\"text\" placeholder=\"Your name\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; width: 100%; } .ds-field-label { font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); } .ds-input { height: 44px; width: 100%; padding: 8px 16px; border: 1px solid var(--color-border); border-radius: var(--radius-control, 6px); background: var(--color-surface-2); color: var(--color-text-primary); font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; } .ds-input::placeholder { color: var(--color-text-muted); } .ds-input:hover { border-color: var(--color-border); } .ds-input:focus, .ds-input:focus-visible { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 2px var(--color-primary-soft); }"
+    },
+    {
+      "name": "Conversation Row",
+      "kind": "nav",
+      "refersTo": "conversation-active",
+      "description": "Flush list row; active state is indigo wash plus a right rail.",
+      "html": "<button class=\"ds-convo ds-convo-active\" type=\"button\"><span class=\"ds-avatar\">KR</span><span class=\"ds-convo-copy\"><span class=\"ds-convo-name\">Personal Group</span><span class=\"ds-convo-preview\">yes</span></span></button>",
+      "css": ".ds-convo { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; border: none; border-radius: 0; background: transparent; text-align: left; cursor: pointer; font-family: Inter, system-ui, sans-serif; } .ds-convo:hover { background: var(--color-surface-2); } .ds-convo:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--color-primary); } .ds-convo-active { background: var(--color-primary-soft); box-shadow: inset -2px 0 0 var(--color-primary); } .ds-avatar { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 9999px; background: linear-gradient(to bottom right, #8b5cf6, #4f46e5); color: #fff; font-size: 0.875rem; font-weight: 600; } .ds-convo-copy { display: flex; min-width: 0; flex-direction: column; } .ds-convo-name { font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary); } .ds-convo-preview { margin-top: 2px; font-size: 0.75rem; color: var(--color-text-secondary); }"
+    },
+    {
+      "name": "Sent Bubble",
+      "kind": "custom",
+      "refersTo": "bubble-sent",
+      "description": "Own message: Signal Indigo, right-aligned, sharper top-right corner.",
+      "html": "<div class=\"ds-bubble-sent\">Hi Kazi?</div>",
+      "css": ".ds-bubble-sent { max-width: 60%; padding: 10px 16px; border-radius: 16px 4px 16px 16px; background: var(--color-bubble-sent); color: var(--color-bubble-sent-text); font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; line-height: 1.625; }"
+    },
+    {
+      "name": "Received Bubble",
+      "kind": "custom",
+      "refersTo": "bubble-received",
+      "description": "Incoming message: Plate 2, hairline, sharper top-left corner.",
+      "html": "<div class=\"ds-bubble-wrap\"><span class=\"ds-sender\">Kazi Rahamatullah</span><div class=\"ds-bubble-received\">Hi Rahmat..</div></div>",
+      "css": ".ds-bubble-wrap { display: flex; max-width: 60%; flex-direction: column; align-items: flex-start; } .ds-sender { margin-bottom: 2px; padding: 0 4px; color: var(--color-primary); font-family: Inter, system-ui, sans-serif; font-size: 11px; font-weight: 500; } .ds-bubble-received { padding: 10px 16px; border: 1px solid var(--color-border); border-radius: 4px 16px 16px 16px; background: var(--color-bubble-received); color: var(--color-bubble-received-text); font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; line-height: 1.625; }"
+    },
+    {
+      "name": "Night-glass Sheet",
+      "kind": "card",
+      "refersTo": "sheet",
+      "description": "Login card / dialog: 16px plate, hairline, sheet-lift shadow.",
+      "html": "<div class=\"ds-sheet\"><h2 class=\"ds-sheet-title\">Welcome to ChatApp</h2><p class=\"ds-sheet-sub\">Enter your details to continue</p></div>",
+      "css": ".ds-sheet { width: 100%; max-width: 24rem; padding: 32px; border: 1px solid var(--color-border); border-radius: 16px; background: var(--color-surface-1); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); } .ds-sheet-title { margin: 0; color: var(--color-text-primary); font-family: Inter, system-ui, sans-serif; font-size: 1.25rem; font-weight: 700; } .ds-sheet-sub { margin: 4px 0 0; color: var(--color-text-secondary); font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Night Switchboard",
+    "overview": "ChatApp’s operate UI is a late-night desk: a near-black void, stacked charcoal plates, and one live line. Signal Indigo is that line — send, active thread, unread, group sender names. Everything else stays graphite so operators can scan a list and fire a message without the chrome competing.\n\nFloating sheets (login card, dialogs) are the soft night-glass: large radius, dim blur behind, a single heavy shadow. In-app chrome is not glass. Sidebar, header, and composer are flush plates divided by hairlines. Controls stay compact (6px corners, 150ms ease) so the desk feels instrumental even while overlays feel like lifted glass.\n\nConfirmed visual refusal: this is not a WhatsApp or Telegram clone. No green sent bubbles, no chat wallpaper, no consumer-messenger mascot. The live line is indigo on charcoal, not brand-green on a patterned canvas.",
+    "keyCharacteristics": [
+      "Dark-only canvas (`switchboard-void`); no light theme in the shipped system",
+      "One accent family (Signal Indigo + hover + 12% wash)",
+      "Tonal stacking for app chrome; shadow only on floating sheets",
+      "Shared 6px control radius; 16px radius reserved for sheets and bubbles",
+      "Inter at 14px body, 12px meta — dense, not editorial"
+    ],
+    "rules": [
+      { "name": "The Live Line Rule", "body": "Signal Indigo is scarce except where it is the message (sent bubbles). Do not paint large surfaces, wallpapers, or both bubble sides indigo.", "section": "colors" },
+      { "name": "The Hairline Rule", "body": "App chrome is separated by hairline borders. Do not add drop shadows to the sidebar, header, list, or composer.", "section": "colors" },
+      { "name": "The One Face Rule", "body": "Do not introduce a second family inside the chat shell. Inter is the switchboard type.", "section": "typography" },
+      { "name": "The Flat Chrome Rule", "body": "Sidebar, list, header, and composer stay shadowless. If a new panel lives in the shell, give it a hairline and a plate step, not a drop shadow.", "section": "elevation" },
+      { "name": "The Control Radius Rule", "body": "Every input and button is 6px. Do not mix 9999px pills onto form controls; pills are for avatars and count badges only.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep operate chrome on Switchboard Void and Plate 1–3 with hairline separators.",
+      "Do spend Signal Indigo on the live line: send, sent bubbles, active rail, unread, focus.",
+      "Do use 6px on every control and 16px on floating sheets and bubbles.",
+      "Do hide the sidebar below sm and recover navigation in the chat header.",
+      "Do treat reconnect and send-failure as semantic washes (amber / red), not as indigo."
+    ],
+    "donts": [
+      "Don't clone WhatsApp/Telegram: no green sent bubbles, no patterned/wallpaper message canvas, no consumer-green brand mark.",
+      "Don't drop-shadow the sidebar, list, header, or composer.",
+      "Don't introduce a second typeface in the chat shell.",
+      "Don't round conversation rows into cards; they tile flush.",
+      "Don't paint both bubble sides with Signal Indigo."
+    ]
+  }
+}

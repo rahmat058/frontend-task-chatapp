@@ -47,7 +47,9 @@ export function MessageList({ conversation }: MessageListProps) {
         </div>
       )}
 
-      <div ref={scrollRef} className="flex flex-1 flex-col gap-2 overflow-y-auto px-4 py-4">
+      <div
+        ref={scrollRef}
+        className="mx-auto flex w-full max-w-[760px] flex-1 flex-col gap-2 overflow-y-auto px-6 py-4">
         {messages.length === 0 ? (
           <EmptyState
             icon={<MessagesSquare className="h-6 w-6" />}

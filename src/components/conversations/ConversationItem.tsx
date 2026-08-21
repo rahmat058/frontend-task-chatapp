@@ -1,7 +1,6 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Users } from 'lucide-react'
 import { Avatar } from '@/components/common/Avatar'
 import { useUIStore } from '@/lib/store/uiStore'
 import { formatConversationTime } from '@/lib/utils/formatDate'
@@ -36,34 +35,27 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
       onClick={handleClick}
       aria-current={isActive ? 'page' : undefined}
       className={cn(
-        // Flush edges: these rows tile a list rather than read as buttons.
-        'flex w-full items-center gap-3 rounded-none px-4 py-3 text-left transition-colors duration-150',
-        isActive
-          ? 'border-r-2 border-[var(--color-primary)] bg-[var(--color-primary-soft)]'
-          : 'hover:bg-[var(--color-surface-2)]',
+        'relative flex min-h-16 w-full items-center gap-3 rounded-none px-3 py-2.5 text-left transition-colors duration-[var(--duration-fast)]',
+        isActive ? 'bg-[var(--surface-3)]' : 'hover:bg-[var(--surface-hover)]',
       )}>
+      {isActive && (
+        <span className="absolute top-2 bottom-2 left-0 w-0.5 rounded-r bg-[var(--green-500)]" aria-hidden="true" />
+      )}
       <Avatar name={displayName} size="md" isGroup={isGroup} />
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
-          <span className="flex min-w-0 items-center gap-1.5">
-            {isGroup && (
-              <Users className="h-3 w-3 shrink-0 text-[var(--color-text-muted)]" aria-label="Group conversation" />
-            )}
-            <span className="truncate text-sm font-medium text-[var(--color-text-primary)]">{displayName}</span>
-          </span>
-          <span className="flex shrink-0 items-center gap-2">
-            {timestamp && <span className="text-xs text-[var(--color-text-muted)]">{timestamp}</span>}
-            {unread > 0 && !isActive && (
-              <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] font-semibold text-white">
-                {unread > 9 ? '9+' : unread}
-              </span>
-            )}
-          </span>
+          <span className="truncate text-sm font-semibold text-[var(--text-primary)]">{displayName}</span>
+          {timestamp && <span className="shrink-0 text-xs text-[var(--text-muted)] tabular-nums">{timestamp}</span>}
         </div>
-        <p className="mt-0.5 truncate text-xs text-[var(--color-text-secondary)]">
-          {lastMessage?.text || 'No messages yet'}
-        </p>
+        <div className="mt-0.5 flex items-center justify-between gap-2">
+          <p className="truncate text-xs text-[var(--text-secondary)]">{lastMessage?.text || 'No messages yet'}</p>
+          {unread > 0 && !isActive && (
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--green-600)] px-1.5 text-[11px] font-medium text-[var(--text-inverse)] tabular-nums">
+              {unread > 9 ? '9+' : unread}
+            </span>
+          )}
+        </div>
       </div>
     </button>
   )

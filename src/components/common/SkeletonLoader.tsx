@@ -10,21 +10,20 @@ interface SkeletonLoaderProps {
 
 function ConversationSkeleton() {
   return (
-    <div className="animate-pulse-soft flex items-center gap-3 px-4 py-3">
-      <div className="h-10 w-10 shrink-0 rounded-full bg-[var(--color-surface-3)]" />
+    <div className="flex items-center gap-3 px-3 py-2.5">
+      <div className="h-10 w-10 shrink-0 rounded-full bg-[var(--surface-3)]" />
       <div className="flex flex-1 flex-col gap-2">
-        <div className="h-3.5 w-2/3 rounded-full bg-[var(--color-surface-3)]" />
-        <div className="h-2.5 w-4/5 rounded-full bg-[var(--color-surface-3)] opacity-60" />
+        <div className="h-3.5 w-2/3 rounded bg-[var(--surface-3)]" />
+        <div className="h-2.5 w-4/5 rounded bg-[var(--surface-3)] opacity-60" />
       </div>
-      <div className="h-2 w-8 rounded-full bg-[var(--color-surface-3)] opacity-40" />
     </div>
   )
 }
 
 function MessageSkeleton({ isMine = false }: { isMine?: boolean }) {
   return (
-    <div className={cn('animate-pulse-soft flex', isMine ? 'justify-end' : 'justify-start')}>
-      <div className={cn('h-10 rounded-2xl bg-[var(--color-surface-3)]', isMine ? 'w-48' : 'w-56')} />
+    <div className={cn('flex', isMine ? 'justify-end' : 'justify-start')}>
+      <div className={cn('h-10 rounded-[10px] bg-[var(--surface-3)]', isMine ? 'w-48' : 'w-56')} />
     </div>
   )
 }

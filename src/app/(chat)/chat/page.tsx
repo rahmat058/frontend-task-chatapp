@@ -10,7 +10,7 @@ export default function ChatIndexPage() {
       <EmptyState
         icon={<MessagesSquare className="h-7 w-7" />}
         title="Select a conversation"
-        description="Choose an existing conversation from the sidebar, or start a new one."
+        description="Pick a thread in the inbox, or start a new chat or group."
       />
     </div>
   )

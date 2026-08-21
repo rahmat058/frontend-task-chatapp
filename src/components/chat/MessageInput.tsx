@@ -60,26 +60,26 @@ export function MessageInput({ conversationId }: MessageInputProps) {
 
   return (
     <form
-      className="shrink-0 border-t border-[var(--color-border)] bg-[var(--color-surface-1)]"
+      className="shrink-0 border-t border-[var(--border-subtle)] bg-[var(--surface-1)] pb-[env(safe-area-inset-bottom)]"
       onSubmit={handleSubmit(onSend)}
       noValidate>
       {errors.root?.message && (
         <div
-          className="flex items-center justify-between gap-3 border-b border-red-500/20 bg-red-500/10 px-4 py-2 text-xs text-red-300"
+          className="flex items-center justify-between gap-3 border-b border-[var(--danger)]/20 bg-[var(--danger-soft)] px-4 py-2 text-xs text-[var(--danger)]"
           role="alert">
           <span>{errors.root.message}</span>
           <button
             type="button"
             onClick={() => clearErrors('root')}
             aria-label="Dismiss error"
-            className="shrink-0 rounded-md p-0.5 hover:text-red-200">
-            <X className="h-3.5 w-3.5" aria-hidden="true" />
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--radius-md)]">
+            <X className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
           </button>
         </div>
       )}
 
-      <div className="flex items-end gap-2 px-4 py-3">
-        <div className="flex flex-1 items-end rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] transition-all duration-150 focus-within:border-[var(--color-primary)] focus-within:ring-2 focus-within:ring-[var(--color-primary-soft)]">
+      <div className="flex min-h-[72px] items-end gap-2 px-4 py-3">
+        <div className="flex flex-1 items-end rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--surface-2)] transition-[border-color,box-shadow] duration-[var(--duration-fast)] focus-within:border-[var(--green-400)] focus-within:shadow-[var(--focus-ring)]">
           <textarea
             id="message-input"
             {...textField}
@@ -99,12 +99,12 @@ export function MessageInput({ conversationId }: MessageInputProps) {
             }}
             placeholder="Type a message…"
             rows={1}
-            aria-label="Message input"
+            aria-label="Message"
             className={cn(
               'flex-1 resize-none bg-transparent px-4 py-3 text-sm',
-              'text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]',
+              'text-[var(--text-primary)] placeholder:text-[var(--text-muted)]',
               'leading-relaxed focus:outline-none',
-              'max-h-[140px] min-h-[44px] overflow-y-auto',
+              'max-h-[140px] min-h-12 overflow-y-auto',
             )}
           />
         </div>
@@ -115,13 +115,14 @@ export function MessageInput({ conversationId }: MessageInputProps) {
           disabled={!canSend}
           aria-label="Send message"
           className={cn(
-            'flex h-11 w-11 shrink-0 items-center justify-center rounded-md',
-            'bg-[var(--color-primary)] text-white',
-            'transition-all duration-150 active:scale-95',
-            'hover:bg-[var(--color-primary-hover)]',
-            'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--color-primary)]',
+            'flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius-md)]',
+            'bg-[var(--green-600)] text-[var(--text-primary)]',
+            'transition-colors duration-[var(--duration-fast)]',
+            'hover:bg-[var(--green-500)]',
+            'focus-visible:shadow-[var(--focus-ring)]',
+            'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--green-600)]',
           )}>
-          <SendHorizontal className="h-4 w-4" aria-hidden="true" />
+          <SendHorizontal className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
         </button>
       </div>
     </form>

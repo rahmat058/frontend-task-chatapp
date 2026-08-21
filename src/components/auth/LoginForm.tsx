@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { ArrowRight, Phone, User } from 'lucide-react'
+import { ArrowRight, Lock, Phone, User } from 'lucide-react'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
 import { useAuth } from '@/lib/hooks/useAuth'
@@ -98,7 +98,7 @@ export function LoginForm() {
 
       {apiDown && (
         <div
-          className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-400"
+          className="rounded-[var(--radius-md)] border border-[var(--warning)]/30 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-4 py-3 text-sm text-[var(--warning)]"
           role="status">
           The chat API is not reachable right now. Check your connection and try again.
         </div>
@@ -106,7 +106,7 @@ export function LoginForm() {
 
       {error && (
         <div
-          className="animate-fade-in rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400"
+          className="animate-fade-in rounded-[var(--radius-md)] border border-[var(--danger)]/25 bg-[var(--danger-soft)] px-4 py-3 text-sm text-[var(--danger)]"
           role="alert">
           {error}
         </div>
@@ -122,8 +122,9 @@ export function LoginForm() {
         {isLoading ? 'Signing in…' : 'Continue'}
       </Button>
 
-      <p className="text-center text-xs leading-relaxed text-[var(--color-text-muted)]">
-        New here? Just enter your phone — we&apos;ll create your account automatically.
+      <p className="flex items-start gap-2 text-xs leading-relaxed text-[var(--text-muted)]">
+        <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+        New here? We&apos;ll create your account automatically.
       </p>
     </form>
   )

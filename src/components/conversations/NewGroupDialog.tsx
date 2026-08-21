@@ -121,7 +121,7 @@ export function NewGroupDialog() {
             {selectedUsers.map((u) => (
               <span
                 key={u._id}
-                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-primary)]/20 bg-[var(--color-primary-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-primary)]">
+                className="inline-flex items-center gap-1.5 rounded-[var(--radius-md)] border border-[var(--green-border)] bg-[var(--green-soft)] px-2.5 py-1 text-xs font-medium text-[var(--green-400)]">
                 {u.name}
                 <button
                   type="button"
@@ -136,7 +136,7 @@ export function NewGroupDialog() {
         )}
 
         {searchResults && searchResults.length > 0 && (
-          <div className="max-h-44 overflow-y-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)]">
+          <div className="max-h-44 overflow-y-auto rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-2)]">
             {searchResults.map((u) => {
               const isSelected = selectedUsers.some((x) => x._id === u._id)
               return (
@@ -147,7 +147,7 @@ export function NewGroupDialog() {
                   aria-pressed={isSelected}
                   className={cn(
                     'flex w-full items-center gap-3 rounded-none px-4 py-2.5 text-left transition-colors',
-                    'hover:bg-[var(--color-surface-3)]',
+                    'hover:bg-[var(--surface-hover)]',
                     isSelected && 'opacity-60',
                   )}>
                   <Avatar name={u.name} size="sm" />
@@ -155,7 +155,7 @@ export function NewGroupDialog() {
                     <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{u.name}</p>
                     <p className="truncate text-xs text-[var(--color-text-muted)]">{u.phone}</p>
                   </div>
-                  {isSelected && <Check className="h-4 w-4 shrink-0 text-[var(--color-primary)]" aria-hidden="true" />}
+                  {isSelected && <Check className="h-4 w-4 shrink-0 text-[var(--green-400)]" aria-hidden="true" />}
                 </button>
               )
             })}
@@ -163,7 +163,7 @@ export function NewGroupDialog() {
         )}
 
         {(errors.root?.message || submitError) && (
-          <p className="text-xs text-red-400" role="alert">
+          <p className="text-xs text-[var(--danger)]" role="alert">
             {errors.root?.message || submitError}
           </p>
         )}

@@ -30,26 +30,24 @@ export function MessageBubble({ message, conversation, isMine, isGroup, showSend
   })
 
   return (
-    <div className={cn('flex', isMine ? 'animate-slide-in-right justify-end' : 'animate-slide-in-left justify-start')}>
-      <div className={cn('flex max-w-[72%] flex-col sm:max-w-[60%]', isMine ? 'items-end' : 'items-start')}>
+    <div className={cn('flex', isMine ? 'justify-end' : 'justify-start')}>
+      <div className={cn('flex max-w-[68%] flex-col', isMine ? 'items-end' : 'items-start')}>
         {isGroup && !isMine && showSender && (
-          <span className="mb-0.5 px-1 text-[11px] font-medium text-[var(--color-primary)]">
-            {senderName}
-          </span>
+          <span className="mb-1 px-1 text-xs font-medium text-[var(--text-secondary)]">{senderName}</span>
         )}
 
         <div
           className={cn(
-            'rounded-2xl px-4 py-2.5 text-sm leading-relaxed break-words whitespace-pre-wrap',
+            'rounded-[10px] px-3 py-2.5 text-sm leading-relaxed break-words whitespace-pre-wrap',
             isMine
-              ? 'rounded-tr-sm bg-[var(--color-bubble-sent)] text-[var(--color-bubble-sent-text)]'
-              : 'rounded-tl-sm border border-[var(--color-border)] bg-[var(--color-bubble-received)] text-[var(--color-bubble-received-text)]',
+              ? 'rounded-tr-md border border-[#22513d] bg-[#123d2c] text-[var(--text-primary)]'
+              : 'rounded-tl-md border border-[var(--border-subtle)] bg-[var(--surface-2)] text-[var(--text-primary)]',
             pending && 'opacity-70',
           )}>
           {message.text}
         </div>
 
-        <span className="mt-0.5 flex items-center gap-1 px-1 text-[10px] text-[var(--color-text-muted)]">
+        <span className="mt-1 flex items-center gap-1 px-1 text-xs text-[var(--text-muted)] tabular-nums">
           {timestamp}
           {isMine &&
             (pending ? (

@@ -10,10 +10,10 @@ export function ConnectionBanner() {
 
   return (
     <div
-      className="animate-fade-in flex shrink-0 items-center justify-center gap-2 border-b border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-medium text-amber-300"
+      className="flex shrink-0 items-center justify-center gap-2 border-b border-[var(--warning)]/25 bg-[color-mix(in_srgb,var(--warning)_10%,transparent)] px-4 py-2 text-xs font-medium text-[var(--warning)]"
       role="status"
       aria-live="polite">
-      <WifiOff className="animate-pulse-soft h-3.5 w-3.5" aria-hidden="true" />
+      <WifiOff className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
       Connection lost. Reconnecting…
     </div>
   )

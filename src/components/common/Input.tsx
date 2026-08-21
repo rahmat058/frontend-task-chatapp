@@ -17,20 +17,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const errorId = error ? `${inputId}-error` : undefined
 
     return (
-      <div className="flex w-full flex-col gap-1.5">
+      <div className="flex w-full flex-col gap-2">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-[var(--color-text-secondary)]">
+          <label htmlFor={inputId} className="text-xs leading-[1.3] font-medium text-[var(--text-secondary)]">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
-          {leftIcon && (
-            <span className="pointer-events-none absolute left-3 text-[var(--color-text-muted)]">{leftIcon}</span>
-          )}
+          {leftIcon && <span className="pointer-events-none absolute left-3 text-[var(--text-muted)]">{leftIcon}</span>}
           {prefix && (
             <span
               className={cn(
-                'pointer-events-none absolute text-sm font-medium text-[var(--color-text-secondary)] select-none',
+                'pointer-events-none absolute text-sm font-medium text-[var(--text-secondary)] select-none',
                 leftIcon ? 'left-10' : 'left-4',
               )}
               aria-hidden="true">
@@ -43,25 +41,26 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={error ? true : undefined}
             aria-describedby={errorId}
             className={cn(
-              'h-11 w-full rounded-md px-4 py-2 text-sm',
-              'border border-[var(--color-border)] bg-[var(--color-surface-2)]',
-              'text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]',
-              'transition-all duration-150',
-              'focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-soft)] focus:outline-none',
+              'h-11 w-full rounded-[var(--radius-md)] px-4 py-2 text-sm',
+              'border border-[var(--border-default)] bg-[var(--surface-2)]',
+              'text-[var(--text-primary)] placeholder:text-[var(--text-muted)]',
+              'transition-[border-color,box-shadow] duration-[var(--duration-fast)] ease-[var(--ease-standard)]',
+              'focus:border-[var(--green-400)] focus:shadow-[var(--focus-ring)] focus:outline-none',
               'disabled:cursor-not-allowed disabled:opacity-50',
               leftIcon && !prefix && 'pl-10',
               leftIcon && prefix && 'pl-[5.75rem]',
               !leftIcon && prefix && 'pl-16',
               rightIcon && 'pr-10',
-              error && 'border-red-500/60 focus:border-red-500 focus:ring-red-500/20',
+              error &&
+                'border-[var(--danger)] focus:border-[var(--danger)] focus:shadow-[0_0_0_3px_var(--danger-soft)]',
               className,
             )}
             {...props}
           />
-          {rightIcon && <span className="absolute right-3 text-[var(--color-text-muted)]">{rightIcon}</span>}
+          {rightIcon && <span className="absolute right-3 text-[var(--text-muted)]">{rightIcon}</span>}
         </div>
         {error && (
-          <p id={errorId} className="animate-fade-in text-xs text-red-400">
+          <p id={errorId} className="mt-[-2px] text-xs leading-[1.45] text-[var(--danger)]">
             {error}
           </p>
         )}

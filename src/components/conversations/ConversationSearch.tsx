@@ -63,7 +63,7 @@ export function ConversationSearch() {
 
         {noResults && (
           <p className="flex flex-col items-center gap-2 py-6 text-center text-sm text-[var(--color-text-secondary)]">
-            <UserX className="h-5 w-5 text-[var(--color-text-muted)]" />
+            <UserX className="h-5 w-5 text-[var(--text-muted)]" />
             No users found for &ldquo;{query}&rdquo;
           </p>
         )}
@@ -74,11 +74,11 @@ export function ConversationSearch() {
             id={`user-result-${u._id}`}
             onClick={() => handleSelectUser(u)}
             disabled={isPending}
-            className="flex w-full items-center gap-3 rounded-none px-5 py-3 text-left transition-colors hover:bg-[var(--color-surface-2)] disabled:opacity-50">
+            className="flex w-full items-center gap-3 rounded-none px-5 py-3 text-left transition-colors hover:bg-[var(--surface-hover)] disabled:opacity-50">
             <Avatar name={u.name} size="sm" />
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{u.name}</p>
-              <p className="truncate text-xs text-[var(--color-text-muted)]">{u.phone}</p>
+              <p className="truncate text-sm font-medium text-[var(--text-primary)]">{u.name}</p>
+              <p className="truncate text-xs text-[var(--text-muted)]">{u.phone}</p>
             </div>
           </button>
         ))}
