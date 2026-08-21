@@ -40,6 +40,10 @@ export function GroupSettingsDialog({
   const [name, setName] = useState(conversation.name ?? '');
   const [query, setQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState<{
+    kind: 'add' | 'promote' | 'remove' | 'leave';
+    id: string;
+  } | null>(null);
 
   const { data: searchResults, isFetching } = useUserSearch(query);
   const rename = useRenameGroup(conversation._id);
@@ -50,36 +54,58 @@ export function GroupSettingsDialog({
   const memberIds = new Set(members.map((m) => m._id));
   const candidates = (searchResults ?? []).filter((u) => !memberIds.has(u._id));
 
-  const run = async (action: () => Promise<unknown>, fallback: string) => {
+  const isBusy = (
+    kind: 'add' | 'promote' | 'remove' | 'leave',
+    id: string
+  ) => pending?.kind === kind && pending.id === id;
+
+  const run = async (
+    kind: 'add' | 'promote' | 'remove' | 'leave',
+    id: string,
+    action: () => Promise<unknown>,
+    fallback: string
+  ) => {
     setError(null);
+    setPending({ kind, id });
     try {
       await action();
     } catch (err) {
       setError(getApiErrorMessage(err, fallback));
+    } finally {
+      setPending(null);
     }
   };
 
   const handleRename = () => {
     const next = name.trim();
     if (!next || next === conversation.name) return;
-    void run(() => rename.mutateAsync(next), 'Could not rename the group.');
+    void (async () => {
+      setError(null);
+      try {
+        await rename.mutateAsync(next);
+      } catch (err) {
+        setError(getApiErrorMessage(err, 'Could not rename the group.'));
+      }
+    })();
   };
 
   const handleLeave = async () => {
     if (!user?._id) return;
     setError(null);
+    setPending({ kind: 'leave', id: user._id });
     try {
       await removeMember.mutateAsync(user._id);
       onClose();
       router.push('/chat');
     } catch (err) {
       setError(getApiErrorMessage(err, 'Could not leave the group.'));
+      setPending(null);
     }
   };
 
   return (
-    <Dialog title="Group settings" onClose={onClose}>
-      <div className="p-4 flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
+    <Dialog title="Group settings" onClose={onClose} className="max-h-[85vh] flex flex-col">
+      <div className="p-4 flex flex-col gap-4 min-h-0 overflow-y-auto">
         {admin && (
           <div className="flex gap-2">
             <Input
@@ -116,7 +142,7 @@ export function GroupSettingsDialog({
         )}
 
         {admin && candidates.length > 0 && (
-          <div className="rounded-xl border border-[var(--color-border)] overflow-hidden">
+          <div className="rounded-xl border border-[var(--color-border)] max-h-40 overflow-y-auto shrink-0">
             {candidates.map((candidate) => (
               <div
                 key={candidate._id}
@@ -134,11 +160,13 @@ export function GroupSettingsDialog({
                   variant="secondary"
                   onClick={() =>
                     run(
+                      'add',
+                      candidate._id,
                       () => addMembers.mutateAsync([candidate._id]),
                       'Could not add that member.'
                     )
                   }
-                  isLoading={addMembers.isPending}
+                  isLoading={isBusy('add', candidate._id)}
                 >
                   Add
                 </Button>
@@ -151,7 +179,7 @@ export function GroupSettingsDialog({
           <p className="text-xs font-medium text-[var(--color-text-muted)] mb-2">
             Members · {members.length}
           </p>
-          <div className="rounded-xl border border-[var(--color-border)] overflow-hidden">
+          <div className="rounded-xl border border-[var(--color-border)] max-h-52 overflow-y-auto">
             {members.map((member) => {
               const memberIsAdmin = isAdmin(conversation, member._id);
               const isSelf = member._id === user?._id;
@@ -188,11 +216,13 @@ export function GroupSettingsDialog({
                         }
                         onClick={() =>
                           run(
+                            'promote',
+                            member._id,
                             () => promote.mutateAsync(member._id),
                             'Could not promote that member.'
                           )
                         }
-                        isLoading={promote.isPending}
+                        isLoading={isBusy('promote', member._id)}
                       >
                         Promote
                       </Button>
@@ -207,11 +237,13 @@ export function GroupSettingsDialog({
                         }
                         onClick={() =>
                           run(
+                            'remove',
+                            member._id,
                             () => removeMember.mutateAsync(member._id),
                             'Could not remove that member.'
                           )
                         }
-                        isLoading={removeMember.isPending}
+                        isLoading={isBusy('remove', member._id)}
                       >
                         Remove
                       </Button>
@@ -229,7 +261,11 @@ export function GroupSettingsDialog({
           </p>
         )}
 
-        <Button variant="danger" onClick={handleLeave} isLoading={removeMember.isPending}>
+        <Button
+          variant="danger"
+          onClick={handleLeave}
+          isLoading={isBusy('leave', user?._id ?? '')}
+        >
           Leave group
         </Button>
       </div>
