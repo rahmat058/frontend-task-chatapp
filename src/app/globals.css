@@ -109,4 +109,20 @@ html, body {
   :focus-visible {
     outline: none;
   }
+
+  /* Browsers default `<button>` to `cursor: default`, and Tailwind's preflight
+     no longer overrides it. `a` also covers `next/link`, which renders one. */
+  button,
+  a,
+  summary,
+  label[for],
+  [role="button"],
+  [role="tab"] {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled='true'] {
+    cursor: not-allowed;
+  }
 }
