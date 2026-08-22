@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { Search } from 'lucide-react'
+import { Search, UserX } from 'lucide-react'
 import { Dialog } from '@/components/common/Dialog'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
@@ -60,14 +60,25 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
     id: string
   } | null>(null)
 
-  const { data: searchResults, isSearching } = useUserSearch(query)
+  const { data: searchResults, isSearching, matchedSelf } = useUserSearch(query)
   const rename = useRenameGroup(conversation._id)
   const addMembers = useAddParticipants(conversation._id)
   const removeMember = useRemoveParticipant(conversation._id)
   const promote = usePromoteAdmin(conversation._id)
 
-  const memberIds = new Set(members.map((m) => m._id))
-  const candidates = (searchResults ?? []).filter((u) => !memberIds.has(u._id))
+  const isAlreadyMember = (id: string) => members.some((member) => idsMatch(member._id, id))
+  const candidates = (searchResults ?? []).filter((u) => !isAlreadyMember(u._id))
+  const alreadyInGroup = (searchResults ?? []).filter((u) => isAlreadyMember(u._id))
+  const searchSettled = query.trim().length > 0 && !isSearching
+  const searchEmptyHint = !searchSettled
+    ? null
+    : candidates.length > 0
+      ? null
+      : alreadyInGroup.length > 0
+        ? `${alreadyInGroup[0].name} is already in this group`
+        : matchedSelf
+          ? 'That’s you — you’re already in this group'
+          : `No users found for “${query.trim()}”`
 
   const isBusy = (kind: 'add' | 'promote' | 'remove' | 'leave', id: string) =>
     pending?.kind === kind && pending.id === id
@@ -168,6 +179,13 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
               onChange={(e) => setQuery(e.target.value)}
               leftIcon={isSearching ? <Spinner size="sm" /> : <Search className="h-4 w-4" strokeWidth={1.75} />}
             />
+          )}
+
+          {admin && searchEmptyHint && (
+            <p className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+              <UserX className="h-4 w-4 shrink-0" aria-hidden="true" />
+              {searchEmptyHint}
+            </p>
           )}
 
           {admin && candidates.length > 0 && (

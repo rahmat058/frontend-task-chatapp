@@ -73,13 +73,13 @@ Desktop [PageSpeed Insights](https://pagespeed.web.dev/) for the live landing pa
 
 ![ChatApp landing — PageSpeed Insights (desktop)](./public/page-speed-performance.png)
 
-| Category            | Score |
-| ------------------- | ----- |
-| **Performance**     | 99    |
-| **Accessibility**   | 97    |
-| **Best Practices**  | 100   |
-| **SEO**             | 100   |
-| **Agentic Browsing** | 2/2  |
+| Category             | Score |
+| -------------------- | ----- |
+| **Performance**      | 99    |
+| **Accessibility**    | 97    |
+| **Best Practices**   | 100   |
+| **SEO**              | 100   |
+| **Agentic Browsing** | 2/2   |
 
 Field metrics on that run: **FCP** 0.3s, **LCP** 0.6s (desktop). The report is for the marketing homepage, not `/chat`.
 

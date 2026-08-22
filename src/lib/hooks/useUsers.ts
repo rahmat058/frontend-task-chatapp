@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { usersApi } from '@/lib/api/users'
 import { useAuthStore } from '@/lib/store/authStore'
+import { idsMatch } from '@/lib/utils/ids'
 
 export function useUserSearch(query: string) {
   const searchTerm = query.trim()
@@ -17,12 +18,14 @@ export function useUserSearch(query: string) {
     placeholderData: (previous) => previous,
   })
 
-  const users =
-    searchTerm.length > 0 ? result.data?.filter((user) => !currentUserId || user._id !== currentUserId) : undefined
+  const hits = searchTerm.length > 0 ? (result.data ?? []) : undefined
+  const users = hits?.filter((user) => !idsMatch(user._id, currentUserId))
+  const matchedSelf = Boolean(hits?.some((user) => idsMatch(user._id, currentUserId)))
 
   return {
     ...result,
     data: users,
+    matchedSelf,
     isSearching: searchTerm.length > 0 && result.isFetching,
   }
 }

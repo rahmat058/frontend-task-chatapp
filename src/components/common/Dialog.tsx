@@ -33,21 +33,29 @@ export function Dialog({
   const titleId = useId()
   const descId = useId()
 
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+
   useEffect(() => {
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    panelRef.current?.focus()
+    const root = panelRef.current
+    const active = document.activeElement
+    const focusedInside = Boolean(root && active instanceof HTMLElement && root.contains(active) && active !== root)
+    if (!focusedInside) {
+      root?.focus()
+    }
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
       if (captureEscape) e.stopImmediatePropagation()
-      onClose()
+      onCloseRef.current()
     }
     document.addEventListener('keydown', onKeyDown, captureEscape)
     return () => {
       document.removeEventListener('keydown', onKeyDown, captureEscape)
       previous?.focus()
     }
-  }, [onClose, captureEscape])
+  }, [captureEscape])
 
   return (
     <div
