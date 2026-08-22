@@ -126,9 +126,14 @@ export function CommandPalette() {
     if (activeIndex >= items.length) setActiveIndex(0)
   }, [activeIndex, items.length])
 
-  if (!open) return null
-
   const active = items[activeIndex]
+
+  useEffect(() => {
+    if (!open || !active) return
+    const option = document.getElementById(`${listId}-${active.id}`)
+    option?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }, [active, listId, open])
+
   const shortcut = commandPaletteShortcutLabel()
 
   const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -145,6 +150,8 @@ export function CommandPalette() {
   }
 
   let lastGroup: PaletteItem['group'] | null = null
+
+  if (!open) return null
 
   return (
     <Dialog
