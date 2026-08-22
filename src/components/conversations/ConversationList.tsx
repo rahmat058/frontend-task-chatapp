@@ -16,6 +16,7 @@ import { useAuthStore } from '@/lib/store/authStore'
 import { useUserDirectory } from '@/lib/store/userDirectory'
 import { useUIStore } from '@/lib/store/uiStore'
 import { getConversationName } from '@/lib/utils/conversation'
+import { commandPaletteShortcutLabel } from '@/lib/utils/modKey'
 import { cn } from '@/lib/utils/cn'
 import type { Conversation } from '@/types/models'
 
@@ -31,6 +32,7 @@ export function ConversationList() {
   const { data: conversations, isLoading, error, refetch } = useConversations()
   const isNewChatOpen = useUIStore((s) => s.isNewChatOpen)
   const isNewGroupOpen = useUIStore((s) => s.isNewGroupOpen)
+  const setCommandPaletteOpen = useUIStore((s) => s.setCommandPaletteOpen)
   const unreadById = useUIStore((s) => s.unreadById)
   const userId = useAuthStore((s) => s.user?._id)
   const knownUsers = useUserDirectory((s) => s.byId)
@@ -63,7 +65,18 @@ export function ConversationList() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           leftIcon={<Search className="h-4 w-4" strokeWidth={1.75} />}
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setCommandPaletteOpen(true)}
+              className="rounded-[var(--radius-xs)] border border-[var(--border-default)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-muted)] hover:border-[var(--border-strong)] hover:text-[var(--text-secondary)]"
+              aria-label={`Open command palette (${commandPaletteShortcutLabel()})`}>
+              {commandPaletteShortcutLabel()}
+            </button>
+          }
+          className="pr-16"
           aria-label="Search chats"
+          aria-keyshortcuts="Meta+K Control+K"
         />
         <div className="mt-3 flex gap-1" role="tablist" aria-label="Filter conversations">
           {filters.map((item) => {

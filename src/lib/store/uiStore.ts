@@ -4,12 +4,14 @@ interface UIState {
   activeConversationId: string | null
   isNewChatOpen: boolean
   isNewGroupOpen: boolean
+  isCommandPaletteOpen: boolean
   isMobileSidebarOpen: boolean
   unreadById: Record<string, number>
 
   setActiveConversation: (id: string | null) => void
   setNewChatOpen: (open: boolean) => void
   setNewGroupOpen: (open: boolean) => void
+  setCommandPaletteOpen: (open: boolean) => void
   setMobileSidebarOpen: (open: boolean) => void
   incrementUnread: (conversationId: string) => void
   clearUnread: (conversationId: string) => void
@@ -19,6 +21,7 @@ export const useUIStore = create<UIState>((set) => ({
   activeConversationId: null,
   isNewChatOpen: false,
   isNewGroupOpen: false,
+  isCommandPaletteOpen: false,
   isMobileSidebarOpen: false,
   unreadById: {},
 
@@ -29,6 +32,7 @@ export const useUIStore = create<UIState>((set) => ({
     })),
   setNewChatOpen: (open) => set({ isNewChatOpen: open }),
   setNewGroupOpen: (open) => set({ isNewGroupOpen: open }),
+  setCommandPaletteOpen: (open) => set({ isCommandPaletteOpen: open }),
   setMobileSidebarOpen: (open) => set({ isMobileSidebarOpen: open }),
   incrementUnread: (conversationId) =>
     set((state) => ({

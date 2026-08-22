@@ -8,6 +8,7 @@ import { NavRail } from '@/components/layout/NavRail'
 import { AuthSplash } from '@/components/common/AuthSplash'
 import { ToastHost } from '@/components/common/ToastHost'
 import { ConnectionBanner } from '@/components/layout/ConnectionBanner'
+import { CommandPalette } from '@/components/layout/CommandPalette'
 import { cn } from '@/lib/utils/cn'
 
 /**
@@ -44,6 +45,7 @@ export function ChatShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <ToastHost />
+      <CommandPalette />
     </div>
   )
 }
