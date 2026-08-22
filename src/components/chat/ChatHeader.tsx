@@ -1,23 +1,20 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Settings2 } from 'lucide-react'
 import { Avatar } from '@/components/common/Avatar'
 import { Button } from '@/components/common/Button'
-import { GroupSettingsDialog } from './GroupSettingsDialog'
 import { useConversationName } from '@/lib/hooks/useConversationName'
 import { getParticipantCount } from '@/lib/utils/conversation'
 import type { Conversation } from '@/types/models'
 
 interface ChatHeaderProps {
   conversation: Conversation
+  onManageGroup?: () => void
 }
 
-export function ChatHeader({ conversation }: ChatHeaderProps) {
+export function ChatHeader({ conversation, onManageGroup }: ChatHeaderProps) {
   const isGroup = conversation.type === 'group'
-  const [settingsOpen, setSettingsOpen] = useState(false)
-
   const displayName = useConversationName(conversation)
   const memberCount = getParticipantCount(conversation)
   const subtitle = isGroup ? `${memberCount} ${memberCount === 1 ? 'member' : 'members'}` : 'Direct message'
@@ -43,13 +40,11 @@ export function ChatHeader({ conversation }: ChatHeaderProps) {
           size="sm"
           className="shrink-0"
           aria-label="Manage group"
-          onClick={() => setSettingsOpen(true)}>
+          onClick={onManageGroup}>
           <Settings2 className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
           Manage group
         </Button>
       )}
-
-      {settingsOpen && <GroupSettingsDialog conversation={conversation} onClose={() => setSettingsOpen(false)} />}
     </header>
   )
 }

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils/cn'
 
 interface AvatarProps {
   name: string
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
   className?: string
   isGroup?: boolean
   online?: boolean
@@ -16,6 +16,7 @@ const sizes = {
   md: 'h-10 w-10 text-[13px]',
   lg: 'h-12 w-12 text-sm',
   xl: 'h-16 w-16 text-lg',
+  '2xl': 'h-20 w-20 text-[22px]',
 } as const
 
 const iconSizes = {
@@ -23,6 +24,7 @@ const iconSizes = {
   md: 'h-4 w-4',
   lg: 'h-5 w-5',
   xl: 'h-7 w-7',
+  '2xl': 'h-8 w-8',
 } as const
 
 const presence = {
@@ -30,6 +32,7 @@ const presence = {
   md: 'h-2.5 w-2.5',
   lg: 'h-3 w-3',
   xl: 'h-4 w-4',
+  '2xl': 'h-5 w-5',
 } as const
 
 /** Moderate, readable fills — not neon and not a purple brand. */

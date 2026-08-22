@@ -1,24 +1,41 @@
 'use client'
 
-import { ChevronUp, MessagesSquare, Users } from 'lucide-react'
+import { ChevronUp } from 'lucide-react'
 import { MessageBubble } from './MessageBubble'
+import { DirectThreadIntro, DayDivider } from './DirectThreadIntro'
 import { ScrollToBottom } from './ScrollToBottom'
 import { SkeletonLoader } from '@/components/common/SkeletonLoader'
-import { EmptyState } from '@/components/common/EmptyState'
 import { Button } from '@/components/common/Button'
 import { useMessages } from '@/lib/hooks/useMessages'
 import { useResolveUnknownUsers } from '@/lib/hooks/useResolveUnknownUsers'
+import { useConversationName } from '@/lib/hooks/useConversationName'
 import { useAuthStore } from '@/lib/store/authStore'
+import { useUserDirectory } from '@/lib/store/userDirectory'
 import { useScrollBehavior } from '@/lib/hooks/useScrollBehavior'
+import { formatDayLabel, isSameCalendarDay, toTimestamp } from '@/lib/utils/formatDate'
 import { getSenderId, isOwnMessage } from '@/lib/utils/message'
-import type { Conversation } from '@/types/models'
+import { idsMatch } from '@/lib/utils/ids'
+import { resolveMembers } from '@/lib/utils/conversation'
+import type { Conversation, Message } from '@/types/models'
+
+const CLUSTER_MS = 5 * 60 * 1000
 
 interface MessageListProps {
   conversation: Conversation
+  onManageGroup?: () => void
 }
 
-export function MessageList({ conversation }: MessageListProps) {
+function isClustered(previous: Message | undefined, current: Message): boolean {
+  if (!previous) return false
+  if (getSenderId(previous) !== getSenderId(current)) return false
+  if (!isSameCalendarDay(previous.createdAt, current.createdAt)) return false
+  return Math.abs(toTimestamp(current.createdAt) - toTimestamp(previous.createdAt)) < CLUSTER_MS
+}
+
+export function MessageList({ conversation, onManageGroup }: MessageListProps) {
   const user = useAuthStore((s) => s.user)
+  const knownUsers = useUserDirectory((s) => s.byId)
+  const displayName = useConversationName(conversation)
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useMessages(conversation._id)
 
   const messages = data?.allMessages ?? []
@@ -26,10 +43,16 @@ export function MessageList({ conversation }: MessageListProps) {
   useResolveUnknownUsers(conversation, messages, user?._id)
 
   const isGroup = conversation.type === 'group'
+  const showIntro = !hasNextPage
+  const peer = resolveMembers(conversation, knownUsers, user).find((member) => !idsMatch(member._id, user?._id))
 
   if (isLoading) {
     return <SkeletonLoader variant="message" count={8} />
   }
+
+  const intro = (
+    <DirectThreadIntro name={displayName} isGroup={isGroup} peer={peer} onManageGroup={onManageGroup} />
+  )
 
   return (
     <div className="relative flex h-full flex-col">
@@ -49,28 +72,30 @@ export function MessageList({ conversation }: MessageListProps) {
 
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto">
         {messages.length === 0 ? (
-          <div className="flex min-h-full items-center justify-center px-6">
-            <EmptyState
-              icon={isGroup ? <Users className="h-6 w-6" /> : <MessagesSquare className="h-6 w-6" />}
-              title="No messages yet"
-              description="Say hello to start the conversation."
-            />
-          </div>
+          intro
         ) : (
-          <div className="flex w-full flex-col gap-2 px-6 py-4">
-            {messages.map((message, index) => {
-              const previous = messages[index - 1]
-              return (
-                <MessageBubble
-                  key={message._id}
-                  message={message}
-                  conversation={conversation}
-                  isMine={isOwnMessage(message, user?._id)}
-                  isGroup={isGroup}
-                  showSender={getSenderId(previous) !== getSenderId(message)}
-                />
-              )
-            })}
+          <div className="flex w-full flex-col">
+            {showIntro && intro}
+            <div className="flex flex-col gap-1 px-6 pb-4">
+              {messages.map((message, index) => {
+                const previous = messages[index - 1]
+                const showDay = !previous || !isSameCalendarDay(previous.createdAt, message.createdAt)
+                const clustered = isClustered(previous, message)
+
+                return (
+                  <div key={message._id} className={index === 0 ? undefined : clustered ? 'mt-0.5' : 'mt-2'}>
+                    {showDay && <DayDivider label={formatDayLabel(message.createdAt)} />}
+                    <MessageBubble
+                      message={message}
+                      conversation={conversation}
+                      isMine={isOwnMessage(message, user?._id)}
+                      isGroup={isGroup}
+                      showSender={!clustered}
+                    />
+                  </div>
+                )
+              })}
+            </div>
           </div>
         )}
       </div>

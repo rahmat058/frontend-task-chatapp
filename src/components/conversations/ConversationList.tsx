@@ -76,9 +76,9 @@ export function ConversationList() {
                 aria-selected={selected}
                 onClick={() => setFilter(item.id)}
                 className={cn(
-                  'h-8 rounded-[var(--radius-md)] px-3 text-xs font-medium',
+                  'h-8 rounded-full px-3 text-xs font-medium transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-visible:shadow-[var(--focus-ring)]',
                   selected
-                    ? 'bg-[var(--surface-3)] text-[var(--text-primary)]'
+                    ? 'bg-[var(--green-600)] text-[var(--text-primary)]'
                     : 'text-[var(--text-muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]',
                 )}>
                 {item.label}

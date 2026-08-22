@@ -35,11 +35,11 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
       onClick={handleClick}
       aria-current={isActive ? 'page' : undefined}
       className={cn(
-        'relative flex min-h-16 w-full items-center gap-3 rounded-none px-3 py-2.5 text-left transition-colors duration-[var(--duration-fast)]',
-        isActive ? 'bg-[var(--surface-3)]' : 'hover:bg-[var(--surface-hover)]',
+        'relative flex min-h-16 w-full items-center gap-3 rounded-none py-2.5 pr-3 pl-3 text-left transition-colors duration-[var(--duration-fast)]',
+        isActive ? 'bg-[var(--surface-active)]' : 'hover:bg-[var(--surface-hover)]',
       )}>
       {isActive && (
-        <span className="absolute top-2 bottom-2 left-0 w-0.5 rounded-r bg-[var(--green-500)]" aria-hidden="true" />
+        <span className="absolute inset-y-0 left-0 w-[3px] bg-[var(--green-500)]" aria-hidden="true" />
       )}
       <Avatar name={displayName} size="md" isGroup={isGroup} />
 

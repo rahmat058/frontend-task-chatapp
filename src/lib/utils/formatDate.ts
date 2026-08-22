@@ -30,6 +30,22 @@ export function formatConversationTime(iso?: string | null): string {
   return format(date, 'MMM d')
 }
 
+/** Date divider in a thread — "Today", "Yesterday", then a full date. */
+export function formatDayLabel(iso?: string | null): string {
+  const date = parseDate(iso)
+  if (!date) return ''
+  if (isToday(date)) return 'Today'
+  if (isYesterday(date)) return 'Yesterday'
+  return format(date, 'MMMM d, yyyy')
+}
+
+export function isSameCalendarDay(a?: string | null, b?: string | null): boolean {
+  const first = parseDate(a)
+  const second = parseDate(b)
+  if (!first || !second) return false
+  return first.toDateString() === second.toDateString()
+}
+
 /** Relative time — "2 minutes ago". */
 export function formatRelative(iso?: string | null): string {
   const date = parseDate(iso)
