@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type ToastTone = 'success' | 'error'
+export type ToastTone = 'success' | 'warning' | 'info' | 'error'
 
 interface ToastState {
   message: string | null

@@ -20,6 +20,7 @@ import { getApiErrorMessage } from '@/lib/api/normalize'
 import { getAdminIds, isAdmin, resolveMembers } from '@/lib/utils/conversation'
 import { idsMatch } from '@/lib/utils/ids'
 import { cn } from '@/lib/utils/cn'
+import type { ToastTone } from '@/lib/store/toastStore'
 import type { Conversation } from '@/types/models'
 
 interface GroupSettingsDialogProps {
@@ -76,14 +77,18 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
     id: string,
     action: () => Promise<unknown>,
     fallback: string,
+    success?: { message: string; tone?: ToastTone },
   ) => {
     setError(null)
     setPending({ kind, id })
     try {
       await action()
       setConfirm(null)
+      if (success) toast(success.message, success.tone ?? 'success')
     } catch (err) {
-      setError(getApiErrorMessage(err, fallback))
+      const description = getApiErrorMessage(err, fallback)
+      setError(description)
+      toast(description, 'error')
     } finally {
       setPending(null)
     }
@@ -95,9 +100,11 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
     setError(null)
     try {
       await rename.mutateAsync(next)
-      toast('Group name updated')
+      toast('Group name updated', 'info')
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Could not rename the group.'))
+      const description = getApiErrorMessage(err, 'Could not rename the group.')
+      setError(description)
+      toast(description, 'error')
     }
   })
 
@@ -107,10 +114,13 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
     setPending({ kind: 'leave', id: user._id })
     try {
       await removeMember.mutateAsync(user._id)
+      toast('You left the group', 'warning')
       onClose()
       router.push('/chat')
     } catch (err) {
-      setError(getApiErrorMessage(err, 'Could not leave the group.'))
+      const description = getApiErrorMessage(err, 'Could not leave the group.')
+      setError(description)
+      toast(description, 'error')
       setPending(null)
     }
   }
@@ -182,6 +192,7 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
                         return addMembers.mutateAsync([candidate._id])
                       },
                       'Could not add that member.',
+                      { message: `${candidate.name} added to the group`, tone: 'success' },
                     )
                   }
                   isLoading={isBusy('add', candidate._id)}>
@@ -233,6 +244,7 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
                                 member._id,
                                 () => promote.mutateAsync(member._id),
                                 'Could not promote that member.',
+                                { message: `${member.name} is now an admin`, tone: 'success' },
                               ),
                           },
                           {
@@ -270,7 +282,13 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
                 size="sm"
                 isLoading={isBusy('remove', confirm.id)}
                 onClick={() =>
-                  run('remove', confirm.id, () => removeMember.mutateAsync(confirm.id), 'Could not remove that member.')
+                  run(
+                    'remove',
+                    confirm.id,
+                    () => removeMember.mutateAsync(confirm.id),
+                    'Could not remove that member.',
+                    { message: `${confirm.name} was removed from the group`, tone: 'warning' },
+                  )
                 }>
                 Remove
               </Button>
