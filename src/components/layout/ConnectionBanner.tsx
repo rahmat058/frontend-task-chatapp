@@ -1,12 +1,16 @@
 'use client'
 
 import { WifiOff } from 'lucide-react'
-import { useSocket } from '@/lib/hooks/useSocket'
+import { useOnlineStatus } from '@/lib/hooks/useOnlineStatus'
 
+/**
+ * Shown only when the browser reports no network. A Socket.io handshake after
+ * refresh is not "offline" and must not flash this banner.
+ */
 export function ConnectionBanner() {
-  const { socket, isConnected } = useSocket()
+  const online = useOnlineStatus()
 
-  if (!socket || isConnected) return null
+  if (online) return null
 
   return (
     <div
