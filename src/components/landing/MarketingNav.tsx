@@ -43,12 +43,10 @@ export function MarketingNav() {
           </div>
 
           <div className="hidden items-center gap-2 sm:gap-4 md:flex">
-            {!signedIn && (
-              <Link href="/login" className={cn(buttonClassName({ size: 'md' }), 'landing-btn-primary')}>
-                <MessageSquare className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-                Let&apos;s Chat
-              </Link>
-            )}
+            <Link href={appHref} className={cn(buttonClassName({ size: 'md' }), 'landing-btn-primary')}>
+              <MessageSquare className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+              {signedIn ? 'Open ChatApp' : "Let's Chat"}
+            </Link>
           </div>
 
           <button
@@ -78,15 +76,13 @@ export function MarketingNav() {
                   {link.label}
                 </a>
               ))}
-              {!signedIn && (
-                <Link
-                  href="/login"
-                  className={cn(buttonClassName({ size: 'lg' }), 'landing-btn-primary mt-2 w-full')}
-                  onClick={() => setOpen(false)}>
-                  <MessageSquare className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-                  {signedIn ? 'Open ChatApp' : "Let's Chat"}
-                </Link>
-              )}
+              <Link
+                href={appHref}
+                className={cn(buttonClassName({ size: 'lg' }), 'landing-btn-primary mt-2 w-full')}
+                onClick={() => setOpen(false)}>
+                <MessageSquare className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                {signedIn ? 'Open ChatApp' : "Let's Chat"}
+              </Link>
             </div>
           </div>
         )}
