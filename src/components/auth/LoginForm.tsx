@@ -30,7 +30,7 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginValues>({
     defaultValues: { phoneDigits: '', name: '' },
-    mode: 'onBlur',
+    mode: 'onChange',
   })
 
   const nameValue = watch('name')
