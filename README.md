@@ -1,5 +1,7 @@
 # ChatApp
 
+![ChatApp — inbox and thread](./public/chat-app.png)
+
 **ChatApp** is a real-time messenger client for private 1:1 threads and groups. It is a Next.js 16 frontend that talks to the assignment backend over REST + Socket.io. Sign in with a name and a Bangladesh phone number — no password. New numbers register; known numbers return.
 
 There is **no local mock chat API**. Auth, conversations, messages, and groups live on the hosted backend.
