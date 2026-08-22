@@ -23,10 +23,7 @@ export function MarketingNav() {
 
   return (
     <nav className="fixed inset-x-4 top-4 z-50 mx-auto max-w-6xl">
-      <div
-        className={cn(
-          open ? 'rounded-[1.25rem] landing-nav-glass' : 'rounded-2xl landing-nav-solid',
-        )}>
+      <div className={cn(open ? 'landing-nav-menu rounded-[1.25rem]' : 'landing-nav-solid rounded-2xl')}>
         <div className="flex h-14 items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
             <BrandMark size="sm" />
@@ -84,18 +81,12 @@ export function MarketingNav() {
               {!signedIn && (
                 <Link
                   href="/login"
-                  className="flex min-h-11 items-center text-sm text-[var(--text-secondary)]"
+                  className={cn(buttonClassName({ size: 'lg' }), 'landing-btn-primary mt-2 w-full')}
                   onClick={() => setOpen(false)}>
-                  Log in
+                  <MessageSquare className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                  {signedIn ? 'Open ChatApp' : "Let's Chat"}
                 </Link>
               )}
-              <Link
-                href={appHref}
-                className={cn(buttonClassName({ size: 'lg' }), 'landing-btn-primary mt-2 w-full')}
-                onClick={() => setOpen(false)}>
-                <MessageSquare className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-                {signedIn ? 'Open ChatApp' : "Let's Chat"}
-              </Link>
             </div>
           </div>
         )}
