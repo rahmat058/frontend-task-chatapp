@@ -159,6 +159,8 @@ Restart the dev server after changing `.env.local`.
 | Health badge / CORS on `/health`             | Browser calls to the public `/health` URL are often blocked; the app proxies via `GET /api/health`.                  |
 | Paperclip does nothing                       | Attachments are not in the message API. The control is disabled with “coming soon”.                                  |
 | Stale user after testing another account     | DevTools → Application → Local Storage → remove `chat_jwt` and `chat_user_directory`.                                |
+| People search is not case-sensitive          | `GET /api/users/search` matches **abc** and **ABC** the same. That is the API, not a client filter.                  |
+| Your name changes after refresh              | Reload calls `GET /api/auth/me`. The server sometimes returns a stored name that differs from the one sent at login. |
 
 ---
 
@@ -210,5 +212,7 @@ The published OpenAPI spec is request-focused and omits most response bodies and
 - Responses are sometimes a bare object and sometimes `{ data }` / `{ message }` / `{ conversation }`. Workaround: `unwrapObject` / `unwrapArray`.
 - Browser `GET` to origin `/health` is CORS-blocked even when `/api` works. Workaround: Next.js `GET /api/health` proxy.
 - Pagination `hasMore` can be true without a usable `nextCursor`. Workaround: treat `hasMore` as true only when a cursor string is present.
+- **User search is not case-sensitive.** `GET /api/users/search?q=` matches the same people for `abc` and `ABC`. The client searches with the typed string as-is and does not add a case-sensitive filter.
+- **Display name can change on refresh.** Login sends `{ phone, name }`, but a reload restores the session with `GET /api/auth/me`. For an existing phone, the API sometimes keeps an older stored name (or a different spelling/casing) instead of the name just entered. The client treats `/me` as the source of truth after restore, so the header can disagree with the last login form.
 
 None of these blocked the product; they are why the client is defensive rather than strictly typed to the spec.
