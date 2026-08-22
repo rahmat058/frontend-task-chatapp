@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Lock, Shield, User, Zap } from 'lucide-react'
+import { ArrowLeft, Shield, User, Zap } from 'lucide-react'
 import { BrandMark } from '@/components/common/BrandMark'
 
 export const metadata: Metadata = {

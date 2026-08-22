@@ -6,6 +6,7 @@
 
 There is **no local mock chat API**. Auth, conversations, messages, and groups live on the hosted backend.
 
+**Live URL:** [frontend-task-chatapp.vercel.app](https://frontend-task-chatapp.vercel.app/)  
 **API origin (default):** [frontend-task-chatapp.onrender.com](https://frontend-task-chatapp.onrender.com)  
 **Live OpenAPI:** [frontend-task-chatapp.onrender.com/docs](https://frontend-task-chatapp.onrender.com/docs/)
 
