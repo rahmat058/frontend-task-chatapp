@@ -50,9 +50,7 @@ export function MessageList({ conversation, onManageGroup }: MessageListProps) {
     return <SkeletonLoader variant="message" count={8} />
   }
 
-  const intro = (
-    <DirectThreadIntro name={displayName} isGroup={isGroup} peer={peer} onManageGroup={onManageGroup} />
-  )
+  const intro = <DirectThreadIntro name={displayName} isGroup={isGroup} peer={peer} onManageGroup={onManageGroup} />
 
   return (
     <div className="relative flex h-full flex-col">
@@ -82,7 +80,8 @@ export function MessageList({ conversation, onManageGroup }: MessageListProps) {
                 const next = messages[index + 1]
                 const showDay = !previous || !isSameCalendarDay(previous.createdAt, message.createdAt)
                 const withPrev = !showDay && isClustered(previous, message)
-                const withNext = next && isSameCalendarDay(message.createdAt, next.createdAt) && isClustered(message, next)
+                const withNext =
+                  next && isSameCalendarDay(message.createdAt, next.createdAt) && isClustered(message, next)
                 const cluster = withPrev && withNext ? 'middle' : withPrev ? 'end' : withNext ? 'start' : 'single'
 
                 return (

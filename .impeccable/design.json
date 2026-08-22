@@ -261,7 +261,10 @@
       }
     },
     "typographyMeta": {
-      "headline": { "displayName": "Headline", "purpose": "Login welcome only. The operate shell does not use a marketing display size." },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Login welcome only. The operate shell does not use a marketing display size."
+      },
       "title": { "displayName": "Title", "purpose": "Dialog titles." },
       "body": { "displayName": "Body", "purpose": "Message text, list names, form fields." },
       "label": { "displayName": "Label", "purpose": "Timestamps, previews, reconnect copy." }
@@ -356,11 +359,31 @@
       "Inter at 14px body, 12px meta — dense, not editorial"
     ],
     "rules": [
-      { "name": "The Live Line Rule", "body": "Signal Indigo is scarce except where it is the message (sent bubbles). Do not paint large surfaces, wallpapers, or both bubble sides indigo.", "section": "colors" },
-      { "name": "The Hairline Rule", "body": "App chrome is separated by hairline borders. Do not add drop shadows to the sidebar, header, list, or composer.", "section": "colors" },
-      { "name": "The One Face Rule", "body": "Do not introduce a second family inside the chat shell. Inter is the switchboard type.", "section": "typography" },
-      { "name": "The Flat Chrome Rule", "body": "Sidebar, list, header, and composer stay shadowless. If a new panel lives in the shell, give it a hairline and a plate step, not a drop shadow.", "section": "elevation" },
-      { "name": "The Control Radius Rule", "body": "Every input and button is 6px. Do not mix 9999px pills onto form controls; pills are for avatars and count badges only.", "section": "elevation" }
+      {
+        "name": "The Live Line Rule",
+        "body": "Signal Indigo is scarce except where it is the message (sent bubbles). Do not paint large surfaces, wallpapers, or both bubble sides indigo.",
+        "section": "colors"
+      },
+      {
+        "name": "The Hairline Rule",
+        "body": "App chrome is separated by hairline borders. Do not add drop shadows to the sidebar, header, list, or composer.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Face Rule",
+        "body": "Do not introduce a second family inside the chat shell. Inter is the switchboard type.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Chrome Rule",
+        "body": "Sidebar, list, header, and composer stay shadowless. If a new panel lives in the shell, give it a hairline and a plate step, not a drop shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Control Radius Rule",
+        "body": "Every input and button is 6px. Do not mix 9999px pills onto form controls; pills are for avatars and count badges only.",
+        "section": "elevation"
+      }
     ],
     "dos": [
       "Do keep operate chrome on Switchboard Void and Plate 1–3 with hairline separators.",

@@ -1,8 +1,8 @@
 ---
 version: 1
-slug: "src-app-page-tsx"
-primary_target: "src/app/page.tsx"
-related_targets: ["src/app/layout.tsx", "src/components/landing/LandingPage.tsx"]
+slug: 'src-app-page-tsx'
+primary_target: 'src/app/page.tsx'
+related_targets: ['src/app/layout.tsx', 'src/components/landing/LandingPage.tsx']
 ---
 
 # Surface: ChatApp landing (`/`)

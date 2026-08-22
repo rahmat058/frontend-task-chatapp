@@ -98,9 +98,7 @@ export function OverflowMenu({
                 className={cn(
                   'flex min-h-11 w-full items-center px-3 text-left text-sm',
                   item.danger ? 'text-[var(--danger)]' : 'text-[var(--text-primary)]',
-                  item.disabled
-                    ? 'cursor-not-allowed text-[var(--text-disabled)]'
-                    : 'hover:bg-[var(--surface-hover)]',
+                  item.disabled ? 'cursor-not-allowed text-[var(--text-disabled)]' : 'hover:bg-[var(--surface-hover)]',
                 )}
                 onClick={() => {
                   if (item.disabled) return

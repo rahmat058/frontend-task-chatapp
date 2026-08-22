@@ -44,9 +44,7 @@ export function MarketingNav() {
 
           <div className="hidden items-center gap-2 sm:gap-4 md:flex">
             {!signedIn && (
-              <Link
-                href="/login"
-                className={cn(buttonClassName({ size: 'md' }), 'landing-btn-primary')}>
+              <Link href="/login" className={cn(buttonClassName({ size: 'md' }), 'landing-btn-primary')}>
                 Log in
               </Link>
             )}
@@ -68,7 +66,7 @@ export function MarketingNav() {
         </div>
 
         {open && (
-          <div id="landing-menu" className="border-t border-white/10 px-4 pb-4 pt-2 sm:px-6 md:hidden">
+          <div id="landing-menu" className="border-t border-white/10 px-4 pt-2 pb-4 sm:px-6 md:hidden">
             <div className="flex flex-col gap-1">
               {links.map((link) => (
                 <a

@@ -71,7 +71,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <div className="mb-8 flex flex-col items-center text-center">
               <BrandMark size="sm" />
               <h2 className="mt-5 text-[22px] leading-[1.3] font-semibold">Welcome back</h2>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">Enter your details to continue.</p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
+                Enter your details to continue.
+              </p>
             </div>
             {children}
           </div>

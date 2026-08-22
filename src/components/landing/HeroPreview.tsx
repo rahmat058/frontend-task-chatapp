@@ -39,10 +39,7 @@ export function HeroPreview() {
   useEffect(() => {
     const node = rootRef.current
     if (!node) return
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.2 },
-    )
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.2 })
     observer.observe(node)
     return () => observer.disconnect()
   }, [])

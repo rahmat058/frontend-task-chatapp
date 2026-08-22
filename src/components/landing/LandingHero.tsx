@@ -22,14 +22,14 @@ export function LandingHero() {
 
       <LandingContainer className="relative z-10 text-center">
         <Reveal>
-          <h1 className="text-balance text-[48px] leading-[1.05] font-[650] tracking-[-0.035em] sm:text-[64px] sm:leading-[1.04] lg:text-[72px] lg:leading-[1.02]">
+          <h1 className="text-[48px] leading-[1.05] font-[650] tracking-[-0.035em] text-balance sm:text-[64px] sm:leading-[1.04] lg:text-[72px] lg:leading-[1.02]">
             <span className="landing-text-gradient">Conversation</span>
             <br />
             without the noise.
           </h1>
           <p className="mx-auto mt-6 max-w-[42rem] px-4 text-base leading-[1.65] text-[var(--text-secondary)] sm:text-lg sm:leading-[1.6]">
-            ChatApp is a realtime messenger for private 1:1 threads and groups — not a public feed.
-            Sign in with your name and a Bangladesh phone number. 
+            ChatApp is a realtime messenger for private 1:1 threads and groups — not a public feed. Sign in with your
+            name and a Bangladesh phone number.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link href="/login" className={cn(buttonClassName({ size: 'lg' }), 'landing-btn-primary px-8')}>

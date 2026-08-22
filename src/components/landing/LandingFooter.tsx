@@ -52,7 +52,9 @@ export function LandingFooter() {
           <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
             No password. Use a name and a Bangladesh phone number to start.
           </p>
-          <Link href="/login" className="mt-4 inline-flex text-sm font-medium text-[var(--green-400)] hover:text-[var(--green-300)]">
+          <Link
+            href="/login"
+            className="mt-4 inline-flex text-sm font-medium text-[var(--green-400)] hover:text-[var(--green-300)]">
             Sign in →
           </Link>
         </div>

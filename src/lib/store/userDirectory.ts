@@ -65,10 +65,7 @@ function toDirectoryUser(value: unknown): DirectoryUser | null {
   }
 }
 
-export function findKnownUser(
-  byId: Record<string, DirectoryUser>,
-  id?: string | null,
-): DirectoryUser | undefined {
+export function findKnownUser(byId: Record<string, DirectoryUser>, id?: string | null): DirectoryUser | undefined {
   if (!id) return undefined
   if (byId[id]) return byId[id]
   return Object.values(byId).find((user) => idsMatch(user._id, id))

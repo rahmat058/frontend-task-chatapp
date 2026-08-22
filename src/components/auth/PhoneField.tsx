@@ -40,7 +40,8 @@ export function PhoneField({ id, label, value, error, onChange, onBlur, name, in
           'transition-[border-color,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-standard)]',
           'focus-within:border-[var(--green-400)] focus-within:shadow-[var(--focus-ring)]',
           valid && !error && 'border-[var(--green-400)]',
-          error && 'border-[var(--danger)] focus-within:border-[var(--danger)] focus-within:shadow-[0_0_0_3px_var(--danger-soft)]',
+          error &&
+            'border-[var(--danger)] focus-within:border-[var(--danger)] focus-within:shadow-[0_0_0_3px_var(--danger-soft)]',
           !valid && !error && 'border-[var(--border-default)]',
         )}>
         <span

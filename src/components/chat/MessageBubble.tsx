@@ -83,14 +83,7 @@ function BubbleTail({ side }: { side: 'left' | 'right' }) {
   )
 }
 
-export function MessageBubble({
-  message,
-  conversation,
-  isMine,
-  isGroup,
-  showSender,
-  cluster,
-}: MessageBubbleProps) {
+export function MessageBubble({ message, conversation, isMine, isGroup, showSender, cluster }: MessageBubbleProps) {
   const pending = isOptimistic(message)
   const timestamp = formatMessageTime(message.createdAt)
   const currentUser = useAuthStore((s) => s.user)

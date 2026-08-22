@@ -35,12 +35,7 @@ export function ChatHeader({ conversation, onManageGroup }: ChatHeaderProps) {
       </div>
 
       {isGroup && (
-        <Button
-          variant="secondary"
-          size="sm"
-          className="shrink-0"
-          aria-label="Manage group"
-          onClick={onManageGroup}>
+        <Button variant="secondary" size="sm" className="shrink-0" aria-label="Manage group" onClick={onManageGroup}>
           <Settings2 className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
           Manage group
         </Button>

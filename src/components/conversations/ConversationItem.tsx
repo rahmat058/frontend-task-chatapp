@@ -38,9 +38,7 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
         'relative flex min-h-16 w-full items-center gap-3 rounded-none py-2.5 pr-3 pl-3 text-left transition-colors duration-[var(--duration-fast)]',
         isActive ? 'bg-[var(--surface-active)]' : 'hover:bg-[var(--surface-hover)]',
       )}>
-      {isActive && (
-        <span className="absolute inset-y-0 left-0 w-[3px] bg-[var(--green-500)]" aria-hidden="true" />
-      )}
+      {isActive && <span className="absolute inset-y-0 left-0 w-[3px] bg-[var(--green-500)]" aria-hidden="true" />}
       <Avatar name={displayName} size="md" isGroup={isGroup} />
 
       <div className="min-w-0 flex-1">

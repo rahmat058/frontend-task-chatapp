@@ -13,8 +13,14 @@
       "viewport": "Sticky dark nav; large centered headline and Try it now; interactive ChatApp thread staged under the copy; How it works, capabilities, footer.",
       "risk": "This is the category-default landing shape; it can feel like a template if the thread is a static picture.",
       "raised": [
-        { "from": "treasure map", "raise": "How it works is a visible trail (Log in → Find people → Chat), not three equal icon cards." },
-        { "from": "seven-segment clock", "raise": "Unread pills and timestamps in the demo light and swap instantly, like live instruments." }
+        {
+          "from": "treasure map",
+          "raise": "How it works is a visible trail (Log in → Find people → Chat), not three equal icon cards."
+        },
+        {
+          "from": "seven-segment clock",
+          "raise": "Unread pills and timestamps in the demo light and swap instantly, like live instruments."
+        }
       ],
       "comp": ".impeccable/mocks/decision/assigned.png"
     },

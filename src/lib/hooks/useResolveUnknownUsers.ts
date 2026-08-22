@@ -15,11 +15,7 @@ const attempted = new Set<string>()
  * that id so group sender labels can resolve to a real name when the API
  * allows it, and so later bubbles pick the name up from the directory.
  */
-export function useResolveUnknownUsers(
-  conversation: Conversation,
-  messages: Message[],
-  currentUserId?: string,
-) {
+export function useResolveUnknownUsers(conversation: Conversation, messages: Message[], currentUserId?: string) {
   const byId = useUserDirectory((s) => s.byId)
 
   useEffect(() => {

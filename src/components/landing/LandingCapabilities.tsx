@@ -53,7 +53,7 @@ export function LandingCapabilities() {
             {capabilities.map((item) => (
               <li
                 key={item.title}
-                className="flex gap-3 border-[var(--border-subtle)] p-5 not-last:border-b sm:border-r sm:[&:nth-child(2n)]:border-r-0 sm:[&:nth-child(n+5)]:border-b-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0 lg:[&:nth-child(n+4)]:border-b-0">
+                className="flex gap-3 border-[var(--border-subtle)] p-5 not-last:border-b sm:border-r sm:[&:nth-child(2n)]:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0 lg:[&:nth-child(n+4)]:border-b-0 sm:[&:nth-child(n+5)]:border-b-0">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--green-border)] bg-[var(--green-soft)] text-[var(--green-400)]">
                   <item.icon className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden="true" />
                 </span>

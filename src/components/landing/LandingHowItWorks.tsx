@@ -116,9 +116,7 @@ function ThreadMock() {
           3
         </span>
       </div>
-      <p className="text-center text-xs text-[var(--text-muted)]">
-        Another thread got busy. Your scroll stayed here.
-      </p>
+      <p className="text-center text-xs text-[var(--text-muted)]">Another thread got busy. Your scroll stayed here.</p>
     </div>
   )
 }

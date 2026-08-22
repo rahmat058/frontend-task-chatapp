@@ -77,7 +77,7 @@ Use semantic variables in components. Do not paste raw colors repeatedly.
   --focus-ring: 0 0 0 3px rgb(53 208 127 / 22%);
 
   /* Motion */
-  --ease-standard: cubic-bezier(.2, .8, .2, 1);
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
   --duration-fast: 120ms;
   --duration-base: 180ms;
 }
@@ -98,24 +98,31 @@ Use semantic variables in components. Do not paste raw colors repeatedly.
 Use **Geist Sans** as the first choice and **Inter** as the fallback.
 
 ```css
-font-family: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system,
-  BlinkMacSystemFont, "Segoe UI", sans-serif;
+font-family:
+  'Geist',
+  'Inter',
+  ui-sans-serif,
+  system-ui,
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  sans-serif;
 font-synthesis: none;
 text-rendering: optimizeLegibility;
 ```
 
-| Token | Size / line-height | Weight | Use |
-|---|---:|---:|---|
-| Display | 56px / 1.06 | 650 | Landing hero only |
-| H1 | 40px / 1.12 | 650 | Marketing page heading |
-| H2 | 30px / 1.2 | 620 | Marketing sections |
-| H3 | 22px / 1.3 | 600 | Cards and dialogs |
-| Title | 16px / 1.35 | 600 | Conversation and panel titles |
-| Body | 14px / 1.55 | 400 | Default product copy |
-| Body strong | 14px / 1.45 | 560 | Names and controls |
-| Small | 12px / 1.45 | 400 | Metadata and timestamps |
-| Label | 12px / 1.3 | 560 | Form labels and tabs |
-| Micro | 11px / 1.3 | 500 | Badges only |
+| Token       | Size / line-height | Weight | Use                           |
+| ----------- | -----------------: | -----: | ----------------------------- |
+| Display     |        56px / 1.06 |    650 | Landing hero only             |
+| H1          |        40px / 1.12 |    650 | Marketing page heading        |
+| H2          |         30px / 1.2 |    620 | Marketing sections            |
+| H3          |         22px / 1.3 |    600 | Cards and dialogs             |
+| Title       |        16px / 1.35 |    600 | Conversation and panel titles |
+| Body        |        14px / 1.55 |    400 | Default product copy          |
+| Body strong |        14px / 1.45 |    560 | Names and controls            |
+| Small       |        12px / 1.45 |    400 | Metadata and timestamps       |
+| Label       |         12px / 1.3 |    560 | Form labels and tabs          |
+| Micro       |         11px / 1.3 |    500 | Badges only                   |
 
 Use sentence case. Avoid all caps except very short technical badges. Use tabular numbers for timestamps and unread counts. Do not use pure white for secondary copy.
 
@@ -284,4 +291,3 @@ Base spacing unit: `4px`. Preferred rhythm: `4, 8, 12, 16, 24, 32, 48, 64, 96`.
 - [ ] Responsive layouts avoid compressed multi-column UI.
 - [ ] Keyboard focus is always visible.
 - [ ] The result looks like a real product, not a generic generated dashboard.
-

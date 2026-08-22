@@ -71,9 +71,7 @@ export function LandingFaq() {
             const headerId = `${baseId}-header-${index}`
 
             return (
-              <div
-                key={item.q}
-                className="border-b border-[var(--border-subtle)] last:border-b-0">
+              <div key={item.q} className="border-b border-[var(--border-subtle)] last:border-b-0">
                 <h3>
                   <button
                     type="button"
