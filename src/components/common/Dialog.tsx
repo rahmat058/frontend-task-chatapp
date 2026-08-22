@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { X } from 'lucide-react'
 import { Button } from './Button'
 import { cn } from '@/lib/utils/cn'
@@ -12,32 +12,53 @@ interface DialogProps {
   children: React.ReactNode
   footer?: React.ReactNode
   className?: string
+  overlayClassName?: string
+  /** Nested alerts should capture Escape so the parent dialog stays open. */
+  captureEscape?: boolean
+  role?: 'dialog' | 'alertdialog'
 }
 
-export function Dialog({ title, description, onClose, children, footer, className }: DialogProps) {
+export function Dialog({
+  title,
+  description,
+  onClose,
+  children,
+  footer,
+  className,
+  overlayClassName,
+  captureEscape = false,
+  role = 'dialog',
+}: DialogProps) {
   const panelRef = useRef<HTMLDivElement>(null)
+  const titleId = useId()
+  const descId = useId()
 
   useEffect(() => {
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
     panelRef.current?.focus()
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key !== 'Escape') return
+      if (captureEscape) e.stopImmediatePropagation()
+      onClose()
     }
-    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('keydown', onKeyDown, captureEscape)
     return () => {
-      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('keydown', onKeyDown, captureEscape)
       previous?.focus()
     }
-  }, [onClose])
+  }, [onClose, captureEscape])
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--overlay)] px-0 sm:items-center sm:px-4"
-      role="dialog"
+      className={cn(
+        'fixed inset-0 z-50 flex items-end justify-center bg-[var(--overlay)] px-0 sm:items-center sm:px-4',
+        overlayClassName,
+      )}
+      role={role}
       aria-modal="true"
-      aria-labelledby="dialog-title"
-      aria-describedby={description ? 'dialog-desc' : undefined}
+      aria-labelledby={titleId}
+      aria-describedby={description ? descId : undefined}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}>
@@ -53,11 +74,11 @@ export function Dialog({ title, description, onClose, children, footer, classNam
         )}>
         <div className="flex shrink-0 items-start justify-between gap-3 border-b border-[var(--border-subtle)] px-5 py-4">
           <div className="min-w-0">
-            <h2 id="dialog-title" className="text-base leading-[1.35] font-semibold text-[var(--text-primary)]">
+            <h2 id={titleId} className="text-base leading-[1.35] font-semibold text-[var(--text-primary)]">
               {title}
             </h2>
             {description && (
-              <p id="dialog-desc" className="mt-1 text-xs text-[var(--text-muted)]">
+              <p id={descId} className="mt-1 text-xs text-[var(--text-muted)]">
                 {description}
               </p>
             )}

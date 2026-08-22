@@ -126,6 +126,7 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
   }
 
   return (
+    <>
     <Dialog
       title="Group settings"
       description={`${members.length} ${members.length === 1 ? 'member' : 'members'}`}
@@ -270,50 +271,72 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
           </p>
         )}
 
-        {confirm?.kind === 'remove' && (
-          <div className="rounded-[var(--radius-md)] border border-[var(--danger)]/25 bg-[var(--danger-soft)] p-3">
-            <p className="text-sm">Remove {confirm.name} from this group?</p>
-            <div className="mt-3 flex gap-2">
-              <Button variant="ghost" size="sm" onClick={() => setConfirm(null)}>
-                Cancel
-              </Button>
-              <Button
-                variant="danger"
-                size="sm"
-                isLoading={isBusy('remove', confirm.id)}
-                onClick={() =>
-                  run(
-                    'remove',
-                    confirm.id,
-                    () => removeMember.mutateAsync(confirm.id),
-                    'Could not remove that member.',
-                    { message: `${confirm.name} was removed from the group`, tone: 'warning' },
-                  )
-                }>
-                Remove
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {confirm?.kind === 'leave' ? (
-          <div className="rounded-[var(--radius-md)] border border-[var(--danger)]/25 bg-[var(--danger-soft)] p-3">
-            <p className="text-sm">Leave this group? You will lose access until someone adds you again.</p>
-            <div className="mt-3 flex gap-2">
-              <Button variant="ghost" size="sm" onClick={() => setConfirm(null)}>
-                Cancel
-              </Button>
-              <Button variant="danger" size="sm" isLoading={isBusy('leave', user?._id ?? '')} onClick={handleLeave}>
-                Leave group
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <Button variant="danger" className="w-full" onClick={() => setConfirm({ kind: 'leave' })}>
-            Leave group
-          </Button>
-        )}
+        <Button variant="danger" className="w-full" onClick={() => setConfirm({ kind: 'leave' })}>
+          Leave group
+        </Button>
       </div>
     </Dialog>
+
+    {confirm?.kind === 'remove' && (
+      <Dialog
+        role="alertdialog"
+        title="Remove member"
+        description={`Remove ${confirm.name} from this group?`}
+        onClose={() => setConfirm(null)}
+        overlayClassName="z-[60]"
+        captureEscape
+        className="max-w-[400px]"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setConfirm(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              isLoading={isBusy('remove', confirm.id)}
+              onClick={() =>
+                void run(
+                  'remove',
+                  confirm.id,
+                  () => removeMember.mutateAsync(confirm.id),
+                  'Could not remove that member.',
+                  { message: `${confirm.name} was removed from the group`, tone: 'warning' },
+                )
+              }>
+              Remove
+            </Button>
+          </>
+        }>
+        <p className="px-5 py-4 text-sm leading-relaxed text-[var(--text-secondary)]">
+          {confirm.name} will lose access to this conversation until an admin adds them again.
+        </p>
+      </Dialog>
+    )}
+
+    {confirm?.kind === 'leave' && (
+      <Dialog
+        role="alertdialog"
+        title="Leave group"
+        description="Leave this group?"
+        onClose={() => setConfirm(null)}
+        overlayClassName="z-[60]"
+        captureEscape
+        className="max-w-[400px]"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setConfirm(null)}>
+              Cancel
+            </Button>
+            <Button variant="danger" isLoading={isBusy('leave', user?._id ?? '')} onClick={handleLeave}>
+              Leave group
+            </Button>
+          </>
+        }>
+        <p className="px-5 py-4 text-sm leading-relaxed text-[var(--text-secondary)]">
+          You will lose access until someone adds you again.
+        </p>
+      </Dialog>
+    )}
+  </>
   )
 }
