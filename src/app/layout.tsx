@@ -20,6 +20,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'ChatApp — Real-time Messaging',
   description: 'Private messages and groups that stay in sync — instantly.',
+  icons: {
+    icon: [{ url: '/nav-logo.svg', type: 'image/svg+xml' }],
+    shortcut: '/nav-logo.svg',
+    apple: '/nav-logo.svg',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
