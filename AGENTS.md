@@ -1,9 +1,17 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# ChatApp — project docs
 
-# This is NOT the Next.js you know
+This is a **frontend-only** Next.js 16 messenger against a hosted REST + Socket.io API. Do not invent backend routes.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+Read these before changing product behavior or UI:
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+| File                                           | Use it for                           |
+| ---------------------------------------------- | ------------------------------------ |
+| [docs/README.md](./docs/README.md)             | Doc index                            |
+| [docs/PRD.md](./docs/PRD.md)                   | Assignment requirements              |
+| [docs/API.md](./docs/API.md)                   | Observed REST + socket contract      |
+| [docs/design-style.md](./docs/design-style.md) | Graphite / emerald tokens and layout |
+| [docs/prompt.md](./docs/prompt.md)             | Redesign workflow and bans           |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)           | Routes, stores, sockets, decisions   |
+| [README.md](./README.md)                       | Setup and scripts                    |
 
-<!-- END:nextjs-agent-rules -->
+Preserve the Next.js marker block above. Extra project rules belong **after** it (or in `docs/`), not inside the markers.

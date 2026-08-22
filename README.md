@@ -68,10 +68,10 @@ For the assignment brief, observed API, and visual system — see **[docs/](./do
 
 ## Prerequisites
 
-| Requirement | Version / notes                         |
-| ----------- | --------------------------------------- |
+| Requirement | Version / notes                          |
+| ----------- | ---------------------------------------- |
 | **Node.js** | `>=24.11.0` (see `package.json` engines) |
-| **npm**     | Package manager for this repo           |
+| **npm**     | Package manager for this repo            |
 
 No local database. The client uses the hosted Chat API (or an origin you set in env).
 
@@ -91,8 +91,8 @@ npm install
 
 Optional. Defaults already point at the assignment API.
 
-| Variable                      | Required | Notes                                                                 |
-| ----------------------------- | -------- | --------------------------------------------------------------------- |
+| Variable                      | Required | Notes                                                                                 |
+| ----------------------------- | -------- | ------------------------------------------------------------------------------------- |
 | `NEXT_PUBLIC_CHAT_API_ORIGIN` | No       | Host origin **without** `/api`. Default: `https://frontend-task-chatapp.onrender.com` |
 
 Create `.env.local` only if you need a different backend:
@@ -111,25 +111,25 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-| Path      | What you get                                      |
-| --------- | ------------------------------------------------- |
-| `/`       | Landing page                                      |
-| `/login`  | Name + phone sign-in                              |
-| `/chat`   | Inbox (auth required)                             |
-| `/chat/[id]` | Active thread                                  |
+| Path         | What you get          |
+| ------------ | --------------------- |
+| `/`          | Landing page          |
+| `/login`     | Name + phone sign-in  |
+| `/chat`      | Inbox (auth required) |
+| `/chat/[id]` | Active thread         |
 
 ---
 
 ## Scripts
 
-| Command             | Description                    |
-| ------------------- | ------------------------------ |
-| `npm run dev`       | Next.js dev server (Turbopack) |
-| `npm run build`     | Production build               |
-| `npm run start`     | Run production server          |
-| `npm run lint`      | ESLint                         |
-| `npm run format`    | Prettier write                 |
-| `npm run format:check` | Prettier check              |
+| Command                | Description                    |
+| ---------------------- | ------------------------------ |
+| `npm run dev`          | Next.js dev server (Turbopack) |
+| `npm run build`        | Production build               |
+| `npm run start`        | Run production server          |
+| `npm run lint`         | ESLint                         |
+| `npm run format`       | Prettier write                 |
+| `npm run format:check` | Prettier check                 |
 
 Type-check (not a package script): `npx tsc --noEmit`.
 
@@ -148,28 +148,28 @@ Restart the dev server after changing `.env.local`.
 
 ## Troubleshooting
 
-| Problem                                         | Fix                                                                                          |
-| ----------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Wrong Node version                              | `nvm install 24.11.0 && nvm use`                                                             |
-| Login works then `/chat` bounces to `/login`    | Wait for session restore (`GET /api/auth/me`). Hard-reload if `chat_jwt` was cleared.        |
-| Empty inbox / 401 after idle                    | JWT expired or invalid — sign in again. Axios clears auth on 401.                            |
-| Names show as “Direct message”                  | List payloads often return participant **ids only**. Search that person once so the directory can remember the name. |
-| People search fires every keystroke             | Search fields must use `debounceMs={SEARCH_DEBOUNCE_MS}` (600). Restart `npm run dev` after pull. |
-| Socket never connects                           | Confirm origin has **no** `/api` suffix. Browser must reach the Socket.io host, not only REST. |
-| Health badge / CORS on `/health`                | Browser calls to the public `/health` URL are often blocked; the app proxies via `GET /api/health`. |
-| Paperclip does nothing                          | Attachments are not in the message API. The control is disabled with “coming soon”.          |
-| Stale user after testing another account        | DevTools → Application → Local Storage → remove `chat_jwt` and `chat_user_directory`.        |
+| Problem                                      | Fix                                                                                                                  |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Wrong Node version                           | `nvm install 24.11.0 && nvm use`                                                                                     |
+| Login works then `/chat` bounces to `/login` | Wait for session restore (`GET /api/auth/me`). Hard-reload if `chat_jwt` was cleared.                                |
+| Empty inbox / 401 after idle                 | JWT expired or invalid — sign in again. Axios clears auth on 401.                                                    |
+| Names show as “Direct message”               | List payloads often return participant **ids only**. Search that person once so the directory can remember the name. |
+| People search fires every keystroke          | Search fields must use `debounceMs={SEARCH_DEBOUNCE_MS}` (600). Restart `npm run dev` after pull.                    |
+| Socket never connects                        | Confirm origin has **no** `/api` suffix. Browser must reach the Socket.io host, not only REST.                       |
+| Health badge / CORS on `/health`             | Browser calls to the public `/health` URL are often blocked; the app proxies via `GET /api/health`.                  |
+| Paperclip does nothing                       | Attachments are not in the message API. The control is disabled with “coming soon”.                                  |
+| Stale user after testing another account     | DevTools → Application → Local Storage → remove `chat_jwt` and `chat_user_directory`.                                |
 
 ---
 
 ## Docs
 
-| File                         | Contents                                              |
-| ---------------------------- | ----------------------------------------------------- |
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | Routes, data flow, sockets, stores, decisions |
-| [docs/API.md](./docs/API.md) | Observed REST + socket contract                       |
-| [docs/PRD.md](./docs/PRD.md) | Assignment requirements                               |
-| [docs/design-style.md](./docs/design-style.md) | Visual system (graphite / emerald)    |
+| File                                           | Contents                                      |
+| ---------------------------------------------- | --------------------------------------------- |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)           | Routes, data flow, sockets, stores, decisions |
+| [docs/API.md](./docs/API.md)                   | Observed REST + socket contract               |
+| [docs/PRD.md](./docs/PRD.md)                   | Assignment requirements                       |
+| [docs/design-style.md](./docs/design-style.md) | Visual system (graphite / emerald)            |
 
 ---
 
