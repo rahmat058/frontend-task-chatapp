@@ -116,7 +116,18 @@ export function CommandPalette() {
     const visibleActions = actions.filter(matches)
     const visibleChats = chats.filter(matches).slice(0, term ? MAX_CHATS : Math.min(MAX_CHATS, chats.length))
     return [...visibleActions, ...visibleChats]
-  }, [conversations, knownUsers, peers, query, router, setActiveConversation, setNewChatOpen, setNewGroupOpen, setOpen, userId])
+  }, [
+    conversations,
+    knownUsers,
+    peers,
+    query,
+    router,
+    setActiveConversation,
+    setNewChatOpen,
+    setNewGroupOpen,
+    setOpen,
+    userId,
+  ])
 
   useEffect(() => {
     setActiveIndex(0)
