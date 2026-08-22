@@ -127,216 +127,216 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
 
   return (
     <>
-    <Dialog
-      title="Group settings"
-      description={`${members.length} ${members.length === 1 ? 'member' : 'members'}`}
-      onClose={onClose}
-      className="max-w-[560px]">
-      <div className="flex flex-col gap-6 p-5">
-        {admin && (
-          <form onSubmit={onRename} className="flex flex-wrap items-end gap-3" noValidate>
-            <Avatar name={conversation.name || 'Group'} size="lg" isGroup className="mb-0.5" />
-            <div className="min-w-0 flex-1">
-              <Input
-                id="rename-group-input"
-                label="Group name"
-                error={renameErrors.name?.message}
-                {...register('name', {
-                  required: 'Group name is required',
-                  validate: (value) => value.trim().length > 0 || 'Group name is required',
-                })}
-              />
-            </div>
-            <Button
-              type="submit"
-              size="md"
-              isLoading={rename.isPending}
-              disabled={!name.trim() || name.trim() === conversation.name}
-              className="mb-0.5 ml-auto shrink-0">
-              Save name
-            </Button>
-          </form>
-        )}
-
-        {admin && (
-          <Input
-            id="add-member-search"
-            label="Add members"
-            placeholder="Search by name or phone…"
-            value={query}
-            debounceMs={SEARCH_DEBOUNCE_MS}
-            onChange={(e) => setQuery(e.target.value)}
-            leftIcon={isSearching ? <Spinner size="sm" /> : <Search className="h-4 w-4" strokeWidth={1.75} />}
-          />
-        )}
-
-        {admin && candidates.length > 0 && (
-          <div className="max-h-40 shrink-0 overflow-y-auto rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
-            {candidates.map((candidate) => (
-              <div
-                key={candidate._id}
-                className="flex items-center gap-3 border-b border-[var(--border-subtle)] px-3 py-2 last:border-b-0">
-                <Avatar name={candidate.name} size="sm" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm">{candidate.name}</p>
-                  <p className="truncate text-xs text-[var(--text-muted)]">{candidate.phone}</p>
-                </div>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() =>
-                    run(
-                      'add',
-                      candidate._id,
-                      () => {
-                        useUserDirectory.getState().remember([candidate])
-                        return addMembers.mutateAsync([candidate._id])
-                      },
-                      'Could not add that member.',
-                      { message: `${candidate.name} added to the group`, tone: 'success' },
-                    )
-                  }
-                  isLoading={isBusy('add', candidate._id)}>
-                  Add
-                </Button>
+      <Dialog
+        title="Group settings"
+        description={`${members.length} ${members.length === 1 ? 'member' : 'members'}`}
+        onClose={onClose}
+        className="max-w-[560px]">
+        <div className="flex flex-col gap-6 p-5">
+          {admin && (
+            <form onSubmit={onRename} className="flex flex-wrap items-end gap-3" noValidate>
+              <Avatar name={conversation.name || 'Group'} size="lg" isGroup className="mb-0.5" />
+              <div className="min-w-0 flex-1">
+                <Input
+                  id="rename-group-input"
+                  label="Group name"
+                  error={renameErrors.name?.message}
+                  {...register('name', {
+                    required: 'Group name is required',
+                    validate: (value) => value.trim().length > 0 || 'Group name is required',
+                  })}
+                />
               </div>
-            ))}
-          </div>
-        )}
+              <Button
+                type="submit"
+                size="md"
+                isLoading={rename.isPending}
+                disabled={!name.trim() || name.trim() === conversation.name}
+                className="mb-0.5 ml-auto shrink-0">
+                Save name
+              </Button>
+            </form>
+          )}
 
-        <div>
-          <p className="mb-2 text-xs font-medium text-[var(--text-muted)]">Members</p>
-          <div className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
-            {members.map((member) => {
-              const role = roleLabel(conversation, member._id)
-              const memberIsAdmin = role === 'Admin'
-              const isSelf = idsMatch(member._id, user?._id)
-              return (
-                <div key={member._id} className="border-b border-[var(--border-subtle)] last:border-b-0">
-                  <div className="flex items-center gap-3 px-3 py-2.5">
-                    <Avatar name={isSelf ? (user?.name ?? member.name) : member.name} size="sm" />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm">
-                        {isSelf ? (user?.name ?? member.name) : member.name}
-                        {isSelf ? ' (you)' : ''}
-                      </p>
-                      <span
-                        className={cn(
-                          'mt-0.5 inline-flex rounded-[var(--radius-xs)] border px-1.5 py-0.5 text-[11px] font-medium',
-                          memberIsAdmin
-                            ? 'border-[var(--green-border)] text-[var(--green-400)]'
-                            : 'border-[var(--border-default)] text-[var(--text-muted)]',
-                        )}>
-                        {role}
-                      </span>
-                    </div>
-                    {!isSelf && admin && (
-                      <OverflowMenu
-                        label={`Actions for ${member.name}`}
-                        disabled={isBusy('promote', member._id) || isBusy('remove', member._id)}
-                        items={[
-                          {
-                            id: 'promote',
-                            label: memberIsAdmin ? 'Already an admin' : 'Promote to admin',
-                            disabled: memberIsAdmin || isBusy('promote', member._id),
-                            onSelect: () =>
-                              void run(
-                                'promote',
-                                member._id,
-                                () => promote.mutateAsync(member._id),
-                                'Could not promote that member.',
-                                { message: `${member.name} is now an admin`, tone: 'success' },
-                              ),
-                          },
-                          {
-                            id: 'remove',
-                            label: 'Remove member',
-                            danger: true,
-                            disabled: isBusy('remove', member._id),
-                            onSelect: () => setConfirm({ kind: 'remove', id: member._id, name: member.name }),
-                          },
-                        ]}
-                      />
-                    )}
+          {admin && (
+            <Input
+              id="add-member-search"
+              label="Add members"
+              placeholder="Search by name or phone…"
+              value={query}
+              debounceMs={SEARCH_DEBOUNCE_MS}
+              onChange={(e) => setQuery(e.target.value)}
+              leftIcon={isSearching ? <Spinner size="sm" /> : <Search className="h-4 w-4" strokeWidth={1.75} />}
+            />
+          )}
+
+          {admin && candidates.length > 0 && (
+            <div className="max-h-40 shrink-0 overflow-y-auto rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+              {candidates.map((candidate) => (
+                <div
+                  key={candidate._id}
+                  className="flex items-center gap-3 border-b border-[var(--border-subtle)] px-3 py-2 last:border-b-0">
+                  <Avatar name={candidate.name} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm">{candidate.name}</p>
+                    <p className="truncate text-xs text-[var(--text-muted)]">{candidate.phone}</p>
                   </div>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() =>
+                      run(
+                        'add',
+                        candidate._id,
+                        () => {
+                          useUserDirectory.getState().remember([candidate])
+                          return addMembers.mutateAsync([candidate._id])
+                        },
+                        'Could not add that member.',
+                        { message: `${candidate.name} added to the group`, tone: 'success' },
+                      )
+                    }
+                    isLoading={isBusy('add', candidate._id)}>
+                    Add
+                  </Button>
                 </div>
-              )
-            })}
-          </div>
-        </div>
+              ))}
+            </div>
+          )}
 
-        {error && (
-          <p className="text-xs text-[var(--danger)]" role="alert">
-            {error}
-          </p>
-        )}
-
-        <Button variant="danger" className="w-full" onClick={() => setConfirm({ kind: 'leave' })}>
-          Leave group
-        </Button>
-      </div>
-    </Dialog>
-
-    {confirm?.kind === 'remove' && (
-      <Dialog
-        role="alertdialog"
-        title="Remove member"
-        description={`Remove ${confirm.name} from this group?`}
-        onClose={() => setConfirm(null)}
-        overlayClassName="z-[60]"
-        captureEscape
-        className="max-w-[400px]"
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setConfirm(null)}>
-              Cancel
-            </Button>
-            <Button
-              variant="danger"
-              isLoading={isBusy('remove', confirm.id)}
-              onClick={() =>
-                void run(
-                  'remove',
-                  confirm.id,
-                  () => removeMember.mutateAsync(confirm.id),
-                  'Could not remove that member.',
-                  { message: `${confirm.name} was removed from the group`, tone: 'warning' },
+          <div>
+            <p className="mb-2 text-xs font-medium text-[var(--text-muted)]">Members</p>
+            <div className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)]">
+              {members.map((member) => {
+                const role = roleLabel(conversation, member._id)
+                const memberIsAdmin = role === 'Admin'
+                const isSelf = idsMatch(member._id, user?._id)
+                return (
+                  <div key={member._id} className="border-b border-[var(--border-subtle)] last:border-b-0">
+                    <div className="flex items-center gap-3 px-3 py-2.5">
+                      <Avatar name={isSelf ? (user?.name ?? member.name) : member.name} size="sm" />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm">
+                          {isSelf ? (user?.name ?? member.name) : member.name}
+                          {isSelf ? ' (you)' : ''}
+                        </p>
+                        <span
+                          className={cn(
+                            'mt-0.5 inline-flex rounded-[var(--radius-xs)] border px-1.5 py-0.5 text-[11px] font-medium',
+                            memberIsAdmin
+                              ? 'border-[var(--green-border)] text-[var(--green-400)]'
+                              : 'border-[var(--border-default)] text-[var(--text-muted)]',
+                          )}>
+                          {role}
+                        </span>
+                      </div>
+                      {!isSelf && admin && (
+                        <OverflowMenu
+                          label={`Actions for ${member.name}`}
+                          disabled={isBusy('promote', member._id) || isBusy('remove', member._id)}
+                          items={[
+                            {
+                              id: 'promote',
+                              label: memberIsAdmin ? 'Already an admin' : 'Promote to admin',
+                              disabled: memberIsAdmin || isBusy('promote', member._id),
+                              onSelect: () =>
+                                void run(
+                                  'promote',
+                                  member._id,
+                                  () => promote.mutateAsync(member._id),
+                                  'Could not promote that member.',
+                                  { message: `${member.name} is now an admin`, tone: 'success' },
+                                ),
+                            },
+                            {
+                              id: 'remove',
+                              label: 'Remove member',
+                              danger: true,
+                              disabled: isBusy('remove', member._id),
+                              onSelect: () => setConfirm({ kind: 'remove', id: member._id, name: member.name }),
+                            },
+                          ]}
+                        />
+                      )}
+                    </div>
+                  </div>
                 )
-              }>
-              Remove
-            </Button>
-          </>
-        }>
-        <p className="px-5 py-4 text-sm leading-relaxed text-[var(--text-secondary)]">
-          {confirm.name} will lose access to this conversation until an admin adds them again.
-        </p>
-      </Dialog>
-    )}
+              })}
+            </div>
+          </div>
 
-    {confirm?.kind === 'leave' && (
-      <Dialog
-        role="alertdialog"
-        title="Leave group"
-        description="Leave this group?"
-        onClose={() => setConfirm(null)}
-        overlayClassName="z-[60]"
-        captureEscape
-        className="max-w-[400px]"
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setConfirm(null)}>
-              Cancel
-            </Button>
-            <Button variant="danger" isLoading={isBusy('leave', user?._id ?? '')} onClick={handleLeave}>
-              Leave group
-            </Button>
-          </>
-        }>
-        <p className="px-5 py-4 text-sm leading-relaxed text-[var(--text-secondary)]">
-          You will lose access until someone adds you again.
-        </p>
+          {error && (
+            <p className="text-xs text-[var(--danger)]" role="alert">
+              {error}
+            </p>
+          )}
+
+          <Button variant="danger" className="w-full" onClick={() => setConfirm({ kind: 'leave' })}>
+            Leave group
+          </Button>
+        </div>
       </Dialog>
-    )}
-  </>
+
+      {confirm?.kind === 'remove' && (
+        <Dialog
+          role="alertdialog"
+          title="Remove member"
+          description={`Remove ${confirm.name} from this group?`}
+          onClose={() => setConfirm(null)}
+          overlayClassName="z-[60]"
+          captureEscape
+          className="max-w-[400px]"
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setConfirm(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                isLoading={isBusy('remove', confirm.id)}
+                onClick={() =>
+                  void run(
+                    'remove',
+                    confirm.id,
+                    () => removeMember.mutateAsync(confirm.id),
+                    'Could not remove that member.',
+                    { message: `${confirm.name} was removed from the group`, tone: 'warning' },
+                  )
+                }>
+                Remove
+              </Button>
+            </>
+          }>
+          <p className="px-5 py-4 text-sm leading-relaxed text-[var(--text-secondary)]">
+            {confirm.name} will lose access to this conversation until an admin adds them again.
+          </p>
+        </Dialog>
+      )}
+
+      {confirm?.kind === 'leave' && (
+        <Dialog
+          role="alertdialog"
+          title="Leave group"
+          description="Leave this group?"
+          onClose={() => setConfirm(null)}
+          overlayClassName="z-[60]"
+          captureEscape
+          className="max-w-[400px]"
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setConfirm(null)}>
+                Cancel
+              </Button>
+              <Button variant="danger" isLoading={isBusy('leave', user?._id ?? '')} onClick={handleLeave}>
+                Leave group
+              </Button>
+            </>
+          }>
+          <p className="px-5 py-4 text-sm leading-relaxed text-[var(--text-secondary)]">
+            You will lose access until someone adds you again.
+          </p>
+        </Dialog>
+      )}
+    </>
   )
 }
