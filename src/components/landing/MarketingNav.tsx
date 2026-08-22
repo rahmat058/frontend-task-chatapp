@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils/cn'
-import { Menu, X } from 'lucide-react'
+import { Menu, MessageSquare, X } from 'lucide-react'
 import { useAuthStore } from '@/lib/store/authStore'
 import { scrollToHash } from '@/lib/utils/scrollToHash'
 import { BrandMark } from '@/components/common/BrandMark'
@@ -45,7 +45,8 @@ export function MarketingNav() {
           <div className="hidden items-center gap-2 sm:gap-4 md:flex">
             {!signedIn && (
               <Link href="/login" className={cn(buttonClassName({ size: 'md' }), 'landing-btn-primary')}>
-                Log in
+                <MessageSquare className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                Let&apos;s Chat
               </Link>
             )}
           </div>
