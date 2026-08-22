@@ -79,18 +79,22 @@ export function MessageList({ conversation, onManageGroup }: MessageListProps) {
             <div className="flex flex-col gap-1 px-6 pb-4">
               {messages.map((message, index) => {
                 const previous = messages[index - 1]
+                const next = messages[index + 1]
                 const showDay = !previous || !isSameCalendarDay(previous.createdAt, message.createdAt)
-                const clustered = isClustered(previous, message)
+                const withPrev = !showDay && isClustered(previous, message)
+                const withNext = next && isSameCalendarDay(message.createdAt, next.createdAt) && isClustered(message, next)
+                const cluster = withPrev && withNext ? 'middle' : withPrev ? 'end' : withNext ? 'start' : 'single'
 
                 return (
-                  <div key={message._id} className={index === 0 ? undefined : clustered ? 'mt-0.5' : 'mt-2'}>
+                  <div key={message._id} className={index === 0 ? undefined : withPrev ? 'mt-0.5' : 'mt-2'}>
                     {showDay && <DayDivider label={formatDayLabel(message.createdAt)} />}
                     <MessageBubble
                       message={message}
                       conversation={conversation}
                       isMine={isOwnMessage(message, user?._id)}
                       isGroup={isGroup}
-                      showSender={!clustered}
+                      showSender={!withPrev}
+                      cluster={cluster}
                     />
                   </div>
                 )
