@@ -29,16 +29,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${inter.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${geist.variable} ${inter.variable}`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning>
       <body className={geist.className} suppressHydrationWarning>
-        {/*
-          THESIS: Split-offer landing — copy left, product preview right; not a centered stacked hero.
-          OWN-WORLD: Graphite canvas, emerald only for action and presence; Geist; 8px controls; 1px borders; no glass.
-          STORY: Visitor sees the messenger, believes DMs and groups stay in sync, opens /login.
-          FIRST VIEWPORT: 64px nav; 42/58 hero; primary CTA in the copy column; framed product PNG.
-          FORM: Pinned Graphite Emerald from design-style.md and supplied comps. Seed: user-pinned.
-          FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
-        */}
         <QueryProvider>
           <AuthProvider>
             <SocketProvider>{children}</SocketProvider>
