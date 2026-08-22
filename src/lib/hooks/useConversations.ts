@@ -11,10 +11,7 @@ import type { Conversation, User } from '@/types/models'
 
 export const CONVERSATIONS_QUERY_KEY = ['conversations']
 
-function upsertConversationInCache(
-  queryClient: ReturnType<typeof useQueryClient>,
-  conversation: Conversation,
-) {
+function upsertConversationInCache(queryClient: ReturnType<typeof useQueryClient>, conversation: Conversation) {
   queryClient.setQueryData(CONVERSATIONS_QUERY_KEY, (old: Conversation[] | undefined) => {
     const list = Array.isArray(old) ? old : []
     return [conversation, ...list.filter((item) => item._id !== conversation._id)]
