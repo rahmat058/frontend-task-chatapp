@@ -11,6 +11,16 @@ import type { Conversation, User } from '@/types/models'
 
 export const CONVERSATIONS_QUERY_KEY = ['conversations']
 
+function upsertConversationInCache(
+  queryClient: ReturnType<typeof useQueryClient>,
+  conversation: Conversation,
+) {
+  queryClient.setQueryData(CONVERSATIONS_QUERY_KEY, (old: Conversation[] | undefined) => {
+    const list = Array.isArray(old) ? old : []
+    return [conversation, ...list.filter((item) => item._id !== conversation._id)]
+  })
+}
+
 export function useConversations() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
 
@@ -33,10 +43,7 @@ export function useStartConversation() {
       return hydrateConversation(conversation, useAuthStore.getState().user?._id, directory.byId, peer)
     },
     onSuccess: (conversation) => {
-      queryClient.setQueryData(CONVERSATIONS_QUERY_KEY, (old: Conversation[] | undefined) => {
-        const list = Array.isArray(old) ? old : []
-        return [conversation, ...list.filter((item) => item._id !== conversation._id)]
-      })
+      upsertConversationInCache(queryClient, conversation)
       queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY })
     },
   })
@@ -47,7 +54,10 @@ export function useCreateGroup() {
   return useMutation({
     mutationFn: (data: CreateGroupRequest) => groupsApi.create(data),
     onSuccess: (conversation) => {
-      useUserDirectory.getState().remember(conversation.participants)
+      const directory = useUserDirectory.getState()
+      directory.remember(conversation.participants)
+      const hydrated = hydrateConversation(conversation, useAuthStore.getState().user?._id, directory.byId)
+      upsertConversationInCache(queryClient, hydrated)
       queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY })
     },
   })

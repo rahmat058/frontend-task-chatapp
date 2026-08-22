@@ -6,9 +6,10 @@ import { ChatPanel } from '@/components/chat/ChatPanel'
 import { ErrorState } from '@/components/common/ErrorState'
 import { SkeletonLoader } from '@/components/common/SkeletonLoader'
 import { useUIStore } from '@/lib/store/uiStore'
+import { idsMatch } from '@/lib/utils/ids'
 
 export function ConversationView({ conversationId }: { conversationId: string }) {
-  const { data: conversations, isLoading, error, refetch } = useConversations()
+  const { data: conversations, isLoading, isFetching, isPending, error, refetch } = useConversations()
   const clearUnread = useUIStore((s) => s.clearUnread)
   const setActiveConversation = useUIStore((s) => s.setActiveConversation)
 
@@ -17,22 +18,22 @@ export function ConversationView({ conversationId }: { conversationId: string })
     clearUnread(conversationId)
   }, [conversationId, clearUnread, setActiveConversation])
 
-  if (isLoading) {
+  const conversation = conversations?.find((c) => idsMatch(c._id, conversationId))
+
+  if (!conversation && (isPending || isLoading || isFetching)) {
     return <SkeletonLoader variant="message" count={6} />
   }
 
-  if (error) {
-    return <ErrorState description="Failed to load this conversation." onRetry={() => refetch()} />
+  if (error && !conversation) {
+    return <ErrorState description="Failed to load this conversation." onRetry={() => void refetch()} />
   }
-
-  const conversation = conversations?.find((c) => c._id === conversationId)
 
   if (!conversation) {
     return (
       <ErrorState
         title="Conversation not found"
         description="This conversation may have been deleted, or you may not have access to it."
-        onRetry={() => refetch()}
+        onRetry={() => void refetch()}
       />
     )
   }
