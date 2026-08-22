@@ -12,7 +12,7 @@ export function ScrollToBottom({ onClick, hasNewMessages = false }: ScrollToBott
   return (
     <button
       onClick={onClick}
-      aria-label={hasNewMessages ? 'Jump to new messages' : 'Scroll to latest message'}
+      aria-label={hasNewMessages ? 'New message — scroll to latest' : 'Scroll to latest message'}
       className={cn(
         'absolute right-4 bottom-4 z-10 flex min-h-11 items-center gap-1.5 rounded-[var(--radius-md)]',
         'border border-[var(--border-default)] bg-[var(--surface-2)] text-[var(--text-primary)]',

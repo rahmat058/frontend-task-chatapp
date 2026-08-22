@@ -175,21 +175,40 @@ Restart the dev server after changing `.env.local`.
 
 ## Thought process (assignment Part 3)
 
-This client is a **frontend against an existing backend**. I did not invent REST routes or a database. The work is mapping an under-specified API onto a product UI that still feels complete.
+This client is a **frontend against an existing backend**. I did not invent REST routes or a database. The work is mapping an under-specified API onto a product UI that still feels complete. Madagascar.
 
-**What I optimized for**
+### Architecture & libraries (Part 1)
 
-1. **Session restore first.** Auth starts as `restoring` until `GET /api/auth/me` finishes, so a valid JWT is never bounced to login on reload.
-2. **Defensive payloads.** OpenAPI documents requests more than responses. `unwrapObject` / `unwrapArray` and `normalizeMessage` / `normalizeConversation` accept both bare objects and `{ data }` envelopes so a shape change does not crash a screen.
-3. **Realtime without fighting REST.** Sends go through `POST /api/messages` (so errors and optimistic UI stay on one path). The socket is for **incoming** `message:new` and list invalidation. Echoes of our own send replace the pending bubble instead of duplicating it.
-4. **Unread stays put.** A message in another thread increments a badge. It does not jump the thread you are reading.
-5. **Names need a directory.** Direct-chat lists often return ids only. `userDirectory` remembers people from search, login, and sockets, keyed by user id and conversation id.
-6. **Search waits until you stop typing.** People search is debounced **600ms** at the input (`debounceMs`) so `/users/search` is not called per key. React Query caches the settled term.
+Auth starts as `restoring` until `GET /api/auth/me` finishes, so a valid JWT is never bounced to login on reload. TanStack Query owns server cache (conversations, paginated messages, people search). Zustand owns session, unread, dialogs, and a local **user directory** because list payloads often return participant ids with no names.
 
-**What I refused to fake**
+Trade-off: REST `POST /api/messages` is the write path so validation, errors, and optimistic bubbles stay in one place. Socket.io is inbound only (`message:new`, `conversation:updated`, reconnect refetch). Using `message:send` as well would have duplicated send-error handling.
 
-- No attachment upload (API is `{ conversationId, text }` only).
-- No “Online” presence for other users (no presence API).
-- No video/call buttons.
+Search is debounced **600ms** at the input so `/users/search` is not called per key. React Query caches the settled term.
 
-Deeper maps, event tables, and folder layout: **[ARCHITECTURE.md](./ARCHITECTURE.md)**.
+Folder layout, event tables, and stores: **[ARCHITECTURE.md](./ARCHITECTURE.md)**. Observed contract: **[docs/API.md](./docs/API.md)**.
+
+### Design decisions (Part 2)
+
+The landing page uses the same **graphite + emerald** system as the messenger so marketing and product feel like one app. Emerald is reserved for action (CTAs, sent bubbles, unread). Type is Geist with a tight tracking hero; motion is Framer `Reveal` with `prefers-reduced-motion` respected. The hero includes a framed product preview instead of stock screenshots. Copy leads with private 1:1 and groups, then **Try it now →** to `/login`.
+
+### AI tool usage
+
+Cursor (Grok) was used for scaffolding, API-shape research, debugging session restore and payload variance, and drafting docs. I kept architecture choices (restoring auth, REST send + socket receive, directory cache, debounce) and rejected faking attachments, presence, and extra backend routes. UI polish and copy were iterated against `docs/design-style.md` and the live API, not generated as a generic chat template.
+
+### What I'd improve with more time
+
+- Hosted demo URL and a small Playwright pass over login → search → send → reconnect.
+- Preserve scroll position more carefully when loading older pages (anchor on the first visible message).
+- If the API added typing / read receipts, show them; until then those stay out of the UI.
+
+### API issues observed
+
+The published OpenAPI spec is request-focused and omits most response bodies and status codes. In practice:
+
+- Conversation list items often have **ids only** for DM participants (no display name). Workaround: `userDirectory` filled from search, login, and sockets.
+- Message `sender` is sometimes a populated object and sometimes a bare id. Workaround: `normalizeMessage` + `getSenderId`.
+- Responses are sometimes a bare object and sometimes `{ data }` / `{ message }` / `{ conversation }`. Workaround: `unwrapObject` / `unwrapArray`.
+- Browser `GET` to origin `/health` is CORS-blocked even when `/api` works. Workaround: Next.js `GET /api/health` proxy.
+- Pagination `hasMore` can be true without a usable `nextCursor`. Workaround: treat `hasMore` as true only when a cursor string is present.
+
+None of these blocked the product; they are why the client is defensive rather than strictly typed to the spec.

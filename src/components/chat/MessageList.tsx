@@ -5,6 +5,7 @@ import { MessageBubble } from './MessageBubble'
 import { DirectThreadIntro, DayDivider } from './DirectThreadIntro'
 import { ScrollToBottom } from './ScrollToBottom'
 import { SkeletonLoader } from '@/components/common/SkeletonLoader'
+import { ErrorState } from '@/components/common/ErrorState'
 import { Button } from '@/components/common/Button'
 import { useMessages } from '@/lib/hooks/useMessages'
 import { useResolveUnknownUsers } from '@/lib/hooks/useResolveUnknownUsers'
@@ -36,7 +37,9 @@ export function MessageList({ conversation, onManageGroup }: MessageListProps) {
   const user = useAuthStore((s) => s.user)
   const knownUsers = useUserDirectory((s) => s.byId)
   const displayName = useConversationName(conversation)
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useMessages(conversation._id)
+  const { data, isLoading, isError, refetch, isFetchingNextPage, hasNextPage, fetchNextPage } = useMessages(
+    conversation._id,
+  )
 
   const messages = data?.allMessages ?? []
   const { scrollRef, showScrollButton, hasNewMessages, scrollToBottom } = useScrollBehavior(messages.length)
@@ -50,7 +53,25 @@ export function MessageList({ conversation, onManageGroup }: MessageListProps) {
     return <SkeletonLoader variant="message" count={8} />
   }
 
-  const intro = <DirectThreadIntro name={displayName} isGroup={isGroup} peer={peer} onManageGroup={onManageGroup} />
+  if (isError) {
+    return (
+      <ErrorState
+        title="Couldn't load messages"
+        description="Check your connection and try again."
+        onRetry={() => void refetch()}
+      />
+    )
+  }
+
+  const intro = (
+    <DirectThreadIntro
+      name={displayName}
+      isGroup={isGroup}
+      peer={peer}
+      onManageGroup={onManageGroup}
+      empty={messages.length === 0}
+    />
+  )
 
   return (
     <div className="relative flex h-full flex-col">

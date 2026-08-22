@@ -54,11 +54,11 @@ export function NewGroupDialog() {
     clearErrors('root')
   }
 
-  const canCreate = groupName.trim().length > 0 && selectedUsers.length > 0
+  const canCreate = groupName.trim().length > 0 && selectedUsers.length >= 2
 
   const onCreate = async ({ name }: NewGroupValues) => {
-    if (selectedUsers.length === 0) {
-      setError('root', { message: 'Select at least one member' })
+    if (selectedUsers.length < 2) {
+      setError('root', { message: 'Select at least two participants' })
       return
     }
     setSubmitError(null)
@@ -117,6 +117,7 @@ export function NewGroupDialog() {
           onChange={(e) => setSearchQuery(e.target.value)}
           leftIcon={isSearching ? <Spinner size="sm" /> : <Search className="h-4 w-4" />}
         />
+        <p className="text-xs text-[var(--text-muted)]">Pick at least two people besides you.</p>
 
         {selectedUsers.length > 0 && (
           <div className="flex flex-wrap gap-2">

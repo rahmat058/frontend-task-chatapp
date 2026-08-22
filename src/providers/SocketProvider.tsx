@@ -6,11 +6,13 @@ import { connectSocket, disconnectSocket } from '@/lib/socket/socket'
 import { useAuthStore } from '@/lib/store/authStore'
 import { SOCKET_EVENTS } from '@/types/socket'
 import type { SocketNewMessagePayload } from '@/types/socket'
+import { CONVERSATIONS_QUERY_KEY } from '@/lib/hooks/useConversations'
 import { isOptimistic, messagesQueryKey } from '@/lib/hooks/useMessages'
+import { sortByRecency } from '@/lib/utils/conversation'
 import { getSenderId, normalizeMessage } from '@/lib/utils/message'
 import { useUserDirectory } from '@/lib/store/userDirectory'
 import { useUIStore } from '@/lib/store/uiStore'
-import type { Message } from '@/types/models'
+import type { Conversation, Message } from '@/types/models'
 import type { MessageHistoryResponse } from '@/types/api'
 
 /**
@@ -62,7 +64,25 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         },
       )
 
-      queryClient.invalidateQueries({ queryKey: ['conversations'] })
+      queryClient.setQueryData(CONVERSATIONS_QUERY_KEY, (old: Conversation[] | undefined) => {
+        if (!Array.isArray(old)) return old
+        const next = old.map((conversation) =>
+          conversation._id === incoming.conversationId
+            ? {
+                ...conversation,
+                lastMessage: {
+                  _id: incoming._id,
+                  text: incoming.text,
+                  sender: getSenderId(incoming),
+                  createdAt: incoming.createdAt,
+                },
+                updatedAt: incoming.createdAt,
+              }
+            : conversation,
+        )
+        return sortByRecency(next)
+      })
+      queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY })
     }
 
     const handleConversationUpdated = () => {

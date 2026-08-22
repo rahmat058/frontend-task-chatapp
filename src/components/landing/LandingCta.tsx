@@ -27,7 +27,7 @@ export function LandingCta() {
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link href="/login" className={cn(buttonClassName({ size: 'lg' }), 'landing-btn-primary px-8')}>
-              Open ChatApp
+              Try it now →
             </Link>
             <a
               href="#features"

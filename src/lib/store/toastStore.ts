@@ -1,13 +1,17 @@
 import { create } from 'zustand'
 
+export type ToastTone = 'success' | 'error'
+
 interface ToastState {
   message: string | null
-  show: (message: string) => void
+  tone: ToastTone
+  show: (message: string, tone?: ToastTone) => void
   hide: () => void
 }
 
 export const useToastStore = create<ToastState>((set) => ({
   message: null,
-  show: (message) => set({ message }),
+  tone: 'success',
+  show: (message, tone = 'success') => set({ message, tone }),
   hide: () => set({ message: null }),
 }))

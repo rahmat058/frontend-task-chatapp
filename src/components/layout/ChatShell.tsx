@@ -7,6 +7,7 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { NavRail } from '@/components/layout/NavRail'
 import { AuthSplash } from '@/components/common/AuthSplash'
 import { ToastHost } from '@/components/common/ToastHost'
+import { ConnectionBanner } from '@/components/layout/ConnectionBanner'
 import { cn } from '@/lib/utils/cn'
 
 /**
@@ -31,14 +32,17 @@ export function ChatShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--bg-app)]">
-      <NavRail />
-      <div className={cn('w-full shrink-0 flex-col md:flex md:w-[330px]', isThread ? 'hidden md:flex' : 'flex')}>
-        <Sidebar />
+    <div className="flex h-screen flex-col overflow-hidden bg-[var(--bg-app)]">
+      <ConnectionBanner />
+      <div className="flex min-h-0 flex-1 overflow-hidden">
+        <NavRail />
+        <div className={cn('w-full shrink-0 flex-col md:flex md:w-[330px]', isThread ? 'hidden md:flex' : 'flex')}>
+          <Sidebar />
+        </div>
+        <main className={cn('min-w-0 flex-1 flex-col bg-[var(--bg-app)]', isThread ? 'flex' : 'hidden md:flex')}>
+          {children}
+        </main>
       </div>
-      <main className={cn('min-w-0 flex-1 flex-col bg-[var(--bg-app)]', isThread ? 'flex' : 'hidden md:flex')}>
-        {children}
-      </main>
       <ToastHost />
     </div>
   )

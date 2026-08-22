@@ -1,12 +1,15 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Check, X } from 'lucide-react'
+import { AlertCircle, Check, X } from 'lucide-react'
 import { useToastStore } from '@/lib/store/toastStore'
+import { cn } from '@/lib/utils/cn'
 
 export function ToastHost() {
   const message = useToastStore((s) => s.message)
+  const tone = useToastStore((s) => s.tone)
   const hide = useToastStore((s) => s.hide)
+  const isError = tone === 'error'
 
   useEffect(() => {
     if (!message) return
@@ -18,10 +21,21 @@ export function ToastHost() {
 
   return (
     <div
-      role="status"
-      aria-live="polite"
-      className="fixed right-4 bottom-4 z-[60] flex min-h-12 w-[min(360px,calc(100vw-2rem))] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--green-border)] bg-[var(--surface-1)] px-3 py-2.5 text-sm text-[var(--text-primary)] shadow-[var(--shadow-card)] max-sm:right-1/2 max-sm:bottom-6 max-sm:translate-x-1/2">
-      <Check className="h-[18px] w-[18px] shrink-0 text-[var(--green-400)]" strokeWidth={1.75} aria-hidden="true" />
+      role={isError ? 'alert' : 'status'}
+      aria-live={isError ? 'assertive' : 'polite'}
+      className={cn(
+        'fixed right-4 bottom-4 z-[60] flex min-h-12 w-[min(360px,calc(100vw-2rem))] items-center gap-3 rounded-[var(--radius-md)] bg-[var(--surface-1)] px-3 py-2.5 text-sm text-[var(--text-primary)] shadow-[var(--shadow-card)] max-sm:right-1/2 max-sm:bottom-6 max-sm:translate-x-1/2',
+        isError ? 'border border-[var(--danger)]/30' : 'border border-[var(--green-border)]',
+      )}>
+      {isError ? (
+        <AlertCircle
+          className="h-[18px] w-[18px] shrink-0 text-[var(--danger)]"
+          strokeWidth={1.75}
+          aria-hidden="true"
+        />
+      ) : (
+        <Check className="h-[18px] w-[18px] shrink-0 text-[var(--green-400)]" strokeWidth={1.75} aria-hidden="true" />
+      )}
       <p className="min-w-0 flex-1">{message}</p>
       <button
         type="button"

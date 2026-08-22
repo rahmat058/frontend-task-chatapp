@@ -91,8 +91,13 @@ export function useSendMessage(conversationId: string) {
 
       queryClient.setQueryData(
         messagesQueryKey(conversationId),
-        (old: { pages: MessageHistoryResponse[] } | undefined) => {
-          if (!old?.pages?.length) return old
+        (old: { pages: MessageHistoryResponse[]; pageParams?: unknown[] } | undefined) => {
+          if (!old?.pages?.length) {
+            return {
+              pages: [{ messages: [optimisticMessage], hasMore: false, nextCursor: null }],
+              pageParams: [undefined],
+            }
+          }
           const pages = [...old.pages]
           const last = pages[pages.length - 1]
           pages[pages.length - 1] = {

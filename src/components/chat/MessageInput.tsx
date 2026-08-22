@@ -7,6 +7,7 @@ import { EmojiPicker } from './EmojiPicker'
 import { useSendMessage } from '@/lib/hooks/useMessages'
 import { useConversationName } from '@/lib/hooks/useConversationName'
 import { getApiErrorMessage } from '@/lib/api/normalize'
+import { useToastStore } from '@/lib/store/toastStore'
 import { cn } from '@/lib/utils/cn'
 import type { Conversation } from '@/types/models'
 
@@ -72,10 +73,10 @@ export function MessageInput({ conversation }: MessageInputProps) {
 
     sendMessage(trimmed, {
       onError: (err) => {
-        setError('root', {
-          message: getApiErrorMessage(err, 'Message failed to send.'),
-        })
+        const description = getApiErrorMessage(err, 'Message failed to send.')
+        setError('root', { message: description })
         setValue('text', trimmed)
+        useToastStore.getState().show(`${description} You can try again.`, 'error')
       },
     })
   }

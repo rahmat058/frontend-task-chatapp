@@ -142,7 +142,7 @@ export function GroupSettingsDialog({ conversation, onClose }: GroupSettingsDial
               isLoading={rename.isPending}
               disabled={!name.trim() || name.trim() === conversation.name}
               className="mb-0.5 ml-auto shrink-0">
-              Save changes
+              Save name
             </Button>
           </form>
         )}

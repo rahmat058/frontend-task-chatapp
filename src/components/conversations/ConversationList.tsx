@@ -95,8 +95,8 @@ export function ConversationList() {
       {!isLoading && !error && conversations && conversations.length === 0 && (
         <EmptyState
           icon={<MessagesSquare className="h-6 w-6" strokeWidth={1.75} />}
-          title="No conversations yet"
-          description="Start a new chat or create a group to get going."
+          title="No conversations yet — start one!"
+          description="Search for a person or create a group to begin."
         />
       )}
 

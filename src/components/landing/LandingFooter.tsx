@@ -63,6 +63,9 @@ export function LandingFooter() {
       <div className="border-t border-[var(--border-subtle)]">
         <LandingContainer className="flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-[var(--text-muted)]">© 2026 ChatApp. Realtime messaging client.</p>
+          <p className="text-xs text-[var(--text-muted)]">
+            Built with Next.js, TanStack Query, Socket.io, and Tailwind CSS.
+          </p>
         </LandingContainer>
       </div>
     </footer>

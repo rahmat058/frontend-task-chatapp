@@ -12,11 +12,13 @@ export function DirectThreadIntro({
   isGroup,
   peer,
   onManageGroup,
+  empty = false,
 }: {
   name: string
   isGroup: boolean
   peer?: ChatUser | null
   onManageGroup?: () => void
+  empty?: boolean
 }) {
   const [dialog, setDialog] = useState<'profile' | 'safety' | null>(null)
 
@@ -27,7 +29,7 @@ export function DirectThreadIntro({
         {name}
       </h2>
       <p className="mt-2 max-w-[36ch] text-sm leading-relaxed text-[var(--text-secondary)]">
-        This is the beginning of your conversation
+        {empty ? 'No messages yet — say hello!' : 'This is the beginning of your conversation'}
       </p>
 
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
